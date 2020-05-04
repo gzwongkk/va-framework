@@ -5,6 +5,9 @@ node_modules
 # local env files
 .env.local
 .env.*.local
+# virtualenv default framework
+framework/
+server/framework/
 
 # Log files
 npm-debug.log*
