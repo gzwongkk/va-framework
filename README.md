@@ -1,10 +1,16 @@
 # framework-flask-vue
-A framework using flask as backend and vue.js as frontend, powered by vue-cli
+A framework using flask as backend and vue.js as frontend, powered by vue-cli. 
+The framework comes with demos to show typical frontend-backend communication, as well as vue components interaction.
+It also comes with two examples featuring the configuration of D3 and Echarts.
 
-## Server setup
+![image](https://github.com/gzwongkk/framework-flask-vue/README.png)
+
+
+## Server
 The server employs Flask to provide web services. 
 All codes below should be run under the "server" folder.
 
+### Server Setup
 This project is created using Python 3.8.2. It is recommended to use virtualenv to build the project. 
 For example, 
 ``` 
@@ -29,14 +35,25 @@ $ pip install -r requirements.txt
 $ pip freeze > requirement.txt
 ```
 
-## Client setup
+### Server activation
+The default address for the server is http://127.0.0.1:5000/
+```
+$ python run.py
+```
+
+
+## Client
 The client services are provided by Vue-cli. 
 All codes below should be run under the "client" folder.
+
+### Client Setup
+The packages are handled by npm, and specified in the package.json.
 ```
 $ npm install
 ```
 
-
+### Client activation
+Notice that it supports hot-reloads, so that the changes on code are applied automatically and do not require reloads.
 ```
 # Compiles and hot-reloads for development
 $ npm run serve
