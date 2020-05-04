@@ -2,8 +2,6 @@
 node_modules
 /dist
 
-server/data/*
-
 # local env files
 .env.local
 .env.*.local

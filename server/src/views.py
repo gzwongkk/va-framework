@@ -18,8 +18,3 @@ def post():
     if post_data != "":
         post_data = simplejson.loads(post_data)
     return json_dumps(post_data)
-
-@app.route('/')
-def mongodb():
-    online_users = mongo.db.users.find({"online": True})
-    return online_users
