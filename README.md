@@ -3,7 +3,7 @@ A framework using flask as backend and vue.js as frontend, powered by vue-cli.
 The framework comes with demos to show typical frontend-backend communication, as well as vue components interaction.
 It also comes with two examples featuring the configuration of D3 and Echarts.
 
-![image](https://github.com/gzwongkk/framework-flask-vue/README.png)
+![image](https://github.com/gzwongkk/framework-flask-vue/blob/master/README.png)
 
 
 ## Server
