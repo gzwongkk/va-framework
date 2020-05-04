@@ -22,3 +22,5 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+A framework using flask as backend and vue.js as frontend, powered by vue-cli
