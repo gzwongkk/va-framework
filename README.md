@@ -53,7 +53,8 @@ $ npm install
 ```
 
 ### Client activation
-Notice that it supports hot-reloads, so that the changes on code are applied automatically and do not require reloads.
+The client is served at http://localhost:8080/.
+Notice that the framework supports hot-reloads, so that the changes on DOM are applied automatically and do not require reloads.
 ```
 # Compiles and hot-reloads for development
 $ npm run serve
