@@ -32,7 +32,7 @@ For this project, we will be installing flask and jupyter lab to facilitate deve
 $ pip install -r requirements.txt
 
 # Export your own dependencies
-$ pip freeze > requirement.txt
+$ pip freeze > requirements.txt
 ```
 
 ### Server activation
