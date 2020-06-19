@@ -15,7 +15,8 @@
     "echarts": "^4.7.0",
     "quasar": "^1.0.0",
     "vue": "^2.6.11",
-    "vue-axios": "^2.1.5"
+    "vue-axios": "^2.1.5",
+    "websocket-extensions": "^0.1.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.3.0",
