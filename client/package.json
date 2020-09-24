@@ -8,13 +8,13 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@quasar/extras": "^1.0.0",
+    "@quasar/extras": "^1.9.5",
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
     "d3": "^5.16.0",
-    "echarts": "^4.7.0",
-    "quasar": "^1.0.0",
-    "vue": "^2.6.11",
+    "echarts": "^4.9.0",
+    "quasar": "^1.14.0",
+    "vue": "^2.6.12",
     "vue-axios": "^2.1.5",
     "websocket-extensions": "^0.1.4"
   },
@@ -26,11 +26,11 @@
     "babel-plugin-transform-imports": "1.5.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
-    "node-sass": "^4.13.0",
+    "node-sass": "^4.14.1",
     "postcss-rtl": "^1.2.3",
     "sass-loader": "^8.0.0",
     "vue-cli-plugin-quasar": "~2.0.2",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.12"
   },
   "eslintConfig": {
     "root": true,
