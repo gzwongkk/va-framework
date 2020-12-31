@@ -8,13 +8,13 @@
   d3 example source: https://observablehq.com/@d3/sortable-bar-chart
    */
   import * as d3 from "d3";
-  import EventService from "../utils/event-service";
 
   export default {
     name: "D3Bar",
     props: {
       loadData: Object,
     },
+    emits: ['selected'],
     data() {
       return {
         svg: null,
@@ -80,8 +80,7 @@
           .attr("y", d => y(d.value))
           .attr("height", d => y(0) - y(d.value))
           .attr("width", x.bandwidth())
-          .on('click', d => EventService.emitSelected(d.name, d.value));    // communication bus across components
-
+          .on('click', (_, d) => this.$emit('selected', d.name, d.value));    // communication bus across components
         this.svg.append("g").call(xAxis);
         this.svg.append("g").call(yAxis);
       }

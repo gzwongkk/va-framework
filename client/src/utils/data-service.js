@@ -1,31 +1,25 @@
-import Vue from 'vue';
+import axios from 'axios'
 
-let DataService = new Vue({
-  data:{
-    // This url should align with backend
-    dataServerUrl: 'http://127.0.0.1:5000',
+let DataService = {
+  dataServerUrl: 'http://127.0.0.1:5000',
+  // HTTP GET request
+  loadGet(callback){
+    axios.get(`${this.dataServerUrl}/get`)
+      .then(response => {
+        callback(response.data)
+      }, errResponse => {
+        console.log(errResponse)
+      })
   },
-
-  methods:{
-    // HTTP GET request
-    loadGet(callback){
-      this.axios.get(`${this.dataServerUrl}/get`)
-        .then(response => {
-          callback(response.data)
-        }, errResponse => {
-          console.log(errResponse)
-        })
-    },
-    // HTTP POST request
-    loadPost(param, callback){
-      this.axios.post(`${this.dataServerUrl}/post`, param)
-        .then(response => {
-          callback(response.data)
-        }, errResponse => {
-          console.log(errResponse)
-        })
-    },
-  }
-});
+  // HTTP POST request
+  loadPost(param, callback){
+    axios.post(`${this.dataServerUrl}/post`, param)
+      .then(response => {
+        callback(response.data)
+      }, errResponse => {
+        console.log(errResponse)
+      })
+  },
+}
 
 export default DataService;
