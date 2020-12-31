@@ -11,7 +11,7 @@ The server employs Flask to provide web services.
 All codes below should be run under the "server" folder.
 
 ### Server Setup
-This project is created using Python 3.8.2. It is recommended to use virtualenv to build the project. 
+This project is created using Python 3.8.5. It is recommended to use virtualenv to build the project. 
 For example, 
 ``` 
 # Create a new virtualenv named "framework"
@@ -43,7 +43,7 @@ $ python run.py
 
 
 ## Client
-The client services are provided by Vue-cli. 
+The client services are provided by Vue 3. 
 All codes below should be run under the "client" folder.
 
 ### Client Setup
