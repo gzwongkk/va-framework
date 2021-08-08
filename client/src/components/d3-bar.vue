@@ -1,5 +1,5 @@
 <template>
-    <div id="d3-bar"></div>
+    <div id="d3-bar" style="height: 100%; width: 100%"></div>
 </template>
 
 <script>
@@ -26,7 +26,7 @@
         this.renderBarChart();
       },
     },
-    mounted: function () {
+    mounted() {
       this.initBarChart();
       this.renderBarChart();
     },
@@ -35,11 +35,14 @@
         // Initialize svg
         let width = this.$el.clientWidth;
         let height = this.$el.clientHeight;
-        this.svg = d3.select(this.$el).append('svg').attr("viewBox", [0, 0, width, height]);
+        this.svg = d3
+            .select("#d3-bar")
+            .append('svg')
+            .attr("viewBox", [0, 0, width, height]);
       },
       renderBarChart() {
         // Remove all groups in svg
-        this.svg.selectAll("g").remove();
+        // this.svg.selectAll("g").remove();
 
         // Configuration
         let width = this.$el.clientWidth;

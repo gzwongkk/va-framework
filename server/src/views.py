@@ -1,6 +1,11 @@
 from src import app
+from src.models import Model
 from flask import request
 import simplejson
+
+# initialize the model
+model = Model()
+print("================================================================")
 
 
 def json_dumps(data):
@@ -10,6 +15,11 @@ def json_dumps(data):
 @app.route('/get')
 def get():
     return json_dumps("Get")
+
+
+@app.route('/get_data')
+def get_data():
+    return json_dumps(model.get_data())
 
 
 @app.route('/post', methods=['POST'])

@@ -1,5 +1,5 @@
 <template>
-    <div id="echarts-bar"></div>
+    <div id="echarts-bar" style="height: 100%; width: 100%"></div>
 </template>
 
 <script>
@@ -26,7 +26,7 @@
         this.renderBarChart();
       },
     },
-    mounted:function(){
+    mounted(){
       this.initBarChart();
       this.renderBarChart();
     },
@@ -96,9 +96,11 @@
         this.barChart.setOption({
           series: [{
             name: 'bar',
+            type: 'bar',
             data: data1,
           }, {
             name: 'bar2',
+            type: 'bar',
             data: data2,
           }],
         });

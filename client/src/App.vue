@@ -1,23 +1,42 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <br>
-    {{ getData }}
-    <br>
-    {{ loadData }}
-    <br>
-    <br>
-    {{dataName && dataValue? dataName + ' : ' + dataValue: 'click on bars in d3 to initiate events'}}
-    <br>
-    <br>
-    <echarts-bar
-        class="echarts"
-        :get-data="getData"></echarts-bar>
-    <d3-bar
-        class="d3"
-        :load-data="loadData"
-        @selected="onSelected"></d3-bar>
-  </div>
+  <a-row :gutter="[2, 2]">
+    <a-col :span="6">
+      <div class="top_container">
+        {{ get }}
+        <br>
+        {{ getData }}
+        <br>
+        {{ loadData }}
+      </div>
+    </a-col>
+    <a-col :span="12">
+      <div class="top_container">
+        <img alt="Vue logo" src="./assets/logo.png">
+      </div>
+    </a-col>
+    <a-col :span="6">
+      <div class="top_container">
+        {{dataName && dataValue? dataName + ' : ' + dataValue: 'click on bars in d3 to initiate events'}}
+      </div>
+    </a-col>
+  </a-row>
+  <a-row :gutter="[2, 2]">
+    <a-col :span="12">
+      <div id="echarts_container">
+        <echarts-bar
+            class="echarts"
+            :get-data="getData"></echarts-bar>
+      </div>
+    </a-col>
+    <a-col :span="12">
+      <div id="d3_container">
+        <d3-bar
+            class="d3"
+            :load-data="loadData"
+            @selected="onSelected"></d3-bar>
+      </div>
+    </a-col>
+  </a-row>
 </template>
 
 <script>
@@ -34,6 +53,7 @@ export default {
   data() {
     return {
       // data for HTTP requests in DataService
+      get: null,
       getData: null,
       loadParam: {'data': 'load'},
       loadData: null,
@@ -45,12 +65,16 @@ export default {
   },
   mounted () {
     // HTTP GET request
-    DataService.loadGet(data => {
+    DataService.get(data => {
+      this.get = data;
+    });
+
+    DataService.getData(data => {
       this.getData = data;
     });
 
     // HTTP POST request
-    DataService.loadPost(this.loadParam, (data) => {
+    DataService.post(this.loadParam, (data) => {
       this.loadData = data;
     });
   },
@@ -66,29 +90,35 @@ export default {
 
 <style>
 #app {
-  font-family: Roboto, sans-serif;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  width: 1600px;
+  height: 900px;
+  margin: 2px;
+  border: 1px solid lightblue;
 }
 
-.echarts{
-  position:absolute;
-  left: 3%;
-  width: 45%;
-  height: 400px;
-  border: 2px solid steelblue;
-  border-radius: 4px;
+.top_container{
+  box-sizing: border-box;
+  height: 300px;
+  width: 100%;
+  margin-bottom: 2px;
+  border: 1px solid darkred;
 }
 
-.d3{
-  position:absolute;
-  right: 3%;
-  width: 45%;
-  height: 400px;
-  border: 2px solid darkred;
-  border-radius: 4px;
+#echarts_container{
+  box-sizing: border-box;
+  height: 600px;
+  width: 100%;
+  border: 1px solid darkblue;
+}
+
+#d3_container{
+  box-sizing: border-box;
+  height: 600px;
+  width: 100%;
+  border: 1px solid darkgreen;
 }
 </style>
