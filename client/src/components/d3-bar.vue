@@ -42,7 +42,7 @@
       },
       renderBarChart() {
         // Remove all groups in svg
-        // this.svg.selectAll("g").remove();
+        this.svg.selectAll("g").remove();
 
         // Configuration
         let width = this.$el.clientWidth;
