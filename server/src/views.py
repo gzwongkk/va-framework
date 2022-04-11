@@ -1,30 +1,27 @@
 from src import app
 from src.models import Model
 from flask import request
-import simplejson
+import json
 
 # initialize the model
 model = Model()
 print("================================================================")
 
 
-def json_dumps(data):
-    return simplejson.dumps(data, ensure_ascii=False, ignore_nan=True)
-
-
 @app.route('/get')
-def get():
-    return json_dumps("Get")
+def _get():
+    return json.dumps("Get", ensure_ascii=False)
 
 
 @app.route('/get_data')
-def get_data():
-    return json_dumps(model.get_data())
+def _get_data():
+    return json.dumps(model.get_data(), ensure_ascii=False)
 
 
 @app.route('/post', methods=['POST'])
-def post():
+def _post():
     post_data = request.data.decode()
-    if post_data != "":
-        post_data = simplejson.loads(post_data)
-    return json_dumps(post_data)
+    if post_data == "":
+        return
+    post_data = json.loads(post_data)
+    return model.set_data(post_data)

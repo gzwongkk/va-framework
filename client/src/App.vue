@@ -1,91 +1,63 @@
 <template>
-  <a-row :gutter="[2, 2]">
-    <a-col :span="6">
-      <div class="top_container">
-        {{ get }}
-        <br>
-        {{ getData }}
-        <br>
-        {{ loadData }}
-      </div>
-    </a-col>
-    <a-col :span="12">
-      <div class="top_container">
-        <img alt="Vue logo" src="./assets/logo.png">
-      </div>
-    </a-col>
-    <a-col :span="6">
-      <div class="top_container">
-        {{dataName && dataValue? dataName + ' : ' + dataValue: 'click on bars in d3 to initiate events'}}
-      </div>
-    </a-col>
-  </a-row>
-  <a-row :gutter="[2, 2]">
-    <a-col :span="12">
-      <div id="echarts_container">
-        <echarts-bar
-            class="echarts"
-            :get-data="getData"></echarts-bar>
-      </div>
-    </a-col>
-    <a-col :span="12">
-      <div id="d3_container">
-        <d3-bar
-            class="d3"
-            :load-data="loadData"
-            @selected="onSelected"></d3-bar>
-      </div>
-    </a-col>
-  </a-row>
+  <div>
+    <svg width="1600" height="600">
+      <g>
+        <circle
+          v-for="(d, i) in data"
+          :key="i"
+          :type="d.dataset"
+          r="5"
+          :cx="1400 - d.x * 5"
+          :cy="550 - d.y * 5"
+          fill="#ccc"
+        />
+      </g>
+      <g>
+        <circle
+          v-for="(d, i) in data"
+          :key="i"
+          :type="d.dataset"
+          r="5"
+          :cx="200 + d.x * 5"
+          :cy="550 - d.y * 5"
+          fill="#ccc"
+        />
+      </g>
+    </svg>
+    <div
+      v-for="dataset in datasets"
+      :key="dataset"
+      @click="selectData(dataset)"
+    >
+      {{ dataset }}
+    </div>
+  </div>
 </template>
 
 <script>
-import DataService from "./utils/data-service";
-import EchartsBar from "./components/echarts-bar";
-import D3Bar from "./components/d3-bar";
+import { mapState, mapActions } from "pinia";
+import { useStore } from "./store/datasaurus.js";
+import D3Bar from "./components/d3-bar.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     D3Bar,
-    EchartsBar
+  },
+  computed: {
+    ...mapState(useStore, {
+      data: "datasaurus",
+      datasets: "datasets",
+    }),
   },
   data() {
-    return {
-      // data for HTTP requests in DataService
-      get: null,
-      getData: null,
-      loadParam: {'data': 'load'},
-      loadData: null,
-
-      // data for event handling in EventService
-      dataName: null,
-      dataValue: null
-    }
+    return {};
   },
-  mounted () {
-    // HTTP GET request
-    DataService.get(data => {
-      this.get = data;
-    });
-
-    DataService.getData(data => {
-      this.getData = data;
-    });
-
-    // HTTP POST request
-    DataService.post(this.loadParam, (data) => {
-      this.loadData = data;
-    });
-  },
+  mounted() {},
   methods: {
-    // Event handling for d3-bar
-    onSelected(name, value) {
-      this.dataName = name;
-      this.dataValue = value;
-    }
-  }
-}
+    ...mapActions(useStore, ["selectData"]),
+  },
+};
 </script>
 
 <style>
@@ -98,27 +70,5 @@ export default {
   height: 900px;
   margin: 2px;
   border: 1px solid lightblue;
-}
-
-.top_container{
-  box-sizing: border-box;
-  height: 300px;
-  width: 100%;
-  margin-bottom: 2px;
-  border: 1px solid darkred;
-}
-
-#echarts_container{
-  box-sizing: border-box;
-  height: 600px;
-  width: 100%;
-  border: 1px solid darkblue;
-}
-
-#d3_container{
-  box-sizing: border-box;
-  height: 600px;
-  width: 100%;
-  border: 1px solid darkgreen;
 }
 </style>
