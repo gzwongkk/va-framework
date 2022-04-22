@@ -1,33 +1,29 @@
-import { defineStore } from "pinia";
+/**
+ * This pinia store demonstrate a way to load dynamic json resources from server.
+ * The dataset is adopted from https://www.kaggle.com/datasets/shivamb/netflix-shows.
+ * "This tabular dataset consists of listings of all the movies and tv shows available on Netflix, 
+ * along with details such as - cast, directors, ratings, release year, duration, etc."
+ * Understanding what content is available in different countries
+Identifying similar content by matching text-based features
+Network analysis of Actors / Directors and find interesting insights
+Does Netflix has more focus on TV Shows than movies in recent years.
+ **/
 
-// import axios from "axios";
-// const DATA_SERVER_URL = "http://127.0.0.1:5000";
+import { defineStore } from 'pinia';
+import axios from 'axios';
+const DATA_SERVER_URL = 'http://127.0.0.1:5000';
 
-import DatasaurusDozen from "../assets/DatasaurusDozen.json";
-
-export const useStore = defineStore("datasaurus", {
+export const useNetflixStore = defineStore({
+  id: 'netflix',
   state: () => {
     return {
-      // from JSON files
-      datasaurusDozen: DatasaurusDozen,
-
-      selectedData: "dino",
+      // from API
+      netflix: [],
     };
   },
   getters: {
-    datasets() {
-      return [...new Set(this.datasaurusDozen.map((d) => d.dataset))];
-    },
-    datasaurus() {
-      return this.datasaurusDozen.filter(
-        (d) => d.dataset === this.selectedData
-      );
-    },
   },
   actions: {
-    selectData(datum) {
-      this.selectedData = datum;
-    },
     // get(callback) {
     //   axios.get(`${this.dataServerUrl}/get`).then(
     //     (response) => {
