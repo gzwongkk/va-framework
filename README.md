@@ -10,7 +10,7 @@ The framework comes with demos to show typical frontend-backend communication, a
 ## Todo List
 - [x] A configuration of UI components with *Ant Design Vue*.
 - [x] A migration guide of the *Composition API* [demo](./client/src/components/CompositionD3Bar.vue) and the *Options API* [demo](./client/src/components/OptionsD3Bar.vue) with *D3.js*.
-- [x] A simple comprehensive MVVM component [demo](./client/src/components/Datasaurus.vue) of *Composition API*, *TypeScript*, *Pinia*, and *v-for SVG rendering*.
+- [x] A simple comprehensive MVVM [demo](./client/src/components/Datasaurus.vue) of *Composition API*, *TypeScript*, *Pinia*, and *v-for SVG rendering*.
 - [ ] An API deisgn [demo](./client/src/stores/netflix.ts) for data transmission (Controller in MVC) with *Pinia*, *Axios*, and *Flask*.
 - [ ] A basic ad-hoc data processing pipeline [demo](./server/src/models.py) (Model in MVC) with *Pandas*.
 

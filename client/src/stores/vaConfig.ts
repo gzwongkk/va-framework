@@ -7,7 +7,7 @@ const colorScale = d3
   .interpolator(d3.interpolateBrBG);
 
 // http://veli.ee/colorpedia/?c=4E6F72
-const color = {
+const color: { [id: string] : string } = {
   /**
    * triad colors that complement each other
    */
