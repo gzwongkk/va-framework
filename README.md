@@ -1,50 +1,50 @@
-# framework-flask-vue
+# va-framework
 
-> This project is migrating towards Vue3 and Pinia.
->
-> More examples and reusable components are on the TODO list.
-
-A framework using flask as backend and vue.js as frontend, powered by vite.
+This framework is designed for jump-starting a single-page visual analytics system.
+It employs Python's _Flask_ server as the backend and Javascript's _Vue_ as the frontend.
+The framework facilitates fast development with hot-reloads (_Vite_), UI components (_Ant design_), state management (_Pinia_), and type inference (_TypeScript_).
 The framework comes with demos to show typical frontend-backend communication, as well as vue components interaction.
 
 <!-- ![image](https://github.com/gzwongkk/framework-flask-vue/blob/master/README.png) -->
 
-## Server
+## Todo List
+- [x] A configuration of UI components with *Ant Design Vue*.
+- [x] A migration guide of the *Composition API* [demo](CompositionD3Bar.vue) and the *Options API* [demo](OptionsD3Bar.vue) with *D3.js*.
+- [x] A simple comprehensive MVVM component [demo](Datasaurus.vue) of *Composition API*, *TypeScript*, *Pinia*, and *v-for SVG rendering*.
+- [ ] An API deisgn [demo](netflix.ts) for data transmission (Controller in MVC) with *Pinia*, *Axios*, and *Flask*.
+- [ ] A basic ad-hoc data processing pipeline (Model in MVC) with *Pandas*.
+
+
+### Planned demo list
+- [ ] [The periphery plots](https://gotz.web.unc.edu/research-project/periphery-plots/)
+
+## Run the framework
+
+### Server
 
 The server employs Flask to provide web services.
 All codes below should be run under the "server" folder.
-
-### Server Setup
-
-This project is created using Python 3.8.5.
-The default address for the server is <http://127.0.0.1:5000/>
+For the first time user, please install the requirements in the _requirements.txt_.
+This project is built using Python 3.8.5.
+Using a version below 3.7 might encounter errors regarding the use of f-string.
+The default address for the server is <http://127.0.0.1:5000/>.
 
 ```
 python run.py
 ```
 
-## Client
+### Client
 
-The client services are provided by Vue 3.
+The client services are provided by Vue 3 and many other packages.
 All codes below should be run under the "client" folder.
-
-### Client Setup
-
 The packages are handled by npm, and specified in the package.json.
-
-```
-npm install
-```
-
-### Client activation
-
+For the first time user, please install the dependencies in the _package.json_ with `npm install`.
 The client is served at <http://localhost:3000/>.
-Notice that the framework supports hot-reloads, so that the changes on DOM are applied automatically and do not require reloads.
 
 ```
-# Compiles and hot-reloads for development
+# Compiles for development
 $ npm run dev
 
-# Compiles and minifies for production
+# Compiles for production
 $ npm run build
 ```

@@ -1,37 +1,93 @@
+<script setup lang="ts">
+/**
+ * This component demonstrates basic usage of the composition API and typescript with Pinia store.
+ * The data from DatasaurusDozen is plotted on the intuitive v-for SVG rendering.
+ * SVG rendering is suitable for simple static visualizations where interactions and animations are unnecessary (e.g., legend).
+ */
+
+import { Button } from 'ant-design-vue';
+import { useConfig } from '../stores/vaConfig';
+import { useDatasaurusStore } from '../stores/datasaurus';
+import { storeToRefs } from 'pinia';
+import { ref, onMounted } from 'vue';
+import * as d3 from 'd3';
+
+const vaConfig = useConfig(); // define colors
+const datasaurusStore = useDatasaurusStore(); // define data source
+const { nameList, data } = storeToRefs(datasaurusStore); // obtain reactive variables
+
+/**
+ * To place the data points around center, we need the center's coordinate.
+ * Since the svg's width and height are automatically calculated by CSS flex,
+ * we can get them dynamically after the Datasaurus component is mounted to DOM.
+ * If you know other workarounds, please let me know.
+ */
+const height = ref(0),
+  width = ref(0); // create reactive variables to reflect SVG element's size
+
+const h_ratio = 4,
+  v_ratio = 3; // scale the original datapoints horizontally and vertically
+
+onMounted(() => {
+  let svg: any = d3.select('#datasaurus_svg').node();
+  if (svg !== null) {
+    let rect: DOMRect = svg.getBoundingClientRect(); // optain the bounding box's attributes dynamically
+    height.value = rect.height / 2;
+    width.value = rect.width / 2;
+  }
+});
+</script>
+
 <template>
-  <div style='height: 100%'>
-    <div v-for='name in nameList' :key='name' class='item' @click='datasaurusStore.selectDataType(name)'>
-      {{ name }}
+  <div class="datasaurus">
+    <div class="button_group">
+      <a-button
+        class="button"
+        v-for="name in nameList"
+        :key="name"
+        :type="name === datasaurusStore.selectedDataset ? 'primary' : ''"
+        @click="datasaurusStore.selectDataType(name)"
+      >
+        {{ name }}
+      </a-button>
     </div>
-    <svg width='1200' height='380'>
+    <svg id="datasaurus_svg">
       <g>
-        <circle v-for='(d, i) in data' :key='i' r='5' :cx='1200 - d.x * 4' :cy='350 - d.y * 3' fill='#455a64' />
-      </g>
-      <g>
-        <circle v-for='(d, i) in data' :key='i' r='5' :cx='d.x * 4' :cy='350 - d.y * 3' fill='#455a64' />
+        <circle
+          v-for="(d, i) in data"
+          :key="i"
+          :r="5"
+          :cx="width + d.x * h_ratio"
+          :cy="height - d.y * v_ratio"
+          :fill="vaConfig.color.bg"
+        />
       </g>
     </svg>
   </div>
 </template>
 
-<script setup lang='ts'>
-import { useDatasaurusStore } from '../stores/datasaurus';
-import { storeToRefs } from 'pinia'
-
-const datasaurusStore = useDatasaurusStore();
-const { nameList, data } = storeToRefs(datasaurusStore);
-</script>
-
-<style>
-.item {
-  display: inline;
-  margin: 10px;
+<style scoped>
+.datasaurus {
+  height: calc(100% - 2px);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
 }
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
+
+.button_group {
+  padding: 5px;
+  display: flex;
+  flex: 0 1 auto;
+  flex-flow: row wrap;
+}
+
+.button {
+  flex: auto;
+}
+
+#datasaurus_svg {
+  flex: 1 0 auto;
+  /* border: 1px solid black; */
 }
 </style>

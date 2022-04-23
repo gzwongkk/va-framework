@@ -1,122 +1,75 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from '@/components/HelloWorld.vue'
-import Datasaurus from '@/components/Datasaurus.vue'
+import Datasaurus from './components/Datasaurus.vue';
+import CompositionD3BarVue from './components/CompositionD3Bar.vue';
+import OptionsD3Bar from './components/OptionsD3Bar.vue';
+
+import { ref } from 'vue';
+import { Row, Col, Button } from 'ant-design-vue';
+
+const isComposition = ref(false);
+const playAnimation = ref(true);
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+  <a-row :gutter="16" class="row">
+    <a-col :span="6">
+      <div class="button_group composition">
+        <a-button
+          :type="isComposition ? 'primary' : ''"
+          @click="isComposition = !isComposition"
+        >
+          {{ isComposition ? 'Composition' : 'Options' }}
+        </a-button>
+        <a-button
+          :type="playAnimation ? 'primary' : ''"
+          @click="playAnimation = !playAnimation"
+        >
+          {{ playAnimation ? 'Play' : 'Pause' }}
+        </a-button>
+      </div>
+      <!-- The following implements the same bar chart in different API to serve as a migration guide -->
+      <CompositionD3BarVue
+        v-if="isComposition"
+        :playAnimation="playAnimation"
+      />
+      <OptionsD3Bar v-if="!isComposition" :playAnimation="playAnimation" />
+    </a-col>
+  </a-row>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+  <a-row :gutter="16" class="row">
+    <a-col :span="6">
+      <Datasaurus id="datasaurus_container" />
+    </a-col>
+    <a-col :span="18"> </a-col>
+  </a-row>
 
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
-
-  <!-- <Datasaurus id="datasaurus_container" /> -->
+  <a-row> </a-row>
 </template>
 
 <style>
-@import '@/assets/base.css';
-
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-
-  font-weight: normal;
-}
-
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
+  font-family: 'Open Sans', Helvetica, 'PingFang SC', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  margin-top: 2rem;
+  width: 1600px;
+  height: 900px;
+  margin: 10px;
+  border: 1px solid #455a64;
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
+.button_group.composition {
+  position: absolute;
+  margin-top: 5px;
+  right: 10px;
+  margin-right: 5px;
 }
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
+.row {
+  height: 450px;
 }
 
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
-
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+.noselect {
+  user-select: none;
 }
 </style>

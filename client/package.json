@@ -1,6 +1,6 @@
 {
-  "name": "vue",
-  "version": "0.0.0",
+  "name": "va-framework",
+  "version": "1.1.0",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
@@ -8,13 +8,13 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "@types/d3": "^7.1.0",
     "ant-design-vue": "^3.2.0",
     "axios": "^0.26.1",
     "d3": "^7.4.4",
     "pinia": "^2.0.13",
     "unplugin-vue-components": "^0.19.3",
-    "vue": "^3.2.33",
-    "vue-router": "^4.0.14"
+    "vue": "^3.2.33"
   },
   "devDependencies": {
     "@types/node": "^16.11.27",

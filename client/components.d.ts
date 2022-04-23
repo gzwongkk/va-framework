@@ -5,18 +5,17 @@ import '@vue/runtime-core'
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AButton: typeof import('ant-design-vue/es')['Button']
+    ACol: typeof import('ant-design-vue/es')['Col']
+    ARow: typeof import('ant-design-vue/es')['Row']
+    CompositionD3Bar: typeof import('./src/components/CompositionD3Bar.vue')['default']
+    CompositionDatasaurus: typeof import('./src/components/CompositionDatasaurus.vue')['default']
     D3Bar: typeof import('./src/components/d3-bar.vue')['default']
+    D3BarOption: typeof import('./src/components/d3-bar-option.vue')['default']
+    D3BarOptions: typeof import('./src/components/D3BarOptions.vue')['default']
     Datasaurus: typeof import('./src/components/Datasaurus.vue')['default']
-    HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
-    IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
-    IconDocumentation: typeof import('./src/components/icons/IconDocumentation.vue')['default']
-    IconEcosystem: typeof import('./src/components/icons/IconEcosystem.vue')['default']
-    IconSupport: typeof import('./src/components/icons/IconSupport.vue')['default']
-    IconTooling: typeof import('./src/components/icons/IconTooling.vue')['default']
-    RouterLink: typeof import('vue-router')['RouterLink']
-    RouterView: typeof import('vue-router')['RouterView']
-    TheWelcome: typeof import('./src/components/TheWelcome.vue')['default']
-    WelcomeItem: typeof import('./src/components/WelcomeItem.vue')['default']
+    OptionsD3Bar: typeof import('./src/components/OptionsD3Bar.vue')['default']
+    'OptionsD3Bar copy': typeof import('./src/components/OptionsD3Bar copy.vue')['default']
   }
 }
 

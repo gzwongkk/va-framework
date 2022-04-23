@@ -5,15 +5,19 @@
  **/
 
 import { defineStore } from 'pinia';
+import * as d3 from 'd3';
 
 import DatasaurusDozenJson from '../assets/DatasaurusDozen.json';
 
-export interface dataPoint {
+/**
+ * We define interface or types for Typescript to enhance type inference and readability.
+ */
+export interface DataPoint {
   x: number;
   y: number;
 }
 
-export type DatasaurusDozen = dataPoint & {
+export type DatasaurusDozen = DataPoint & {
   dataset: string;
 };
 
@@ -24,22 +28,38 @@ export const useDatasaurusStore = defineStore({
       // from JSON files
       datasaurusDozen: DatasaurusDozenJson as DatasaurusDozen[],
 
-      selectedDataType: 'dino' as string,
+      selectedDataset: 'dino' as string,
     };
   },
   getters: {
+    /**
+     * Obtain the list of dataset names in DatasaurusDozen.
+     * @returns a set of unique data names
+     */
     nameList(): string[] {
       return [...new Set(this.datasaurusDozen.map((d) => d.dataset))];
     },
-    data(): dataPoint[] {
-      return this.datasaurusDozen.filter(
-        (d) => d.dataset === this.selectedDataType
+    /**
+     * Obtain the DataPoints in the selected dataset. They are centered around mean for better layout.
+     * @returns an array of DataPoints centered around mean
+     */
+    data(): DataPoint[] {
+      // Filter the selected data type
+      let rawData = this.datasaurusDozen.filter(
+        (d) => d.dataset === this.selectedDataset
       );
+
+      // center the points around mean
+      let mean_x = d3.mean(rawData, (d) => d.x) || 0,
+        mean_y = d3.mean(rawData, (d) => d.y) || 0;
+      return rawData.map((d) => {
+        return { x: d.x - mean_x, y: d.y - mean_y };
+      });
     },
   },
   actions: {
-    selectDataType(datum: string) {
-      this.selectedDataType = datum;
+    selectDataType(datum: string): void {
+      this.selectedDataset = datum;
     },
   },
 });

@@ -41,15 +41,15 @@ def _get_country_distribution():
 def _get_category_distribution():
     return model.get_unique_distribution('listed_in', 'category')
 
-@app.route('/get_items_by_actor')
+@app.route('/get_bill_burr')
 def _get_items_by_actor():
     return model.get_items_by_actor('Bill Burr')
 
 
-@app.route('/post', methods=['POST'])
-def _post():
+@app.route('/get_data_by_year', methods=['POST'])
+def _get_items_by_year():
     post_data = request.data.decode()
     if post_data == "":
-        return
+        return ""
     post_data = json.loads(post_data)
-    return model.set_data(post_data)
+    return model.get_items_by_year(post_data)

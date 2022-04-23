@@ -27,6 +27,11 @@ class Model:
         except:
             print(f'could not open: {PATH_DATA_FILE_DATASAURUS}')
 
+    """
+    to_json is frequently used in outputing pandas DataFrame
+    The 'records' and 'index' orients are typically helpful in rendering front-end components.
+    force_ascii is set to False to support diverse character sets.
+    """    
     # The following methods all target netflix dataset
     def get_data(self):
         return self.data.to_json(orient='records', force_ascii=False)
@@ -55,6 +60,9 @@ class Model:
     def get_items_by_actor(self, actor):
         return self.data[self.data.cast.str.contains(actor, na=False)].to_json(orient='records', force_ascii=False)
 
-    def save_data(self, post_data):
-        self.data = post_data
-        return 'Success'
+    def get_items_by_year(self, post_data):
+        print(post_data)
+        if 'year' not in post_data:
+            return ""
+        year = post_data['year']
+        return self.data.query('release_year == @year').to_json(orient='records', force_ascii=False)
