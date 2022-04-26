@@ -13,9 +13,11 @@ The framework comes with demos to show typical frontend-backend communication, a
 - [x] A simple comprehensive MVVM [demo](./client/src/components/Datasaurus.vue) of *Composition API*, *TypeScript*, *Pinia*, and *v-for SVG rendering*.
 - [ ] An API deisgn [demo](./client/src/stores/netflix.ts) for data transmission (Controller in MVC) with *Pinia*, *Axios*, and *Flask*.
 - [ ] A basic ad-hoc data processing pipeline [demo](./server/src/models.py) (Model in MVC) with *Pandas*.
+- [ ] A basic layout for visual analytics system
 
 
-### Planned demo list
+### Planned implementation list
+- [ ] [Composition and Configuration Patterns in Multiple-View Visualizations](https://ieeexplore.ieee.org/abstract/document/9222323)
 - [ ] [The periphery plots](https://gotz.web.unc.edu/research-project/periphery-plots/)
 
 ## Run the framework

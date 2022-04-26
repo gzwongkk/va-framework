@@ -4,28 +4,25 @@ import CompositionD3BarVue from './components/CompositionD3Bar.vue';
 import OptionsD3Bar from './components/OptionsD3Bar.vue';
 
 import { ref } from 'vue';
-import { Row, Col, Button } from 'ant-design-vue';
+import { Row, Col, Switch } from 'ant-design-vue';
+import { PlayCircleOutlined, PauseCircleOutlined } from '@ant-design/icons-vue';
 
-const isComposition = ref(false);
-const playAnimation = ref(true);
+const isComposition = ref<boolean>(false);
+const playAnimation = ref<boolean>(true);
 </script>
 
 <template>
   <a-row :gutter="16" class="row">
     <a-col :span="6">
       <div class="button_group composition">
-        <a-button
-          :type="isComposition ? 'primary' : ''"
-          @click="isComposition = !isComposition"
-        >
-          {{ isComposition ? 'Composition' : 'Options' }}
-        </a-button>
-        <a-button
-          :type="playAnimation ? 'primary' : ''"
-          @click="playAnimation = !playAnimation"
-        >
-          {{ playAnimation ? 'Play' : 'Pause' }}
-        </a-button>
+        <a-switch v-model:checked="isComposition">
+          <template #checkedChildren>Composition</template>
+          <template #unCheckedChildren>Options</template>
+        </a-switch>
+        <a-switch v-model:checked="playAnimation">
+          <template #checkedChildren><play-circle-outlined /></template>
+          <template #unCheckedChildren><pause-circle-outlined /></template>
+        </a-switch>
       </div>
       <!-- The following implements the same bar chart in different API to serve as a migration guide -->
       <CompositionD3BarVue

@@ -2,7 +2,8 @@
 /**
  * This component demonstrates basic usage of the composition API and typescript with Pinia store.
  * The data from DatasaurusDozen is plotted on the intuitive v-for SVG rendering.
- * SVG rendering is suitable for simple static visualizations where interactions and animations are unnecessary (e.g., legend).
+ * SVG rendering is suitable for simple static visualizations where complex interactions and animations are unnecessary (e.g., legend). 
+ * For simple animations, visit https://vuejs.org/guide/built-ins/transition-group.html.
  */
 
 import { Button } from 'ant-design-vue';
@@ -52,7 +53,8 @@ onMounted(() => {
       </a-button>
     </div>
     <svg id="datasaurus_svg">
-      <g>
+      <!-- datapoint refers to the "class" in CSS, and g refers to the tag in DOM -->
+      <TransitionGroup name="datapoint" tag="g">
         <circle
           v-for="(d, i) in data"
           :key="i"
@@ -61,7 +63,7 @@ onMounted(() => {
           :cy="height - d.y * v_ratio"
           :fill="vaConfig.color.bg"
         />
-      </g>
+      </TransitionGroup>
     </svg>
   </div>
 </template>
@@ -89,5 +91,16 @@ onMounted(() => {
 #datasaurus_svg {
   flex: 1 0 auto;
   /* border: 1px solid black; */
+}
+
+.datapoint-move,
+.datapoint-enter-active,
+.datapoint-leave-active {
+  transition: all 0.5s ease;
+}
+.datapoint-enter-from,
+.datapoint-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
 }
 </style>

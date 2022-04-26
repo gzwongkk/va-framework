@@ -5,7 +5,6 @@
  * D3 rendering is suitable for more complicated interactions and enabling animations.
  * This example initializes the static components and set up a timer for changes.
  */
-import { assert } from '@vue/compiler-core';
 import * as d3 from 'd3';
 import { defineComponent } from 'vue';
 
@@ -16,9 +15,6 @@ interface DataPoint {
 
 export default defineComponent({
   name: 'OptionsD3Bar',
-  props: {
-    playAnimation: Boolean,
-  },
   data() {
     return {
       // svg configurations
@@ -29,14 +25,19 @@ export default defineComponent({
 
       // data configurations
       data: [] as DataPoint[],
-      dataMax: 100 as number,
+      dataMaxX: 26 as number,
+      dataMaxY: 100 as number,
       refreshInterval: null as any | null,
 
       // chart configurations
       x: null as any | null,
       y: null as any | null,
+      barChartAxisX: null as any | null,
       barChartContainer: null as any | null,
     };
+  },
+  props: {
+    playAnimation: Boolean,
   },
   watch: {
     playAnimation(_play) {
@@ -59,10 +60,11 @@ export default defineComponent({
   methods: {
     generateData(): void {
       this.data.length = 0; // clear the array
-      for (let i = 0; i < 10; i++) {
+      let num_cols = Math.random() * this.dataMaxX;
+      for (let i = 0; i < num_cols; i++) {
         this.data.push({
           name: String.fromCharCode(97 + i),
-          value: Math.floor(Math.random() * this.dataMax),
+          value: Math.floor(Math.random() * this.dataMaxY),
         });
       }
     },
@@ -75,25 +77,9 @@ export default defineComponent({
         .append('svg')
         .attr('viewBox', [0, 0, this.svgWidth, this.svgHeight]);
 
-      // define scales
-      this.x = d3
-        .scaleBand()
-        .domain(this.data.map((d: DataPoint) => d.name))
-        .range([this.svgMargin.left, this.svgWidth - this.svgMargin.right])
-        .padding(0.1);
-      // define and draw axes
-      let xAxis = (g: any) =>
-        g
-          .attr(
-            'transform',
-            `translate(0,${this.svgHeight - this.svgMargin.bottom})`
-          )
-          .call(d3.axisBottom(this.x).tickSizeOuter(0));
-      this.svg.append('g').call(xAxis);
-
       this.y = d3
         .scaleLinear()
-        .domain([0, this.dataMax])
+        .domain([0, this.dataMaxY])
         .nice()
         .range([this.svgHeight - this.svgMargin.bottom, this.svgMargin.top]);
       let yAxis = (g: any) =>
@@ -103,18 +89,36 @@ export default defineComponent({
           .call((g: any) => g.select('.domain').remove());
       this.svg.append('g').call(yAxis);
 
+      // append components
+      this.barChartAxisX = this.svg.append('g');
       this.barChartContainer = this.svg.append('g');
     },
     renderBarChart(): void {
+      // define scales
+      this.x = d3
+        .scaleBand()
+        .domain(this.data.map((d: DataPoint) => d.name))
+        .range([this.svgMargin.left, this.svgWidth - this.svgMargin.right])
+        .padding(0.1);
+      // define and draw x-axis
+      let xAxis = (g: any) =>
+        g
+          .attr(
+            'transform',
+            `translate(0,${this.svgHeight - this.svgMargin.bottom})`
+          )
+          .call(d3.axisBottom(this.x).tickSizeOuter(0));
+      this.barChartAxisX.call(xAxis);
+
       // draw the bars
       this.barChartContainer
         .selectAll('rect')
         .data(this.data)
         .join('rect')
         .transition(100) // the animation is done in this single line
-        .attr('x', (d: any) => this.x(d.name))
-        .attr('y', (d: any) => this.y(d.value))
-        .attr('height', (d: any) => this.y(0) - this.y(d.value))
+        .attr('x', (d: DataPoint) => this.x(d.name))
+        .attr('y', (d: DataPoint) => this.y(d.value))
+        .attr('height', (d: DataPoint) => this.y(0) - this.y(d.value))
         .attr('width', this.x.bandwidth())
         .attr('fill', 'steelblue');
     },

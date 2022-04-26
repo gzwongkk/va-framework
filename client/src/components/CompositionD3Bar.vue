@@ -14,6 +14,10 @@ interface DataPoint {
   value: number;
 }
 
+/**
+ * The following code follows the same structure with OptionsD3Bar to show the differences.
+ */
+// The data option
 // svg configurations
 let svg: any | null = null;
 let svgHeight: number = 0;
@@ -22,19 +26,23 @@ let svgMargin = { top: 20, right: 0, bottom: 30, left: 40 };
 
 // data configurations
 let data: DataPoint[] = [];
-let dataMax: number = 100;
+let dataMaxX: number = 26;
+let dataMaxY: number = 100;
 let refreshInterval: any | null = null;
 
 // chart configurations
 let x: any | null = null;
 let y: any | null = null;
+let barChartAxisX: any | null = null;
 let barChartContainer: any | null = null;
 
+// The props option
 // props from parent
 const props = defineProps({
   playAnimation: Boolean,
 });
 
+// The watch option
 // watch the reactive props
 watch(
   () => props.playAnimation,
@@ -44,6 +52,7 @@ watch(
   }
 );
 
+// The mounted option
 onMounted(() => {
   // init and render bar chart
   generateData();
@@ -53,17 +62,21 @@ onMounted(() => {
   // setup the timer for animations
   if (props.playAnimation) setChanges();
 });
+
+// The beforeUnmount option
 onBeforeUnmount(() => {
   // clear the timer for animations
   clearChanges();
 });
 
+// The method option
 function generateData() {
   data.length = 0; // clear the array
-  for (let i = 0; i < 10; i++) {
+  let num_cols = Math.random() * dataMaxX;
+  for (let i = 0; i < num_cols; i++) {
     data.push({
       name: String.fromCharCode(97 + i),
-      value: Math.floor(Math.random() * dataMax),
+      value: Math.floor(Math.random() * dataMaxY),
     });
   }
 }
@@ -79,22 +92,10 @@ function initBarChart() {
   svgWidth = rect.width;
   svg = svg.append('svg').attr('viewBox', [0, 0, svgWidth, svgHeight]);
 
-  // define scales
-  x = d3
-    .scaleBand()
-    .domain(data.map((d) => d.name))
-    .range([svgMargin.left, svgWidth - svgMargin.right])
-    .padding(0.1);
-  // define and draw axes
-  let xAxis = (g: any) =>
-    g
-      .attr('transform', `translate(0,${svgHeight - svgMargin.bottom})`)
-      .call(d3.axisBottom(x).tickSizeOuter(0));
-  svg.append('g').call(xAxis);
-
+  // define and draw y-axis
   y = d3
     .scaleLinear()
-    .domain([0, dataMax])
+    .domain([0, dataMaxY])
     .nice()
     .range([svgHeight - svgMargin.bottom, svgMargin.top]);
   let yAxis = (g: any) =>
@@ -104,19 +105,34 @@ function initBarChart() {
       .call((g: any) => g.select('.domain').remove());
   svg.append('g').call(yAxis);
 
+  // append components
+  barChartAxisX = svg.append('g');
   barChartContainer = svg.append('g');
 }
 
 function renderBarChart() {
+  // define scales
+  x = d3
+    .scaleBand()
+    .domain(data.map((d: DataPoint) => d.name))
+    .range([svgMargin.left, svgWidth - svgMargin.right])
+    .padding(0.1);
+  // define and draw x-axis
+  let xAxis = (g: any) =>
+    g
+      .attr('transform', `translate(0,${svgHeight - svgMargin.bottom})`)
+      .call(d3.axisBottom(x).tickSizeOuter(0));
+  barChartAxisX.call(xAxis);
+
   // draw the bars
   barChartContainer
     .selectAll('rect')
     .data(data)
     .join('rect')
     .transition(100) // the animation is done in this single line
-    .attr('x', (d: any) => x(d.name))
-    .attr('y', (d: any) => y(d.value))
-    .attr('height', (d: any) => y(0) - y(d.value))
+    .attr('x', (d: DataPoint) => x(d.name))
+    .attr('y', (d: DataPoint) => y(d.value))
+    .attr('height', (d: DataPoint) => y(0) - y(d.value))
     .attr('width', x.bandwidth())
     .attr('fill', 'steelblue');
 }
