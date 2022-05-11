@@ -7,6 +7,8 @@
  */
 import * as d3 from 'd3';
 import { defineComponent } from 'vue';
+import { mapState } from 'pinia';
+import { useConfig } from '../stores/vaConfig';
 
 interface DataPoint {
   name: string;
@@ -18,29 +20,41 @@ export default defineComponent({
   data() {
     return {
       // svg configurations
-      svg: null as any | null,
+      svg: {} as d3.Selection<SVGSVGElement, {}, HTMLElement, {}>,
+      // svg: null as d3.Selection<SVGSVGElement, {}, HTMLElement, {}> | null, // the more accurate type but having "null" opens potential mis-inference
       svgHeight: 0 as number,
       svgWidth: 0 as number,
-      svgMargin: { top: 20, right: 0, bottom: 30, left: 40 },
+      svgMargin: { top: 40, right: 30, bottom: 30, left: 30 },
+
+      // chart configurations
+      x: d3.scaleBand() as d3.ScaleBand<string>,
+      y: d3.scaleLinear() as d3.ScaleLinear<number, number, never>,
+      barChartAxisX: {} as d3.Selection<SVGGElement, {}, HTMLElement, {}>,
+      barChartContainer: {} as d3.Selection<SVGGElement, {}, HTMLElement, {}>,
 
       // data configurations
       data: [] as DataPoint[],
       dataMaxX: 26 as number,
       dataMaxY: 100 as number,
-      refreshInterval: null as any | null,
 
-      // chart configurations
-      x: null as any | null,
-      y: null as any | null,
-      barChartAxisX: null as any | null,
-      barChartContainer: null as any | null,
+      // animation configurations
+      refreshInterval: null as number | null,
+      refreshSpeed: 2000 as number,
+      refreshAnimationSpeed: 1500 as number,
     };
   },
   props: {
     playAnimation: Boolean,
   },
+  computed: {
+    // declaring the data in pinia stores
+    ...mapState(useConfig, ['color']),
+    svgStyle(): string {
+      return `viewbox: [0, 0, ${this.svgWidth}, ${this.svgHeight}]`;
+    },
+  },
   watch: {
-    playAnimation(_play) {
+    playAnimation(_play): void {
       if (_play) this.setChanges();
       else this.clearChanges();
     },
@@ -55,6 +69,7 @@ export default defineComponent({
     if (this.playAnimation) this.setChanges();
   },
   beforeUnmount() {
+    // clear the timer for animations
     this.clearChanges();
   },
   methods: {
@@ -69,24 +84,25 @@ export default defineComponent({
       }
     },
     initBarChart(): void {
+      this.svg = d3.select('#options-d3-bar');
+
       // initialize svg
+      // optain the attributes from "this"
       this.svgHeight = this.$el.clientHeight;
       this.svgWidth = this.$el.clientWidth;
-      this.svg = d3
-        .select('#options-d3-bar')
-        .append('svg')
-        .attr('viewBox', [0, 0, this.svgWidth, this.svgHeight]);
 
+      // define and draw y-axis
       this.y = d3
         .scaleLinear()
         .domain([0, this.dataMaxY])
         .nice()
         .range([this.svgHeight - this.svgMargin.bottom, this.svgMargin.top]);
-      let yAxis = (g: any) =>
+      // append('g') means append a graphics element => SVGGraphicsElement, a.k.a. SVGGElement
+      let yAxis = (g: d3.Selection<SVGGraphicsElement, {}, HTMLElement, any>) =>
         g
           .attr('transform', `translate(${this.svgMargin.left},0)`)
           .call(d3.axisLeft(this.y))
-          .call((g: any) => g.select('.domain').remove());
+          .call((g: any) => g.select('.domain').remove()); // sometimes you could use any
       this.svg.append('g').call(yAxis);
 
       // append components
@@ -101,7 +117,7 @@ export default defineComponent({
         .range([this.svgMargin.left, this.svgWidth - this.svgMargin.right])
         .padding(0.1);
       // define and draw x-axis
-      let xAxis = (g: any) =>
+      let xAxis = (g: d3.Selection<SVGGraphicsElement, {}, HTMLElement, any>) =>
         g
           .attr(
             'transform',
@@ -111,26 +127,59 @@ export default defineComponent({
       this.barChartAxisX.call(xAxis);
 
       // draw the bars
-      this.barChartContainer
-        .selectAll('rect')
-        .data(this.data)
-        .join('rect')
-        .transition(100) // the animation is done in this single line
-        .attr('x', (d: DataPoint) => this.x(d.name))
+      // color from vaconfig pinia store
+      const rects = this.barChartContainer.selectAll('rect') as d3.Selection<
+        SVGRectElement,
+        DataPoint,
+        SVGGElement,
+        {}
+      >;
+      rects
+        .data(this.data) // let n = num of items in the data array
+        // .join('rect') // can be as simple as this for default behaviors
+        .join(
+          // create new svg elements for increased number of items
+          // run max(n_new - n_old, 0) times
+          (enter: d3.Selection<d3.EnterElement, DataPoint, SVGGElement, {}>) =>
+            enter
+              .append('rect')
+              .attr('fill', this.color.type_two)
+              .attr('y', (d: DataPoint) => this.y(d.value)) // x is default at 0
+              .attr('height', (d: DataPoint) => this.y(0) - this.y(d.value))
+              .attr('width', this.x.bandwidth()),
+          // update existing svg elements to fit new data value/order
+          // run min(n_old, n_new) times
+          (update: d3.Selection<SVGRectElement, DataPoint, SVGGElement, {}>) =>
+            update.attr('fill', this.color.type_one),
+          // update existing svg elements before removing them
+          // run max(n_old - n_new, 0) times
+          (exit: d3.Selection<SVGRectElement, DataPoint, SVGGElement, {}>) => {
+            exit
+              .attr('fill', this.color.type_three)
+              .transition()
+              .duration(this.refreshAnimationSpeed)
+              .ease(d3.easeExpIn)
+              .attr('x', this.svgWidth)
+              .remove();
+          }
+        )
+        .transition()
+        .duration(this.refreshAnimationSpeed)
+        .ease(d3.easeExpIn)
+        .attr('x', (d: DataPoint) => this.x(d.name) as number) // possibly undefined from scaleBand, assert number
         .attr('y', (d: DataPoint) => this.y(d.value))
         .attr('height', (d: DataPoint) => this.y(0) - this.y(d.value))
-        .attr('width', this.x.bandwidth())
-        .attr('fill', 'steelblue');
+        .attr('width', this.x.bandwidth());
     },
     setChanges() {
       let _this = this;
       this.refreshInterval = setInterval(() => {
         _this.generateData();
         _this.renderBarChart();
-      }, 1000);
+      }, this.refreshSpeed);
     },
     clearChanges() {
-      clearInterval(this.refreshInterval);
+      clearInterval(this.refreshInterval as number);
       this.refreshInterval = null;
     },
   },
@@ -138,7 +187,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div id="options-d3-bar"></div>
+  <svg id="options-d3-bar" :style="svgStyle"></svg>
 </template>
 
 <style scoped>

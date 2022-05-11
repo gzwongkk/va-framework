@@ -6,7 +6,6 @@
  * For simple animations, visit https://vuejs.org/guide/built-ins/transition-group.html.
  */
 
-import { Button } from 'ant-design-vue';
 import { useConfig } from '../stores/vaConfig';
 import { useDatasaurusStore } from '../stores/datasaurus';
 import { storeToRefs } from 'pinia';
@@ -61,7 +60,7 @@ onMounted(() => {
           :r="5"
           :cx="width + d.x * h_ratio"
           :cy="height - d.y * v_ratio"
-          :fill="vaConfig.color.bg"
+          :fill="vaConfig.color.type_one"
         />
       </TransitionGroup>
     </svg>

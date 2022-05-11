@@ -5,9 +5,9 @@
  * D3 rendering is suitable for more complicated interactions and enabling animations.
  * This example initializes the static components and set up a timer for changes.
  */
-import { assert } from '@vue/compiler-core';
 import * as d3 from 'd3';
-import { defineProps, watch, onMounted, onBeforeUnmount } from 'vue';
+import { defineProps, computed, watch, onMounted, onBeforeUnmount } from 'vue';
+import { useConfig } from '../stores/vaConfig';
 
 interface DataPoint {
   name: string;
@@ -16,25 +16,31 @@ interface DataPoint {
 
 /**
  * The following code follows the same structure with OptionsD3Bar to show the differences.
+ * Notice that in composition, we can simply declare variables without initializing.
+ * It prevents assigning dummy values and ensures a more clear type inference.
  */
 // The data option
 // svg configurations
-let svg: any | null = null;
+let svg: d3.Selection<SVGSVGElement, {}, HTMLElement, {}>;
 let svgHeight: number = 0;
 let svgWidth: number = 0;
-let svgMargin = { top: 20, right: 0, bottom: 30, left: 40 };
+let svgMargin = { top: 40, right: 30, bottom: 30, left: 30 };
+
+// chart configurations
+let x: d3.ScaleBand<string>;
+let y: d3.ScaleLinear<number, number, never>;
+let barChartAxisX: d3.Selection<SVGGElement, {}, HTMLElement, {}>;
+let barChartContainer: d3.Selection<SVGGElement, {}, HTMLElement, {}>;
 
 // data configurations
 let data: DataPoint[] = [];
 let dataMaxX: number = 26;
 let dataMaxY: number = 100;
-let refreshInterval: any | null = null;
 
-// chart configurations
-let x: any | null = null;
-let y: any | null = null;
-let barChartAxisX: any | null = null;
-let barChartContainer: any | null = null;
+// animation configurations
+let refreshInterval: number;
+let refreshSpeed: number = 2000;
+let refreshAnimationSpeed: number = 1500;
 
 // The props option
 // props from parent
@@ -42,11 +48,16 @@ const props = defineProps({
   playAnimation: Boolean,
 });
 
+// The computed option
+// Using pinia stores in composition is much simpler, just use it as is
+const vaConfig = useConfig(); // define colors
+const svgStyle = computed(() => `viewbox: [0, 0, ${svgWidth}, ${svgHeight}]`);
+
 // The watch option
 // watch the reactive props
 watch(
   () => props.playAnimation,
-  (_play) => {
+  (_play): void => {
     if (_play) setChanges();
     else clearChanges();
   }
@@ -82,15 +93,19 @@ function generateData() {
 }
 
 function initBarChart() {
-  // find the div in the template
-  svg = d3.select('#composition-d3-bar');
-  assert(svg.node() !== null, 'Cannot find #composition-d3-bar');
+  // find the svg in the template
+  svg = d3.select('#composition-d3-bar') as d3.Selection<
+    SVGSVGElement,
+    {},
+    HTMLElement,
+    {}
+  >;
 
-  // configure the svg
-  let rect: DOMRect = svg.node().getBoundingClientRect(); // optain the bounding box's attributes dynamically
-  svgHeight = rect.height;
-  svgWidth = rect.width;
-  svg = svg.append('svg').attr('viewBox', [0, 0, svgWidth, svgHeight]);
+  // initialize svg
+  // optain the bounding box's attributes dynamically
+  const svgNode = svg.node() as SVGSVGElement;
+  svgHeight = svgNode.getBoundingClientRect().height;
+  svgWidth = svgNode.getBoundingClientRect().width;
 
   // define and draw y-axis
   y = d3
@@ -98,7 +113,7 @@ function initBarChart() {
     .domain([0, dataMaxY])
     .nice()
     .range([svgHeight - svgMargin.bottom, svgMargin.top]);
-  let yAxis = (g: any) =>
+  let yAxis = (g: d3.Selection<SVGGraphicsElement, {}, HTMLElement, any>) =>
     g
       .attr('transform', `translate(${svgMargin.left},0)`)
       .call(d3.axisLeft(y))
@@ -118,40 +133,71 @@ function renderBarChart() {
     .range([svgMargin.left, svgWidth - svgMargin.right])
     .padding(0.1);
   // define and draw x-axis
-  let xAxis = (g: any) =>
+  let xAxis = (g: d3.Selection<SVGGraphicsElement, {}, HTMLElement, any>) =>
     g
       .attr('transform', `translate(0,${svgHeight - svgMargin.bottom})`)
       .call(d3.axisBottom(x).tickSizeOuter(0));
   barChartAxisX.call(xAxis);
 
   // draw the bars
-  barChartContainer
-    .selectAll('rect')
-    .data(data)
-    .join('rect')
-    .transition(100) // the animation is done in this single line
-    .attr('x', (d: DataPoint) => x(d.name))
+  const rects = barChartContainer.selectAll('rect') as d3.Selection<
+    SVGRectElement,
+    DataPoint,
+    SVGGElement,
+    {}
+  >;
+  rects
+    .data(data) // let n = num of items in the data array
+    // .join('rect') // can be as simple as this for default behaviors
+    .join(
+      // create new svg elements for increased number of items
+      // run max(n_new - n_old, 0) times
+      (enter: d3.Selection<d3.EnterElement, DataPoint, SVGGElement, {}>) =>
+        enter
+          .append('rect')
+          .attr('fill', vaConfig.color.type_two)
+          .attr('y', (d: DataPoint) => y(d.value)) // x is default at 0
+          .attr('height', (d: DataPoint) => y(0) - y(d.value))
+          .attr('width', x.bandwidth()),
+      // update existing svg elements to fit new data value/order
+      // run min(n_old, n_new) times
+      (update: d3.Selection<SVGRectElement, DataPoint, SVGGElement, {}>) =>
+        update.attr('fill', vaConfig.color.type_one),
+      // update existing svg elements before removing them
+      // run max(n_old - n_new, 0) times
+      (exit: d3.Selection<SVGRectElement, DataPoint, SVGGElement, {}>) => {
+        exit
+          .attr('fill', vaConfig.color.type_three)
+          .transition()
+          .duration(refreshAnimationSpeed)
+          .ease(d3.easeExpIn)
+          .attr('x', svgWidth)
+          .remove();
+      }
+    )
+    .transition()
+    .duration(refreshAnimationSpeed)
+    .ease(d3.easeExpIn)
+    .attr('x', (d: DataPoint) => x(d.name) as number) // possibly undefined from scaleBand, assert number
     .attr('y', (d: DataPoint) => y(d.value))
     .attr('height', (d: DataPoint) => y(0) - y(d.value))
-    .attr('width', x.bandwidth())
-    .attr('fill', 'steelblue');
+    .attr('width', x.bandwidth());
 }
 
 function setChanges() {
   refreshInterval = setInterval(() => {
     generateData();
     renderBarChart();
-  }, 1000);
+  }, refreshSpeed);
 }
 
 function clearChanges() {
-  clearInterval(refreshInterval);
-  refreshInterval = null;
+  clearInterval(refreshInterval as number);
 }
 </script>
 
 <template>
-  <div id="composition-d3-bar"></div>
+  <svg id="composition-d3-bar" :style="svgStyle"></svg>
 </template>
 
 <style scoped>
