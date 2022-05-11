@@ -143,7 +143,7 @@ export default defineComponent({
           (enter: d3.Selection<d3.EnterElement, DataPoint, SVGGElement, {}>) =>
             enter
               .append('rect')
-              .attr('fill', this.color.type_two)
+              .attr('fill', this.color.type_three)
               .attr('y', (d: DataPoint) => this.y(d.value)) // x is default at 0
               .attr('height', (d: DataPoint) => this.y(0) - this.y(d.value))
               .attr('width', this.x.bandwidth()),
@@ -155,7 +155,7 @@ export default defineComponent({
           // run max(n_old - n_new, 0) times
           (exit: d3.Selection<SVGRectElement, DataPoint, SVGGElement, {}>) => {
             exit
-              .attr('fill', this.color.type_three)
+              .attr('fill', this.color.type_two)
               .transition()
               .duration(this.refreshAnimationSpeed)
               .ease(d3.easeExpIn)

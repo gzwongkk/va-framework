@@ -11,6 +11,7 @@ declare module '@vue/runtime-core' {
     ASwitch: typeof import('ant-design-vue/es')['Switch']
     CompositionD3Bar: typeof import('./src/components/CompositionD3Bar.vue')['default']
     Datasaurus: typeof import('./src/components/Datasaurus.vue')['default']
+    DatasaurusLegend: typeof import('./src/components/DatasaurusLegend.vue')['default']
     OptionsD3Bar: typeof import('./src/components/OptionsD3Bar.vue')['default']
     SVGdefs: typeof import('./src/components/SVGdefs.vue')['default']
   }

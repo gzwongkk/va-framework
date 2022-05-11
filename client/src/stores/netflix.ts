@@ -21,11 +21,10 @@ export const useNetflixStore = defineStore({
       netflix: [],
     };
   },
-  getters: {
-  },
+  getters: {},
   actions: {
-    // get(callback) {
-    //   axios.get(`${this.dataServerUrl}/get`).then(
+    // get(callback: Function) {
+    //   axios.get(`${DATA_SERVER_URL}/get`).then(
     //     (response) => {
     //       callback(response.data);
     //     },
@@ -34,8 +33,8 @@ export const useNetflixStore = defineStore({
     //     }
     //   );
     // },
-    // getData(callback) {
-    //   axios.get(`${this.dataServerUrl}/get_data`).then(
+    // getData(callback: Function) {
+    //   axios.get(`${DATA_SERVER_URL}/get_data`).then(
     //     (response) => {
     //       callback(response.data);
     //     },
@@ -45,8 +44,8 @@ export const useNetflixStore = defineStore({
     //   );
     // },
     // // HTTP POST request
-    // post(param, callback) {
-    //   axios.post(`${this.dataServerUrl}/post`, param).then(
+    // post(param: object, callback: Function) {
+    //   axios.post(`${DATA_SERVER_URL}/post`, param).then(
     //     (response) => {
     //       callback(response.data);
     //     },

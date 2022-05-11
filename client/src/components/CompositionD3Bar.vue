@@ -155,7 +155,7 @@ function renderBarChart() {
       (enter: d3.Selection<d3.EnterElement, DataPoint, SVGGElement, {}>) =>
         enter
           .append('rect')
-          .attr('fill', vaConfig.color.type_two)
+          .attr('fill', vaConfig.color.type_three)
           .attr('y', (d: DataPoint) => y(d.value)) // x is default at 0
           .attr('height', (d: DataPoint) => y(0) - y(d.value))
           .attr('width', x.bandwidth()),
@@ -167,7 +167,7 @@ function renderBarChart() {
       // run max(n_old - n_new, 0) times
       (exit: d3.Selection<SVGRectElement, DataPoint, SVGGElement, {}>) => {
         exit
-          .attr('fill', vaConfig.color.type_three)
+          .attr('fill', vaConfig.color.type_two)
           .transition()
           .duration(refreshAnimationSpeed)
           .ease(d3.easeExpIn)
