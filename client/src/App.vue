@@ -3,8 +3,13 @@ import Datasaurus from './components/Datasaurus.vue';
 import CompositionD3BarVue from './components/CompositionD3Bar.vue';
 import OptionsD3Bar from './components/OptionsD3Bar.vue';
 
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { PlayCircleOutlined, PauseCircleOutlined } from '@ant-design/icons-vue';
+
+import { useNetflixStore } from './stores/netflix';
+const netflixStore = useNetflixStore(); // define data source
+// netflixStore.get_bill_burr_async();
+netflixStore.get_bill_burr();
 
 const isComposition = ref<boolean>(false);
 const playAnimation = ref<boolean>(true);

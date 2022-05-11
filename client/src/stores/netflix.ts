@@ -19,40 +19,46 @@ export const useNetflixStore = defineStore({
     return {
       // from API
       netflix: [],
+      billBurr: [],
     };
   },
   getters: {},
   actions: {
-    // get(callback: Function) {
-    //   axios.get(`${DATA_SERVER_URL}/get`).then(
-    //     (response) => {
-    //       callback(response.data);
-    //     },
-    //     (errResponse) => {
-    //       console.log(errResponse);
-    //     }
-    //   );
-    // },
-    // getData(callback: Function) {
-    //   axios.get(`${DATA_SERVER_URL}/get_data`).then(
-    //     (response) => {
-    //       callback(response.data);
-    //     },
-    //     (errResponse) => {
-    //       console.log(errResponse);
-    //     }
-    //   );
-    // },
-    // // HTTP POST request
-    // post(param: object, callback: Function) {
-    //   axios.post(`${DATA_SERVER_URL}/post`, param).then(
-    //     (response) => {
-    //       callback(response.data);
-    //     },
-    //     (errResponse) => {
-    //       console.log(errResponse);
-    //     }
-    //   );
-    // },
+    // generic HTTP GET request
+    get(api: string, callback: Function) {
+      axios.get(`${DATA_SERVER_URL}/${api}`).then(
+        (response) => {
+          callback(response.data);
+        },
+        (errResponse) => {
+          console.log(errResponse);
+        }
+      );
+    },
+    // generic HTTP POST request
+    post(api: string, param: object, callback: Function) {
+      axios.post(`${DATA_SERVER_URL}/${api}`, param).then(
+        (response) => {
+          callback(response.data);
+        },
+        (errResponse) => {
+          console.log(errResponse);
+        }
+      );
+    },
+    get_bill_burr() {
+      this.get('get_bill_burr', (data: any) => {
+        console.log(data);
+      });
+    },
+    // the async and await version if you do not use generic requests
+    async get_bill_burr_async() {
+      try {
+        this.billBurr = await axios.get(`${DATA_SERVER_URL}/get_bill_burr`);
+        console.log(this.billBurr);
+      } catch (error) {
+        alert(error);
+      }
+    },
   },
 });
