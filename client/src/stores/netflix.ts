@@ -13,13 +13,28 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 const DATA_SERVER_URL = 'http://127.0.0.1:5000';
 
+export interface Show {
+  show_id: string;
+  type: string;
+  title: string;
+  director: string;
+  cast: string;
+  country: string;
+  date_added: string;
+  release_year: number;
+  rating: string;
+  duration: string;
+  listed_in: string;
+  description: string;
+}
+
 export const useNetflixStore = defineStore({
   id: 'netflix',
   state: () => {
     return {
       // from API
       netflix: [],
-      billBurr: [],
+      billBurr: [] as Show[],
     };
   },
   getters: {},
@@ -46,19 +61,20 @@ export const useNetflixStore = defineStore({
         }
       );
     },
-    get_bill_burr() {
-      this.get('get_bill_burr', (data: any) => {
-        console.log(data);
-      });
-    },
     // the async and await version if you do not use generic requests
     async get_bill_burr_async() {
       try {
-        this.billBurr = await axios.get(`${DATA_SERVER_URL}/get_bill_burr`);
+        let response = await axios.get(`${DATA_SERVER_URL}/get_bill_burr`);
+        this.billBurr = response.data;
         console.log(this.billBurr);
       } catch (error) {
         alert(error);
       }
+    },
+    get_bill_burr() {
+      this.get('get_bill_burr', (data: Show[]) => {
+        this.billBurr = data;
+      });
     },
   },
 });

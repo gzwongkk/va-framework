@@ -15,8 +15,13 @@ interface DataPoint {
   value: number;
 }
 
+/**
+ * The following code follows the same structure with D3BarComposition.vue to show the differences.
+ * Notice that in options, we need to follow certain fixed keywords/options to define the component.
+ * It offers higher readability for its format, in cost of lower reuseability compared to composition.
+ */
 export default defineComponent({
-  name: 'OptionsD3Bar',
+  name: 'D3BarOptions',
   data() {
     return {
       // svg configurations
@@ -84,7 +89,7 @@ export default defineComponent({
       }
     },
     initBarChart(): void {
-      this.svg = d3.select('#options-d3-bar');
+      this.svg = d3.select('#d3-bar-options');
 
       // initialize svg
       // optain the attributes from "this"
@@ -98,11 +103,13 @@ export default defineComponent({
         .nice()
         .range([this.svgHeight - this.svgMargin.bottom, this.svgMargin.top]);
       // append('g') means append a graphics element => SVGGraphicsElement, a.k.a. SVGGElement
-      let yAxis = (g: d3.Selection<SVGGraphicsElement, {}, HTMLElement, any>) =>
+      let yAxis = (g: d3.Selection<SVGGraphicsElement, {}, HTMLElement, {}>) =>
         g
           .attr('transform', `translate(${this.svgMargin.left},0)`)
           .call(d3.axisLeft(this.y))
-          .call((g: any) => g.select('.domain').remove()); // sometimes you could use any
+          .call((g: d3.Selection<SVGGElement, {}, HTMLElement, {}>) =>
+            g.select('.domain').remove()
+          );
       this.svg.append('g').call(yAxis);
 
       // append components
@@ -117,7 +124,7 @@ export default defineComponent({
         .range([this.svgMargin.left, this.svgWidth - this.svgMargin.right])
         .padding(0.1);
       // define and draw x-axis
-      let xAxis = (g: d3.Selection<SVGGraphicsElement, {}, HTMLElement, any>) =>
+      let xAxis = (g: d3.Selection<SVGGraphicsElement, {}, HTMLElement, {}>) =>
         g
           .attr(
             'transform',
@@ -135,10 +142,13 @@ export default defineComponent({
         {}
       >;
       rects
-        .data(this.data) // let n = num of items in the data array
+        .data(this.data)
+        // or pass a key function to enforce binding the same data to the dom element across rendering
+        // .data(this.data, (d: DataPoint) => d.name)
         // .join('rect') // can be as simple as this for default behaviors
         .join(
-          // create new svg elements for increased number of items
+          // let n = num of items in the data array
+          // enter: creates new svg elements for increased number of items
           // run max(n_new - n_old, 0) times
           (enter: d3.Selection<d3.EnterElement, DataPoint, SVGGElement, {}>) =>
             enter
@@ -147,11 +157,11 @@ export default defineComponent({
               .attr('y', (d: DataPoint) => this.y(d.value)) // x is default at 0
               .attr('height', (d: DataPoint) => this.y(0) - this.y(d.value))
               .attr('width', this.x.bandwidth()),
-          // update existing svg elements to fit new data value/order
+          // update: updates existing svg elements to fit new data value/order
           // run min(n_old, n_new) times
           (update: d3.Selection<SVGRectElement, DataPoint, SVGGElement, {}>) =>
             update.attr('fill', this.color.type_one),
-          // update existing svg elements before removing them
+          // exit: update existing svg elements before removing them
           // run max(n_old - n_new, 0) times
           (exit: d3.Selection<SVGRectElement, DataPoint, SVGGElement, {}>) => {
             exit
@@ -187,11 +197,11 @@ export default defineComponent({
 </script>
 
 <template>
-  <svg id="options-d3-bar" :style="svgStyle"></svg>
+  <svg id="d3-bar-options" :style="svgStyle"></svg>
 </template>
 
 <style scoped>
-#options-d3-bar {
+#d3-bar-options {
   height: calc(100% - 2px);
   width: 100%;
   border: 1px solid black;

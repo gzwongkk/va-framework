@@ -28,6 +28,8 @@ export const useDatasaurusStore = defineStore({
       // from JSON files
       datasaurusDozen: DatasaurusDozenJson as DatasaurusDozen[],
 
+      // storing variables in pinia is more convenient when we need to communicate various components.
+      // see DatasaurusLegend.vue for props-emit pattern
       selectedDataset: 'dino' as string,
     };
   },

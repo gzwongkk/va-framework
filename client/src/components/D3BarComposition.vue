@@ -15,7 +15,7 @@ interface DataPoint {
 }
 
 /**
- * The following code follows the same structure with OptionsD3Bar to show the differences.
+ * The following code follows the same structure with D3BarOptions.vue to show the differences.
  * Notice that in composition, we can simply declare variables without initializing.
  * It prevents assigning dummy values and ensures a more clear type inference.
  */
@@ -94,7 +94,7 @@ function generateData() {
 
 function initBarChart() {
   // find the svg in the template
-  svg = d3.select('#composition-d3-bar') as d3.Selection<
+  svg = d3.select('#d3-bar-composition') as d3.Selection<
     SVGSVGElement,
     {},
     HTMLElement,
@@ -113,11 +113,13 @@ function initBarChart() {
     .domain([0, dataMaxY])
     .nice()
     .range([svgHeight - svgMargin.bottom, svgMargin.top]);
-  let yAxis = (g: d3.Selection<SVGGraphicsElement, {}, HTMLElement, any>) =>
+  let yAxis = (g: d3.Selection<SVGGraphicsElement, {}, HTMLElement, {}>) =>
     g
       .attr('transform', `translate(${svgMargin.left},0)`)
       .call(d3.axisLeft(y))
-      .call((g: any) => g.select('.domain').remove());
+      .call((g: d3.Selection<SVGGraphicsElement, {}, HTMLElement, {}>) =>
+        g.select('.domain').remove()
+      );
   svg.append('g').call(yAxis);
 
   // append components
@@ -133,7 +135,7 @@ function renderBarChart() {
     .range([svgMargin.left, svgWidth - svgMargin.right])
     .padding(0.1);
   // define and draw x-axis
-  let xAxis = (g: d3.Selection<SVGGraphicsElement, {}, HTMLElement, any>) =>
+  let xAxis = (g: d3.Selection<SVGGraphicsElement, {}, HTMLElement, {}>) =>
     g
       .attr('transform', `translate(0,${svgHeight - svgMargin.bottom})`)
       .call(d3.axisBottom(x).tickSizeOuter(0));
@@ -147,10 +149,13 @@ function renderBarChart() {
     {}
   >;
   rects
-    .data(data) // let n = num of items in the data array
+    .data(data)
+    // or pass a key function to enforce aligned data assignment to the same dom element across rendering
+    // .data(data, (d: DataPoint) => d.name)
     // .join('rect') // can be as simple as this for default behaviors
     .join(
-      // create new svg elements for increased number of items
+      // let n = num of items in the data array
+      // enter: creates new svg elements for increased number of items
       // run max(n_new - n_old, 0) times
       (enter: d3.Selection<d3.EnterElement, DataPoint, SVGGElement, {}>) =>
         enter
@@ -159,11 +164,11 @@ function renderBarChart() {
           .attr('y', (d: DataPoint) => y(d.value)) // x is default at 0
           .attr('height', (d: DataPoint) => y(0) - y(d.value))
           .attr('width', x.bandwidth()),
-      // update existing svg elements to fit new data value/order
+      // update: updates existing svg elements to fit new data value/order
       // run min(n_old, n_new) times
       (update: d3.Selection<SVGRectElement, DataPoint, SVGGElement, {}>) =>
         update.attr('fill', vaConfig.color.type_one),
-      // update existing svg elements before removing them
+      // exit: update existing svg elements before removing them
       // run max(n_old - n_new, 0) times
       (exit: d3.Selection<SVGRectElement, DataPoint, SVGGElement, {}>) => {
         exit
@@ -197,11 +202,11 @@ function clearChanges() {
 </script>
 
 <template>
-  <svg id="composition-d3-bar" :style="svgStyle"></svg>
+  <svg id="d3-bar-composition" :style="svgStyle"></svg>
 </template>
 
 <style scoped>
-#composition-d3-bar {
+#d3-bar-composition {
   height: calc(100% - 2px);
   width: 100%;
   border: 1px solid black;

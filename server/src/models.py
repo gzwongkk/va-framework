@@ -24,8 +24,9 @@ class Model:
         try:
             with open(os.path.join(self.DATA_FOLDER, PATH_DATA_FILE_DATASAURUS), 'r') as file:
                 self.datasaurus = json.load(file)
-        except:
+        except Exception as e:
             print(f'could not open: {PATH_DATA_FILE_DATASAURUS}')
+            print(os.path.join(self.DATA_FOLDER, PATH_DATA_FILE_DATASAURUS))
 
     """
     to_json is frequently used in outputing pandas DataFrame

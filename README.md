@@ -8,8 +8,8 @@ The framework comes with demos to show typical frontend-backend communication, a
 <!-- ![image](https://github.com/gzwongkk/framework-flask-vue/blob/master/README.png) -->
 
 ## Todo List
-- [x] A configuration of UI components with *Ant Design Vue*.
-- [x] A migration guide of the *Composition API* [demo](./client/src/components/CompositionD3Bar.vue) and the *Options API* [demo](./client/src/components/OptionsD3Bar.vue) with *D3.js*.
+- [x] A simple demo of bundling the UI components into separate component with *Ant Design Vue* and *Composition API* for higher reusability and readability.
+- [x] A migration guide of the *Composition API* [demo](./client/src/components/D3BarComposition.vue) and the *Options API* [demo](./client/src/components/D3BarOptions.vue) with *D3.js*.
 - [x] A simple comprehensive MVVM [demo](./client/src/components/Datasaurus.vue) of *Composition API*, *TypeScript*, *Pinia*, and *v-for SVG rendering*.
 - [x] A quick legend component [demo](./client/src/components/DatasaurusLegend.vue) with simple props and emits in *Composition API*, *TypeScript*, and *v-for SVG rendering*.
 - [x] An API deisgn [demo](./client/src/stores/netflix.ts) for data transmission (Controller in MVC) with *Pinia*, *Axios*, and *Flask*.
