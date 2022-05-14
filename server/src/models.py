@@ -4,8 +4,8 @@ from syslog import syslog
 import pandas as pd
 
 PATH_DATA_FOLDER = '../data/'
-PATH_DATA_FILE_DATASAURUS = 'DatasaurusDozen.csv'
 PATH_DATA_FILE_NETFLIX = 'netflix_titles.csv'
+PATH_DATA_FILE_DATASAURUS = 'DatasaurusDozen.json'
 
 
 class Model:
@@ -25,15 +25,15 @@ class Model:
             with open(os.path.join(self.DATA_FOLDER, PATH_DATA_FILE_DATASAURUS), 'r') as file:
                 self.datasaurus = json.load(file)
         except Exception as e:
-            print(f'could not open: {PATH_DATA_FILE_DATASAURUS}')
-            print(os.path.join(self.DATA_FOLDER, PATH_DATA_FILE_DATASAURUS))
+            print(f'could not open: {PATH_DATA_FILE_DATASAURUS} because {e}')
 
     """
     to_json is frequently used in outputing pandas DataFrame
     The 'records' and 'index' orients are typically helpful in rendering front-end components.
     force_ascii is set to False to support diverse character sets.
-    """    
+    """
     # The following methods all target netflix dataset
+
     def get_data(self):
         return self.data.to_json(orient='records', force_ascii=False)
 
