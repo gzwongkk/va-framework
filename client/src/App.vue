@@ -4,7 +4,7 @@ import Datasaurus from './components/Datasaurus.vue';
 import D3BarButton from './components/D3BarButton.vue';
 import D3BarComposistion from './components/D3BarComposition.vue';
 import D3BarOptions from './components/D3BarOptions.vue';
-import Netflix from './components/Netflix.vue';
+import NetflixTable from './components/NetflixTable.vue';
 
 const isComposition = ref<boolean>(false);
 const playAnimation = ref<boolean>(true);
@@ -13,7 +13,7 @@ const playAnimation = ref<boolean>(true);
 <template>
   <a-row>
     <a-col :span="6">
-      <a-row class="row">
+      <a-row class="row-half">
         <D3BarButton
           v-model:is-composition="isComposition"
           v-model:play-animation="playAnimation"
@@ -25,12 +25,14 @@ const playAnimation = ref<boolean>(true);
         />
         <D3BarOptions v-if="!isComposition" :playAnimation="playAnimation" />
       </a-row>
-      <a-row class="row">
+      <a-row class="row-half">
         <Datasaurus id="datasaurus_container" />
       </a-row>
     </a-col>
     <a-col :span="18">
-      <Netflix />
+      <a-row class="row-one-third">
+        <NetflixTable />
+      </a-row>
     </a-col>
   </a-row>
 </template>
@@ -47,8 +49,12 @@ const playAnimation = ref<boolean>(true);
   border: 1px solid #455a64;
 }
 
-.row {
+.row-half {
   height: 450px;
+}
+
+.row-one-third {
+  height: 300px;
 }
 
 .noselect {

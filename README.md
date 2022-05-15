@@ -8,15 +8,16 @@ The framework comes with demos to show typical frontend-backend communication, a
 <!-- ![image](https://github.com/gzwongkk/framework-flask-vue/blob/master/README.png) -->
 
 ## Todo List
-- [x] A simple demo of bundling the UI components into separate component with *Ant Design Vue* and *Composition API* for higher reusability and readability.
+- [x] A simple demo of bundling the UI components into separate components, such as [buttons](./client/src/components/D3BarButton.vue), with *Ant Design Vue* and *Composition API* for higher reusability and readability.
 - [x] A migration guide of the *Composition API* [demo](./client/src/components/D3BarComposition.vue) and the *Options API* [demo](./client/src/components/D3BarOptions.vue) with *D3.js*.
 - [x] A simple comprehensive MVVM [demo](./client/src/components/Datasaurus.vue) of *Composition API*, *TypeScript*, *Pinia*, and *v-for SVG rendering*.
 - [x] A quick legend component [demo](./client/src/components/DatasaurusLegend.vue) with simple props and emits in *Composition API*, *TypeScript*, and *v-for SVG rendering*.
 - [x] An API deisgn [demo](./client/src/stores/netflix.ts) for data transmission (Controller in MVC) with *Pinia*, *Axios*, and *Flask*.
 - [ ] A basic ad-hoc data processing pipeline [demo](./server/src/models.py) (Model in MVC) with *Pandas*.
+- [x] A table with tags and tooltips [demo](./client/src/components/NetflixTable.vue) to provide detailed data.
 - [ ] A basic layout for visual analytics system
 
-
+NetflixTable.vue
 ### Planned implementation list
 - [ ] [Composition and Configuration Patterns in Multiple-View Visualizations](https://ieeexplore.ieee.org/abstract/document/9222323)
 - [ ] [The periphery plots](https://gotz.web.unc.edu/research-project/periphery-plots/)

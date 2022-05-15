@@ -9,12 +9,15 @@ declare module '@vue/runtime-core' {
     ACol: typeof import('ant-design-vue/es')['Col']
     ARow: typeof import('ant-design-vue/es')['Row']
     ASwitch: typeof import('ant-design-vue/es')['Switch']
+    ATable: typeof import('ant-design-vue/es')['Table']
+    ATag: typeof import('ant-design-vue/es')['Tag']
+    ATooltip: typeof import('ant-design-vue/es')['Tooltip']
     D3BarButton: typeof import('./src/components/D3BarButton.vue')['default']
     D3BarComposition: typeof import('./src/components/D3BarComposition.vue')['default']
     D3BarOptions: typeof import('./src/components/D3BarOptions.vue')['default']
     Datasaurus: typeof import('./src/components/Datasaurus.vue')['default']
     DatasaurusLegend: typeof import('./src/components/DatasaurusLegend.vue')['default']
-    Netflix: typeof import('./src/components/Netflix.vue')['default']
+    NetflixTable: typeof import('./src/components/NetflixTable.vue')['default']
     SVGdefs: typeof import('./src/components/SVGdefs.vue')['default']
   }
 }
