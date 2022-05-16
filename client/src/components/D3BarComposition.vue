@@ -6,7 +6,7 @@
  * This example initializes the static components and set up a timer for changes.
  */
 import * as d3 from 'd3';
-import { defineProps, computed, watch, onMounted, onBeforeUnmount } from 'vue';
+import { computed, watch, onMounted, onBeforeUnmount } from 'vue';
 import { useConfig } from '../stores/vaConfig';
 
 interface DataPoint {

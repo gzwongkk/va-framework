@@ -13,6 +13,9 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 const DATA_SERVER_URL = 'http://127.0.0.1:5000';
 
+/**
+ * We define interface or types for Typescript to enhance type inference and readability.
+ */
 export interface Show {
   show_id: string;
   type: string;
@@ -28,16 +31,29 @@ export interface Show {
   description: string;
 }
 
+export interface DistCount {
+  dtype: string;
+  count: number;
+}
+
 export const useNetflixStore = defineStore({
   id: 'netflix',
   state: () => {
     return {
       // from API
-      netflix: [],
+      netflixDist: [] as DistCount[],
       billBurr: [] as Show[],
+
+      displayMax: 10 as number,
     };
   },
-  getters: {},
+  getters: {
+    netflixDistTopList(): DistCount[] {
+      return this.netflixDist
+        .sort((a: DistCount, b: DistCount) => b.count - a.count)
+        .slice(0, this.displayMax);
+    },
+  },
   actions: {
     // generic HTTP GET request
     get(api: string, callback: Function) {
@@ -66,7 +82,6 @@ export const useNetflixStore = defineStore({
       try {
         let response = await axios.get(`${DATA_SERVER_URL}/get_bill_burr`);
         this.billBurr = response.data;
-        console.log(this.billBurr);
       } catch (error) {
         alert(error);
       }
@@ -74,6 +89,21 @@ export const useNetflixStore = defineStore({
     get_bill_burr() {
       this.get('get_bill_burr', (data: Show[]) => {
         this.billBurr = data;
+      });
+    },
+    get_year_distribution() {
+      this.get('get_year_distribution', (data: DistCount[]) => {
+        this.netflixDist = data;
+      });
+    },
+    get_country_distribution() {
+      this.get('get_country_distribution', (data: DistCount[]) => {
+        this.netflixDist = data;
+      });
+    },
+    get_genre_distribution() {
+      this.get('get_genre_distribution', (data: DistCount[]) => {
+        this.netflixDist = data;
       });
     },
   },

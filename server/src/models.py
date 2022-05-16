@@ -40,22 +40,22 @@ class Model:
     def get_data_by_type(self, dtype):
         return self.data.query('type == @dtype').to_json(orient='records', force_ascii=False)
 
-    def get_distribution(self, dtype, outName):
+    def get_distribution(self, dtype):
         if dtype not in self.data:
             return ''
         _dist = self.data[[dtype, 'show_id']].groupby(
             dtype).count().reset_index()
-        _dist.columns = [outName, 'count']
+        _dist.columns = ['dtype', 'count']
         return _dist.to_json(orient='records', force_ascii=False)
 
-    def get_unique_distribution(self, dtype, outName):
+    def get_unique_distribution(self, dtype):
         if dtype not in self.data:
             return ''
         _dist = self.data[[dtype, 'show_id']].copy()
         _dist[dtype] = _dist[dtype].str.split(', ')
         _dist = _dist.explode(dtype).reset_index(drop=True)
         _dist = _dist.groupby(dtype).count().reset_index()
-        _dist.columns = [outName, 'count']
+        _dist.columns = ['dtype', 'count']
         return _dist.to_json(orient='records', force_ascii=False)
 
     def get_items_by_actor(self, actor):

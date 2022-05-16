@@ -5,6 +5,8 @@ import D3BarButton from './components/D3BarButton.vue';
 import D3BarComposistion from './components/D3BarComposition.vue';
 import D3BarOptions from './components/D3BarOptions.vue';
 import NetflixTable from './components/NetflixTable.vue';
+import NetflixGraph from './components/NetflixGraph.vue';
+import NetflixDistBar from './components/NetflixDistBar.vue';
 
 const isComposition = ref<boolean>(false);
 const playAnimation = ref<boolean>(true);
@@ -30,8 +32,16 @@ const playAnimation = ref<boolean>(true);
       </a-row>
     </a-col>
     <a-col :span="18">
+      <a-row class="row-two-third">
+        <NetflixGraph />
+      </a-row>
       <a-row class="row-one-third">
-        <NetflixTable />
+        <a-col :span="12">
+          <NetflixDistBar />
+        </a-col>
+        <a-col :span="12">
+          <NetflixTable />
+        </a-col>
       </a-row>
     </a-col>
   </a-row>
@@ -49,12 +59,16 @@ const playAnimation = ref<boolean>(true);
   border: 1px solid #455a64;
 }
 
+.row-one-third {
+  height: 300px;
+}
+
 .row-half {
   height: 450px;
 }
 
-.row-one-third {
-  height: 300px;
+.row-two-third {
+  height: 600px;
 }
 
 .noselect {

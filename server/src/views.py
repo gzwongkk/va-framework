@@ -27,19 +27,19 @@ def _get_tv_shows():
 
 @app.route('/get_year_distribution')
 def _get_year_distribution():
-    return model.get_distribution('release_year', 'year')
+    return model.get_distribution('release_year')
 
 @app.route('/get_director_distribution')
 def _get_director_distribution():
-    return model.get_distribution('director', 'director')
+    return model.get_distribution('director')
 
 @app.route('/get_country_distribution')
 def _get_country_distribution():
-    return model.get_unique_distribution('country', 'country')
+    return model.get_unique_distribution('country')
 
-@app.route('/get_category_distribution')
-def _get_category_distribution():
-    return model.get_unique_distribution('listed_in', 'category')
+@app.route('/get_genre_distribution')
+def _get_genre_distribution():
+    return model.get_unique_distribution('listed_in')
 
 @app.route('/get_bill_burr')
 def _get_items_by_actor():

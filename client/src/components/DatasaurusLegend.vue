@@ -8,7 +8,7 @@
  */
 
 import { useConfig } from '../stores/vaConfig';
-import { defineProps, defineEmits, ref } from 'vue';
+import { ref } from 'vue';
 
 // acquire color from pinia store
 const vaConfig = useConfig();

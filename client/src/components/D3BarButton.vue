@@ -4,7 +4,7 @@
  * To reduce duplicated definitions of variables, v-model bindings are used here.
  * Read more at https://vuejs.org/guide/components/events.html#usage-with-v-model
  */
-import { defineEmits, defineProps, watch } from 'vue';
+import { watch } from 'vue';
 import { PlayCircleOutlined, PauseCircleOutlined } from '@ant-design/icons-vue';
 
 const props = defineProps({

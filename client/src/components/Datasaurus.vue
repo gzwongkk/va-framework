@@ -37,7 +37,7 @@ onMounted(() => {
   // initialize svg
   // optain the bounding box's attributes dynamically
   const svg: d3.Selection<SVGSVGElement, {}, HTMLElement, {}> =
-    d3.select('#datasaurus_svg');
+    d3.select('#datasaurus-svg');
   const svgNode = svg.node() as SVGSVGElement;
   const rect: DOMRect = svgNode.getBoundingClientRect(); // optain the bounding box's attributes dynamically
   height.value = rect.height / 2;
@@ -47,7 +47,7 @@ onMounted(() => {
 
 <template>
   <div class="datasaurus">
-    <div class="button_group">
+    <div class="button-group">
       <a-button
         class="button"
         v-for="name in nameList"
@@ -58,7 +58,7 @@ onMounted(() => {
         {{ name }}
       </a-button>
     </div>
-    <svg id="datasaurus_svg">
+    <svg id="datasaurus-svg">
       <!-- datapoint refers to the "class" in CSS, and g refers to the tag in DOM -->
       <TransitionGroup name="datapoint" tag="g">
         <circle
@@ -89,7 +89,7 @@ onMounted(() => {
   border: 1px solid black;
 }
 
-.button_group {
+.button-group {
   padding: 5px;
   display: flex;
   flex: 0 1 auto;
@@ -100,7 +100,7 @@ onMounted(() => {
   flex: auto;
 }
 
-#datasaurus_svg {
+#datasaurus-svg {
   flex: 1 0 auto;
   /* border: 1px solid black; */
 }

@@ -17,8 +17,10 @@ declare module '@vue/runtime-core' {
     D3BarOptions: typeof import('./src/components/D3BarOptions.vue')['default']
     Datasaurus: typeof import('./src/components/Datasaurus.vue')['default']
     DatasaurusLegend: typeof import('./src/components/DatasaurusLegend.vue')['default']
+    NetflixDistBar: typeof import('./src/components/NetflixDistBar.vue')['default']
+    NetflixGraph: typeof import('./src/components/NetflixGraph.vue')['default']
     NetflixTable: typeof import('./src/components/NetflixTable.vue')['default']
-    SVGdefs: typeof import('./src/components/SVGdefs.vue')['default']
+    SvgDefs: typeof import('./src/components/SvgDefs.vue')['default']
   }
 }
 
