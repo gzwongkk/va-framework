@@ -2,3 +2,4 @@ Flask
 Flask-Cors
 requests
 pandas
+sklearn

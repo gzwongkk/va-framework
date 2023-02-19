@@ -17,8 +17,10 @@ const playAnimation = ref<boolean>(true);
     <a-col :span="6">
       <a-row class="row-half">
         <D3BarButton
-          v-model:is-composition="isComposition"
-          v-model:play-animation="playAnimation"
+          :is-composition="isComposition"
+          :play-animation="playAnimation"
+          @update:is-composition="isComposition = $event"
+          @update:play-animation="playAnimation = $event"
         />
         <!-- The following implements the same bar chart in different API to serve as a migration guide -->
         <D3BarComposistion

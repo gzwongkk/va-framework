@@ -4,7 +4,7 @@
  * To reduce duplicated definitions of variables, v-model bindings are used here.
  * Read more at https://vuejs.org/guide/components/events.html#usage-with-v-model
  */
-import { watch } from 'vue';
+import { ref, watch } from 'vue';
 import { PlayCircleOutlined, PauseCircleOutlined } from '@ant-design/icons-vue';
 
 const props = defineProps({
@@ -12,10 +12,12 @@ const props = defineProps({
   playAnimation: Boolean,
 });
 const emit = defineEmits(['update:isComposition', 'update:playAnimation']);
+const isComposition = ref<boolean>(props.isComposition);
 watch(
   () => props.isComposition,
-  (bool: boolean) => emit('update:isComposition', bool)
+  (bool: boolean) => (isComposition.value = bool)
 );
+watch(isComposition, (bool: boolean) => emit('update:isComposition', bool));
 </script>
 
 <template>

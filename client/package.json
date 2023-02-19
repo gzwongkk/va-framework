@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@types/d3": "^7.1.0",
-    "ant-design-vue": "^3.2.0",
+    "ant-design-vue": "^3.2.15",
     "axios": "^0.26.1",
     "d3": "^7.4.4",
     "pinia": "^2.0.13",

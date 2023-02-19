@@ -3,10 +3,11 @@
  * This component demonstrates combining d3.js and v-for rendering together to draw a bar chart.
  * It also implements a simple tooltip to reflect actual data records.
  */
-import { watch, ref, computed, onMounted } from 'vue';
+import { watch, ref, onMounted } from 'vue';
 import * as d3 from 'd3';
 import { useConfig } from '../stores/vaConfig';
 import { useNetflixStore, type DistCount } from '../stores/netflix';
+import NetflixDistBarTooltip from './NetflixDistBarTooltip.vue';
 
 // acquire color from pinia store
 const vaConfig = useConfig();
@@ -98,37 +99,13 @@ function renderScale() {
   barChartAxisY.call(yAxis);
 }
 
-/**
- * The tooltip is drawn with v-show.
- */
 // root variables that define tooltip container
-const tooltipMoustY = ref<number>(0);
+const tooltipMouseY = ref<number>(0);
 const tooltipDisplay = ref<DistCount | null>(null);
 function showTooltip(event: MouseEvent, data: DistCount) {
-  tooltipMoustY.value = event.offsetY;
+  tooltipMouseY.value = event.offsetY;
   tooltipDisplay.value = data;
 }
-
-// computed variables from the root variables
-const tooltipMessage = computed(() => {
-  if (tooltipDisplay.value === null) return '';
-  return tooltipDisplay.value.dtype + ': ' + tooltipDisplay.value.count;
-});
-const tooltipWidth = computed(() => {
-  return tooltipMessage.value.length * 8; // 16 is the font size
-});
-const tooltipHeight = ref<number>(24);
-const tooltipX = computed(() => {
-  if (tooltipDisplay.value === null) return 0;
-  const _x = x.value(tooltipDisplay.value.dtype.toString()) as number;
-  const rightHandSide = _x + x.value.bandwidth() + 2;
-  return rightHandSide + tooltipWidth.value > svgWidth.value
-    ? _x - 2 - tooltipWidth.value
-    : rightHandSide;
-});
-const tooltipY = computed(() => {
-  return tooltipMoustY.value - tooltipHeight.value / 2;
-});
 </script>
 
 <template>
@@ -159,25 +136,14 @@ const tooltipY = computed(() => {
         @mouseleave="tooltipDisplay = null"
       />
       <!-- tooltip -->
-      <g v-show="tooltipDisplay !== null">
-        <rect
-          :x="tooltipX"
-          :y="tooltipY"
-          :rx="10"
-          :ry="10"
-          :height="tooltipHeight"
-          :width="tooltipWidth"
-          :fill="vaConfig.color.com_dark"
-          :fill-opacity="0.95"
-        />
-        <text
-          :x="tooltipX + tooltipWidth / 16"
-          :y="tooltipMoustY + 4"
-          fill="white"
-        >
-          {{ tooltipMessage }}
-        </text>
-      </g>
+      <NetflixDistBarTooltip
+        v-show="tooltipDisplay !== null"
+        :svg-width="svgWidth"
+        :tooltip-mouse-y="tooltipMouseY"
+        :tooltip-display="tooltipDisplay"
+        :x="x"
+        :y="y"
+      />
     </svg>
   </div>
 </template>
