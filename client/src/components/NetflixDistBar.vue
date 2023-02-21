@@ -7,11 +7,14 @@ import { watch, ref, onMounted } from 'vue';
 import * as d3 from 'd3';
 import { useConfig } from '../stores/vaConfig';
 import { useNetflixStore, type DistCount } from '../stores/netflix';
+import { useStaticNetflixStore } from '../stores/netflixStatic';
 import NetflixDistBarTooltip from './NetflixDistBarTooltip.vue';
 
 // acquire color from pinia store
 const vaConfig = useConfig();
-const netflixStore = useNetflixStore(); // define data source
+const netflixStore = vaConfig.hasServer
+  ? useNetflixStore()
+  : useStaticNetflixStore(); // define data source according to the environment
 
 // button configurations
 const buttonList = [

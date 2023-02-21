@@ -4,20 +4,18 @@
  * To reduce duplicated definitions of variables, v-model bindings are used here.
  * Read more at https://vuejs.org/guide/components/events.html#usage-with-v-model
  */
-import { ref, watch } from 'vue';
 import { PlayCircleOutlined, PauseCircleOutlined } from '@ant-design/icons-vue';
+import { useConfig } from '../stores/vaConfig';
+import { storeToRefs } from 'pinia';
 
 const props = defineProps({
-  isComposition: Boolean,
   playAnimation: Boolean,
 });
-const emit = defineEmits(['update:isComposition', 'update:playAnimation']);
-const isComposition = ref<boolean>(props.isComposition);
-watch(
-  () => props.isComposition,
-  (bool: boolean) => (isComposition.value = bool)
-);
-watch(isComposition, (bool: boolean) => emit('update:isComposition', bool));
+
+const vaConfig = useConfig(); // define data source
+const { isComposition } = storeToRefs(vaConfig); // obtain reactive variables
+
+const emit = defineEmits(['update:playAnimation']);
 </script>
 
 <template>

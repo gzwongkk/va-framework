@@ -7,7 +7,7 @@ const colorScale = d3
   .interpolator(d3.interpolateBrBG);
 
 // http://veli.ee/colorpedia/?c=4E6F72
-const color: { [id: string] : string } = {
+const color: { [id: string]: string } = {
   /**
    * triad colors that complement each other
    */
@@ -85,6 +85,8 @@ export const useConfig = defineStore('va', {
     return {
       language: true, // true for English, false for Chinese
       color: color,
+      isComposition: false,
+      hasServer: false,
     };
   },
 });

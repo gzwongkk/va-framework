@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useConfig } from './stores/vaConfig';
 import Datasaurus from './components/Datasaurus.vue';
 import D3BarButton from './components/D3BarButton.vue';
 import D3BarComposistion from './components/D3BarComposition.vue';
@@ -8,7 +10,9 @@ import NetflixTable from './components/NetflixTable.vue';
 import NetflixGraph from './components/NetflixGraph.vue';
 import NetflixDistBar from './components/NetflixDistBar.vue';
 
-const isComposition = ref<boolean>(false);
+const vaConfig = useConfig(); // define data source
+const { isComposition } = storeToRefs(vaConfig); // obtain reactive variables
+
 const playAnimation = ref<boolean>(true);
 </script>
 
@@ -17,9 +21,7 @@ const playAnimation = ref<boolean>(true);
     <a-col :span="6">
       <a-row class="row-half">
         <D3BarButton
-          :is-composition="isComposition"
           :play-animation="playAnimation"
-          @update:is-composition="isComposition = $event"
           @update:play-animation="playAnimation = $event"
         />
         <!-- The following implements the same bar chart in different API to serve as a migration guide -->

@@ -3,10 +3,16 @@
  * This component implements a-tables for fast data demo.
  * It uses tags and tooltips to provide essential UI components for many VA systems.
  */
+import { useConfig } from '../stores/vaConfig';
 import { useNetflixStore } from '../stores/netflix';
+import { useStaticNetflixStore } from '../stores/netflixStatic';
 import { storeToRefs } from 'pinia';
 
-const netflixStore = useNetflixStore(); // define data source
+const vaConfig = useConfig(); // define colors
+const netflixStore = vaConfig.hasServer
+  ? useNetflixStore()
+  : useStaticNetflixStore(); // define data source according to the environment
+
 const { netflixDist } = storeToRefs(netflixStore); // obtain reactive variables
 </script>
 

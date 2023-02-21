@@ -7,10 +7,13 @@ import { ref, onMounted } from 'vue';
 import type { TableColumnsType } from 'ant-design-vue';
 import { useConfig } from '../stores/vaConfig';
 import { useNetflixStore, type Show } from '../stores/netflix';
+import { useStaticNetflixStore } from '../stores/netflixStatic';
 import { storeToRefs } from 'pinia';
 
 const vaConfig = useConfig(); // define colors
-const netflixStore = useNetflixStore(); // define data source
+const netflixStore = vaConfig.hasServer
+  ? useNetflixStore()
+  : useStaticNetflixStore(); // define data source according to the environment
 const { billBurr } = storeToRefs(netflixStore); // obtain reactive variables
 
 const tableScrollHeight = ref<number>(240); // 300 total height - 60 from header

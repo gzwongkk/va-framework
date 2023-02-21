@@ -20,7 +20,7 @@ export interface Show {
   show_id: string;
   type: string;
   title: string;
-  director: string;
+  director: string | null;
   cast: string;
   country: string;
   date_added: string;
@@ -32,7 +32,7 @@ export interface Show {
 }
 
 export interface DistCount {
-  dtype: string;
+  dtype: string | number;
   count: number;
 }
 
