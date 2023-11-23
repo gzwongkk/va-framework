@@ -172,7 +172,7 @@ function renderBarChart() {
       // run max(n_old - n_new, 0) times
       (exit: d3.Selection<SVGRectElement, DataPoint, SVGGElement, {}>) => {
         exit
-          .attr('fill', vaConfig.color.type_two)
+          .attr('fill', 'url(#stripe_type_two)')
           .transition()
           .duration(refreshAnimationSpeed)
           .ease(d3.easeExpIn)

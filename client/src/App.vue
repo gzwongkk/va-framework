@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useConfig } from './stores/vaConfig';
+import SVGdefs from './components/SvgDefs.vue';
 import Datasaurus from './components/Datasaurus.vue';
 import D3BarButton from './components/D3BarButton.vue';
 import D3BarComposistion from './components/D3BarComposition.vue';
@@ -17,6 +18,8 @@ const playAnimation = ref<boolean>(true);
 </script>
 
 <template>
+  <!-- The definitions of global svg patterns -->
+  <SVGdefs />
   <a-row>
     <a-col :span="6">
       <a-row class="row-half">

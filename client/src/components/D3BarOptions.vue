@@ -165,7 +165,7 @@ export default defineComponent({
           // run max(n_old - n_new, 0) times
           (exit: d3.Selection<SVGRectElement, DataPoint, SVGGElement, {}>) => {
             exit
-              .attr('fill', this.color.type_two)
+              .attr('fill', 'url(#stripe_type_two)')
               .transition()
               .duration(this.refreshAnimationSpeed)
               .ease(d3.easeExpIn)

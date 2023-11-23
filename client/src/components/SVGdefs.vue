@@ -9,12 +9,6 @@ const strips = [
   { id: 'stripe_type_three', stroke: color.type_three_light },
 ];
 
-const strips_wide = [
-  { id: 'stripe_type_one_wide', stroke: color.type_one_light },
-  { id: 'stripe_type_two_wide', stroke: color.type_two_light },
-  { id: 'stripe_type_three_wide', stroke: color.type_three_light },
-];
-
 const markers = [
   { id: 'arrow', fill: color.type_one_dark, size: 20 },
   { id: 'type_oneAnchor', fill: color.type_one_dark, size: 3 },
@@ -30,24 +24,12 @@ const markers = [
         v-for="strip in strips"
         :key="strip.id"
         :id="strip.id"
-        width="5"
-        height="5"
+        width="10"
+        height="10"
         patternUnits="userSpaceOnUse"
         patternTransform="rotate(45)"
       >
-        <line :stroke="strip.stroke" stroke-width="4" y2="20" />
-      </pattern>
-
-      <pattern
-        v-for="strip in strips_wide"
-        :key="strip.id"
-        :id="strip.id"
-        width="18"
-        height="18"
-        patternUnits="userSpaceOnUse"
-        patternTransform="rotate(45)"
-      >
-        <line :stroke="strip.stroke" stroke-width="4" y2="20" />
+        <line :stroke="strip.stroke" stroke-width="10" y2="20" />
       </pattern>
 
       <marker
