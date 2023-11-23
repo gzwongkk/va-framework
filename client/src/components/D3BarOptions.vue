@@ -183,7 +183,7 @@ export default defineComponent({
     },
     setChanges() {
       let _this = this;
-      this.refreshInterval = setInterval(() => {
+      this.refreshInterval = window.setInterval(() => {
         _this.generateData();
         _this.renderBarChart();
       }, this.refreshSpeed);

@@ -190,7 +190,7 @@ function renderBarChart() {
 }
 
 function setChanges() {
-  refreshInterval = setInterval(() => {
+  refreshInterval = window.setInterval(() => {
     generateData();
     renderBarChart();
   }, refreshSpeed);

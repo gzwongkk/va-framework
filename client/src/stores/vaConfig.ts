@@ -68,10 +68,11 @@ const color: { [id: string]: string } = {
   neg: '#d8b365',
   neg_dark: '#bf812d',
   neg_darker: '#8c510a',
-  // pos_dark: colorScale(0.8),
-  // pos: colorScale(0.6),
-  // neg: colorScale(-0.6),
-  // neg_dark: colorScale(-0.8),
+  // instead of defining by Hex codes, we can use d3 color scales
+  pos_dark_cs: colorScale(0.8),
+  pos_cs: colorScale(0.6),
+  neg_cs: colorScale(-0.6),
+  neg_dark_cs: colorScale(-0.8),
 
   // '#7FFFF4', '#FF7F8A', Aquamarine, Geraldine
   // '#6DDBD2', '#D86C75', Viking, Japonica

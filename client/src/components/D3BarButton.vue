@@ -8,7 +8,7 @@ import { PlayCircleOutlined, PauseCircleOutlined } from '@ant-design/icons-vue';
 import { useConfig } from '../stores/vaConfig';
 import { storeToRefs } from 'pinia';
 
-const props = defineProps({
+defineProps({
   playAnimation: Boolean,
 });
 
