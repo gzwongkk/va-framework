@@ -13,6 +13,9 @@ export default defineConfig({
       resolvers: [AntDesignVueResolver({importStyle: true, resolveIcons: true})],
     }),
   ],
+  server: {
+    port: 3000,
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
