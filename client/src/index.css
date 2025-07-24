@@ -1,0 +1,33 @@
+#app {
+  font-family: 'Open Sans', Helvetica, 'PingFang SC', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  width: 1600px;
+  height: 900px;
+  margin: 10px;
+  border: 1px solid #455a64;
+}
+
+.row-one-third {
+  height: 300px;
+}
+
+.row-half {
+  height: 450px;
+}
+
+.row-two-third {
+  height: 600px;
+}
+
+.noselect {
+  user-select: none;
+}
+
+.button_group {
+  position: absolute;
+  margin-top: 5px;
+  right: 10px;
+  margin-right: 5px;
+}
