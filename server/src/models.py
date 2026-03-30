@@ -1,6 +1,6 @@
-import os
 import json
-from syslog import syslog
+import os
+
 import pandas as pd
 
 PATH_DATA_FOLDER = '../data/'
@@ -27,43 +27,41 @@ class Model:
         except Exception as e:
             print(f'could not open: {PATH_DATA_FILE_DATASAURUS} because {e}')
 
-    """
-    to_json is frequently used in outputing pandas DataFrame
-    The 'records' and 'index' orients are typically helpful in rendering front-end components.
-    force_ascii is set to False to support diverse character sets.
-    """
+    def _to_records(self, frame):
+        return json.loads(frame.to_json(orient='records', force_ascii=False))
+
     # The following methods all target netflix dataset
 
     def get_data(self):
-        return self.data.to_json(orient='records', force_ascii=False)
+        return self._to_records(self.data)
 
     def get_data_by_type(self, dtype):
-        return self.data.query('type == @dtype').to_json(orient='records', force_ascii=False)
+        return self._to_records(self.data.query('type == @dtype'))
 
     def get_distribution(self, dtype):
         if dtype not in self.data:
-            return ''
+            return []
         _dist = self.data[[dtype, 'show_id']].groupby(
             dtype).count().reset_index()
         _dist.columns = ['dtype', 'count']
-        return _dist.to_json(orient='records', force_ascii=False)
+        return self._to_records(_dist)
 
     def get_unique_distribution(self, dtype):
         if dtype not in self.data:
-            return ''
+            return []
         _dist = self.data[[dtype, 'show_id']].copy()
         _dist[dtype] = _dist[dtype].str.split(', ')
         _dist = _dist.explode(dtype).reset_index(drop=True)
         _dist = _dist.groupby(dtype).count().reset_index()
         _dist.columns = ['dtype', 'count']
-        return _dist.to_json(orient='records', force_ascii=False)
+        return self._to_records(_dist)
 
     def get_items_by_actor(self, actor):
-        return self.data[self.data.cast.str.contains(actor, na=False)].to_json(orient='records', force_ascii=False)
+        return self._to_records(self.data[self.data.cast.str.contains(actor, na=False)])
 
     def get_items_by_year(self, post_data):
         print(post_data)
         if 'year' not in post_data:
-            return ""
+            return []
         year = post_data['year']
-        return self.data.query('release_year == @year').to_json(orient='records', force_ascii=False)
+        return self._to_records(self.data.query('release_year == @year'))

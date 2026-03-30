@@ -1,12 +1,17 @@
-# -*- coding: UTF-8 -*-
-from flask import Flask
-from flask_cors import CORS
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-app = Flask(__name__)
-app.config['DEBUG'] = True
-app.config['TEMPLATES_AUTO_RELOAD'] = True
+app = FastAPI(
+    title='va-framework API',
+    description='Backend services for the Visual Analytics framework demos.',
+)
 
-# flask_cors: Cross Origin Resource Sharing (CORS), making cross-origin AJAX possible.
-CORS(app)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['http://localhost:3000', 'http://127.0.0.1:3000'],
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*'],
+)
 
-from src import views
+from src import views  # noqa: E402,F401

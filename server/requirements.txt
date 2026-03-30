@@ -1,5 +1,3 @@
-Flask
-Flask-Cors
-requests
-pandas
-sklearn
+fastapi==0.135.2
+pandas==3.0.1
+uvicorn[standard]==0.42.0

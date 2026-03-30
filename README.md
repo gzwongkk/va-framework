@@ -3,8 +3,8 @@
 This framework is designed for jump-starting a single-page Visual Analytics(VA) system.
 While many VA systems are designed for specific applications, their workflow often share similar data processing methods.
 Several demos show typical frontend-backend communication, view components' interaction, and visualization rendering.
-VA-framework employs Python's _Flask_ server as the backend and Javascript's _Vue_ as the frontend.
-It facilitates fast development with hot-reloads (_Vite_), UI components (_Ant design_), state management (_Pinia_), and type inference (_TypeScript_).
+VA-framework employs Python's _FastAPI_ server as the backend and Javascript's _Vue_ as the frontend.
+It facilitates fast development with hot-reloads (_Vite_), typed APIs and OpenAPI docs (_FastAPI_), UI components (_Ant design_), state management (_Pinia_), and type inference (_TypeScript_).
 
 <!-- ![image](https://github.com/gzwongkk/framework-flask-vue/blob/master/README.png) -->
 
@@ -30,12 +30,13 @@ It facilitates fast development with hot-reloads (_Vite_), UI components (_Ant d
 
 ### Server
 
-The server employs Flask to provide web services.
+The server employs FastAPI to provide web services.
 All codes below should be run under the "server" folder.
 For the first time user, please install the requirements in the _requirements.txt_.
-This project is built using Python 3.8.5.
-Using a version below 3.7 might encounter errors regarding the use of f-string.
+This project now targets Python 3.12.
+Using a version below 3.11 will fail because the pinned dependencies require newer Python releases.
 The default address for the server is <http://127.0.0.1:5000/>.
+Interactive API docs are available at <http://127.0.0.1:5000/docs>.
 
 ```
 python run.py
