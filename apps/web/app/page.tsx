@@ -1,3 +1,4 @@
+import { DataFoundationShell } from '@/components/workspace/data-foundation-shell';
 import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@va/ui';
 import { baselineWorkspaceLayout, type CoordinateSpace } from '@va/view-system';
 import { AppWindow, Network, Orbit, PanelsTopLeft } from 'lucide-react';
@@ -107,6 +108,8 @@ export default function HomePage() {
             </div>
           </CardContent>
         </Card>
+
+        <DataFoundationShell />
       </section>
     </main>
   );

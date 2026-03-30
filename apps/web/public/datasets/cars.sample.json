@@ -1,0 +1,110 @@
+[
+  {
+    "name": "chevrolet chevelle malibu",
+    "miles_per_gallon": 18.0,
+    "cylinders": 8,
+    "horsepower": 130,
+    "weight_in_lbs": 3504,
+    "year": "1970-01-01",
+    "origin": "USA"
+  },
+  {
+    "name": "buick skylark 320",
+    "miles_per_gallon": 15.0,
+    "cylinders": 8,
+    "horsepower": 165,
+    "weight_in_lbs": 3693,
+    "year": "1970-01-01",
+    "origin": "USA"
+  },
+  {
+    "name": "plymouth satellite",
+    "miles_per_gallon": 18.0,
+    "cylinders": 8,
+    "horsepower": 150,
+    "weight_in_lbs": 3436,
+    "year": "1970-01-01",
+    "origin": "USA"
+  },
+  {
+    "name": "amc rebel sst",
+    "miles_per_gallon": 16.0,
+    "cylinders": 8,
+    "horsepower": 150,
+    "weight_in_lbs": 3433,
+    "year": "1970-01-01",
+    "origin": "USA"
+  },
+  {
+    "name": "toyota corona mark ii",
+    "miles_per_gallon": 24.0,
+    "cylinders": 4,
+    "horsepower": 95,
+    "weight_in_lbs": 2372,
+    "year": "1970-01-01",
+    "origin": "Japan"
+  },
+  {
+    "name": "volkswagen 1131 deluxe sedan",
+    "miles_per_gallon": 26.0,
+    "cylinders": 4,
+    "horsepower": 46,
+    "weight_in_lbs": 1835,
+    "year": "1970-01-01",
+    "origin": "Europe"
+  },
+  {
+    "name": "peugeot 504",
+    "miles_per_gallon": 25.0,
+    "cylinders": 4,
+    "horsepower": 87,
+    "weight_in_lbs": 2672,
+    "year": "1971-01-01",
+    "origin": "Europe"
+  },
+  {
+    "name": "datsun pl510",
+    "miles_per_gallon": 27.0,
+    "cylinders": 4,
+    "horsepower": 88,
+    "weight_in_lbs": 2130,
+    "year": "1971-01-01",
+    "origin": "Japan"
+  },
+  {
+    "name": "ford pinto",
+    "miles_per_gallon": 25.0,
+    "cylinders": 4,
+    "horsepower": 88,
+    "weight_in_lbs": 2046,
+    "year": "1971-01-01",
+    "origin": "USA"
+  },
+  {
+    "name": "chevrolet vega 2300",
+    "miles_per_gallon": 28.0,
+    "cylinders": 4,
+    "horsepower": 90,
+    "weight_in_lbs": 2264,
+    "year": "1971-01-01",
+    "origin": "USA"
+  },
+  {
+    "name": "saab 99e",
+    "miles_per_gallon": 25.0,
+    "cylinders": 4,
+    "horsepower": 95,
+    "weight_in_lbs": 2778,
+    "year": "1971-01-01",
+    "origin": "Europe"
+  },
+  {
+    "name": "mercury capri 2000",
+    "miles_per_gallon": 23.0,
+    "cylinders": 4,
+    "horsepower": 86,
+    "weight_in_lbs": 2220,
+    "year": "1971-01-01",
+    "origin": "Europe"
+  }
+]

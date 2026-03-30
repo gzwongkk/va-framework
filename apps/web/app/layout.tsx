@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Inter, Space_Grotesk } from 'next/font/google';
 import type { ReactNode } from 'react';
 
+import { Providers } from '@/components/providers';
+
 import './globals.css';
 
 const bodyFont = Inter({
@@ -27,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${bodyFont.variable} ${displayFont.variable}`}>
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

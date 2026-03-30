@@ -1,0 +1,74 @@
+[
+  {
+    "id": "eq-1",
+    "time": "2024-01-01T03:12:00Z",
+    "latitude": 34.0522,
+    "longitude": -118.2437,
+    "magnitude": 2.9,
+    "depth_km": 8.4,
+    "place": "Los Angeles Basin"
+  },
+  {
+    "id": "eq-2",
+    "time": "2024-01-04T11:35:00Z",
+    "latitude": 37.7749,
+    "longitude": -122.4194,
+    "magnitude": 3.1,
+    "depth_km": 10.1,
+    "place": "San Francisco Bay"
+  },
+  {
+    "id": "eq-3",
+    "time": "2024-01-07T18:28:00Z",
+    "latitude": 61.2181,
+    "longitude": -149.9003,
+    "magnitude": 4.2,
+    "depth_km": 32.4,
+    "place": "Anchorage"
+  },
+  {
+    "id": "eq-4",
+    "time": "2024-01-12T05:03:00Z",
+    "latitude": 19.4326,
+    "longitude": -99.1332,
+    "magnitude": 4.7,
+    "depth_km": 53.1,
+    "place": "Central Mexico"
+  },
+  {
+    "id": "eq-5",
+    "time": "2024-01-18T09:54:00Z",
+    "latitude": 35.6895,
+    "longitude": 139.6917,
+    "magnitude": 5.1,
+    "depth_km": 42.8,
+    "place": "Tokyo region"
+  },
+  {
+    "id": "eq-6",
+    "time": "2024-01-22T14:11:00Z",
+    "latitude": -36.8485,
+    "longitude": 174.7633,
+    "magnitude": 4.0,
+    "depth_km": 18.9,
+    "place": "Auckland offshore"
+  },
+  {
+    "id": "eq-7",
+    "time": "2024-01-25T20:46:00Z",
+    "latitude": 64.1466,
+    "longitude": -21.9426,
+    "magnitude": 3.8,
+    "depth_km": 6.7,
+    "place": "Reykjavik volcanic zone"
+  },
+  {
+    "id": "eq-8",
+    "time": "2024-01-29T01:19:00Z",
+    "latitude": -33.8688,
+    "longitude": 151.2093,
+    "magnitude": 2.6,
+    "depth_km": 11.2,
+    "place": "Sydney shelf"
+  }
+]
