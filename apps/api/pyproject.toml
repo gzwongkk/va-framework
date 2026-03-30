@@ -1,0 +1,20 @@
+[project]
+name = "va-framework-api"
+version = "2.0.0"
+description = "FastAPI backend for the v2 visual analytics framework."
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi==0.135.2",
+  "uvicorn[standard]==0.42.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest==8.4.2",
+  "httpx==0.28.1",
+]
+
+[tool.pytest.ini_options]
+addopts = "-p no:cacheprovider"
+pythonpath = ["."]
+testpaths = ["tests"]

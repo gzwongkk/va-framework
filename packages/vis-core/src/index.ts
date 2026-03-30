@@ -1,0 +1,12 @@
+export const corePalette = {
+  canvas: '#07131c',
+  accent: '#33b2c9',
+  accentMuted: '#89d6df',
+  paper: '#f4f8fb',
+};
+
+export type ChartFrame = {
+  width: number;
+  height: number;
+  margin: { top: number; right: number; bottom: number; left: number };
+};

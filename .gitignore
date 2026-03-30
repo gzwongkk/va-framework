@@ -1,4 +1,7 @@
 node_modules
+.next
+.turbo
+.pnpm-store
 .DS_Store
 dist
 dist-ssr
@@ -7,6 +10,8 @@ coverage
 
 /cypress/videos/
 /cypress/screenshots/
+/playwright-report/
+/test-results/
 
 # local env files
 .env.local
