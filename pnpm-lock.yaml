@@ -133,17 +133,26 @@ importers:
         version: 6.0.2
 
   packages/view-system:
-    dependencies:
-      '@va/contracts':
-        specifier: workspace:*
-        version: link:../contracts
     devDependencies:
       typescript:
         specifier: 6.0.2
         version: 6.0.2
 
   packages/vis-core:
+    dependencies:
+      react:
+        specifier: 19.2.4
+        version: 19.2.4
+      react-dom:
+        specifier: 19.2.4
+        version: 19.2.4(react@19.2.4)
     devDependencies:
+      '@types/react':
+        specifier: 19.2.14
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: 19.2.3
+        version: 19.2.3(@types/react@19.2.14)
       typescript:
         specifier: 6.0.2
         version: 6.0.2

@@ -10,3 +10,5 @@ export type ChartFrame = {
   height: number;
   margin: { top: number; right: number; bottom: number; left: number };
 };
+
+export * from './scatter-plot';
