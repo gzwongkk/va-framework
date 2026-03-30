@@ -30,6 +30,7 @@ export type CarsSummary = {
 };
 
 export const CARS_DATASET_ID = 'cars';
+export const CARS_ORIGIN_OPTIONS = ['Europe', 'Japan', 'USA'] as const;
 export const DEFAULT_CARS_CONTROLS: CarsViewControls = {
   executionMode: 'local',
   limit: 10,

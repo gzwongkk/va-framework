@@ -1,4 +1,4 @@
-import { DataFoundationShell } from '@/components/workspace/data-foundation-shell';
+import { CarsSingleViewShell } from '@/components/workspace/cars-single-view-shell';
 import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@va/ui';
 import { baselineWorkspaceLayout, type CoordinateSpace } from '@va/view-system';
 import { AppWindow, Network, Orbit, PanelsTopLeft } from 'lucide-react';
@@ -6,7 +6,7 @@ import { AppWindow, Network, Orbit, PanelsTopLeft } from 'lucide-react';
 const releases = [
   { version: 'v2.0.0', label: 'React shell', detail: 'Workspace scaffold, monorepo layout, and starter contracts.' },
   { version: 'v2.1.0', label: 'Data foundation', detail: 'Query contracts, coordinated state, and workerized compute.' },
-  { version: 'v2.2.0', label: 'Single-view analytics', detail: 'One polished analysis view built on the new data model.' },
+  { version: 'v2.2.0', label: 'Single-view analytics', detail: 'A focused cars workflow with one chart, one control surface, and one detail panel.' },
 ];
 
 const pillars = [
@@ -35,18 +35,18 @@ export default function HomePage() {
           <Card className="border-white/10 bg-slate-950/55 text-white shadow-2xl shadow-cyan-950/30 backdrop-blur">
             <CardHeader className="gap-6">
               <div className="flex flex-wrap items-center gap-3">
-                <Badge variant="secondary">v2.0.0 baseline</Badge>
+                <Badge variant="secondary">v2.2.0 in progress</Badge>
                 <Badge variant="outline">Next.js App Router</Badge>
                 <Badge variant="outline">FastAPI</Badge>
               </div>
               <div className="max-w-3xl space-y-4">
                 <CardTitle className="font-[family-name:var(--font-display)] text-4xl tracking-tight md:text-6xl">
-                  Visual analytics is moving into a React-native workspace.
+                  The React rewrite now has its first real analytic workflow.
                 </CardTitle>
                 <CardDescription className="max-w-2xl text-base text-slate-300 md:text-lg">
-                  This release resets the framework onto a modular monorepo, a React application shell,
-                  and a shared view contract that will carry single-view, graph, spatio-temporal, and
-                  later spatial experiences.
+                  The framework has moved past the data-foundation milestone and into a concrete single-view
+                  experience. The cars analysis below is the first proof that the shared contracts, execution
+                  planner, and coordination store can drive a usable analytic surface.
                 </CardDescription>
               </div>
             </CardHeader>
@@ -89,12 +89,12 @@ export default function HomePage() {
           <CardHeader>
             <div className="flex items-center gap-3">
               <AppWindow className="size-5 text-cyan-700" />
-              <CardTitle className="font-[family-name:var(--font-display)] text-2xl">Blank shell, ready to extend</CardTitle>
+              <CardTitle className="font-[family-name:var(--font-display)] text-2xl">Single-view release focus</CardTitle>
             </div>
             <CardDescription className="max-w-3xl text-slate-600">
-              The old Vue dashboard has been replaced on this branch by a neutral analysis shell. The next
-              milestone will establish the data contracts, local/remote execution planning, and coordinated state
-              that all later views will depend on.
+              v2.2.0 keeps the product intentionally constrained: one main chart, one coordinated table,
+              one detail panel, and one control rail. That gives the next graph, spatio-temporal, and multi-view
+              milestones a concrete interaction pattern to evolve from instead of another abstract scaffold.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -109,7 +109,7 @@ export default function HomePage() {
           </CardContent>
         </Card>
 
-        <DataFoundationShell />
+        <CarsSingleViewShell />
       </section>
     </main>
   );
