@@ -7,7 +7,7 @@
     "build": "next build --webpack",
     "dev": "next dev --turbopack",
     "lint": "eslint .",
-    "test": "vitest run --passWithNoTests",
+    "test": "vitest run --pool threads --passWithNoTests",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
