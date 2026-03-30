@@ -1,53 +1,61 @@
-# va-framework v1.0.0
+# va-framework v2
 
-This framework is designed for jump-starting a single-page Visual Analytics(VA) system.
-While many VA systems are designed for specific applications, their workflow often share similar data processing methods.
-Several demos show typical frontend-backend communication, view components' interaction, and visualization rendering.
-VA-framework employs Python's _FastAPI_ server as the backend and Javascript's _Vue_ as the frontend.
-It facilitates fast development with hot-reloads (_Vite_), typed APIs and OpenAPI docs (_FastAPI_), UI components (_Ant design_), state management (_Pinia_), and type inference (_TypeScript_).
-Version 1.0.0 is the stable baseline release of this FastAPI + Vue framework.
+`main` now tracks the React-native rewrite of the visual analytics framework.
+The stable Vue release is preserved on the `release/v1.0.0` branch.
 
-<!-- ![image](https://github.com/gzwongkk/framework-flask-vue/blob/master/README.png) -->
+## Current milestone
 
-## Featured demo list
-### Beginner/Migration guide
-- [x] A side-by-side comparison of the [Composition API demo](./client/src/components/D3BarComposition.vue) and the [Options API demo](./client/src/components/D3BarOptions.vue) with *D3.js*.
-- [x] A simple comprehensive [MVVM demo](./client/src/components/Datasaurus.vue) of *Composition API*, *TypeScript*, *Pinia*, and *v-for SVG rendering*.
-- [x] A quick [legend component demo](./client/src/components/DatasaurusLegend.vue) with simple props and emits in *Composition API*, *TypeScript*, and *v-for SVG rendering*.
-### MVC demo
-- [x] An API design [demo](./client/src/stores/netflix.ts) for data transmission (Controller in MVC) with *Pinia*, *Axios*, and *FastAPI*.
-- [x] A simple demo of bundling the UI components into separate components, such as [buttons](./client/src/components/D3BarButton.vue) and [tooltip](./client/src/components/NetflixDistBarTooltip.vue), with *Ant Design Vue* and *Composition API* for higher reusability and readability.
-- [x] A table with tags and tooltips [demo](./client/src/components/NetflixTable.vue) to provide detailed data.
-- [x] A basic layout for visual analytics system
+`v2.1.0` is the current release candidate. It establishes the data foundation for the React rewrite:
 
-## Run the framework
+- shared dataset, query, and job contracts in `packages/contracts`
+- a coordination model in `packages/view-system`
+- FastAPI dataset registry, query execution, and background job endpoints
+- TanStack Query for incoming async data and job polling
+- Zustand for persisted coordination state
+- DuckDB-Wasm + Comlink for local preview execution in the browser worker
 
-### Server
+The release ladder remains:
 
-The server employs FastAPI to provide web services.
-All codes below should be run under the "server" folder.
-For the first time user, please install the requirements in the _requirements.txt_.
-This project now targets Python 3.12.
-Using a version below 3.11 will fail because the pinned dependencies require newer Python releases.
-The default address for the server is <http://127.0.0.1:5000/>.
-Interactive API docs are available at <http://127.0.0.1:5000/docs>.
+- `v2.0.0`: React shell and monorepo baseline
+- `v2.1.0`: data foundation with shared contracts, coordinated state, and local/remote execution
+- `v2.2.0`: single-view analytics
+- `v2.3.0`: graph data
+- `v2.4.0`: spatio-temporal data
+- `v2.5.0`: multi-view coordination
+- `v2.6.0`: spatial-ready foundations
 
+## Workspace layout
+
+- `apps/web`: Next.js App Router frontend
+- `apps/api`: FastAPI backend
+- `packages/ui`: shadcn-style component baseline
+- `packages/contracts`: shared TypeScript contracts and schemas
+- `packages/view-system`: workspace and view contracts
+- `packages/vis-core`: visualization primitives
+
+## Development
+
+This repo now uses `pnpm` workspaces for the JavaScript side and Python 3.11+ for the API.
+
+```bash
+pnpm install
+pnpm dev:web
+pnpm dev:api
 ```
-python run.py
+
+Or run both app processes together:
+
+```bash
+pnpm dev
 ```
 
-### Client
+The frontend runs at <http://localhost:3000>.
+The backend health endpoint is available at <http://127.0.0.1:8000/api/health>.
 
-The client services are provided by Vue 3 and many other packages.
-All codes below should be run under the "client" folder.
-The packages are handled by npm, and specified in the package.json.
-For the first time user, please install the dependencies in the _package.json_ with `npm install`.
-The client is served at <http://localhost:3000/>.
+## v2.1.0 endpoints
 
-```
-# Compiles for development
-$ npm run dev
-
-# Compiles for production
-$ npm run build
-```
+- `GET /api/health`
+- `GET /api/datasets`
+- `POST /api/query`
+- `POST /api/jobs`
+- `GET /api/jobs/{id}`

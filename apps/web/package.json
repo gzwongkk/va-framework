@@ -1,0 +1,41 @@
+{
+  "name": "@va/web",
+  "private": true,
+  "version": "2.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "next build --webpack",
+    "dev": "next dev --turbopack",
+    "lint": "eslint .",
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@duckdb/duckdb-wasm": "1.33.1-dev20.0",
+    "@tanstack/react-query": "5.95.2",
+    "@tanstack/react-table": "8.21.3",
+    "@tanstack/react-virtual": "3.13.23",
+    "@va/contracts": "workspace:*",
+    "@va/ui": "workspace:*",
+    "@va/view-system": "workspace:*",
+    "@va/vis-core": "workspace:*",
+    "apache-arrow": "21.1.0",
+    "comlink": "4.4.2",
+    "lucide-react": "1.7.0",
+    "next": "16.2.1",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "zustand": "5.0.12"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.2.2",
+    "@types/node": "25.5.0",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "eslint": "9.39.1",
+    "eslint-config-next": "16.2.1",
+    "tailwindcss": "4.2.2",
+    "typescript": "6.0.2",
+    "vitest": "4.1.2"
+  }
+}
