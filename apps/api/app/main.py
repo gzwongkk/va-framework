@@ -1,10 +1,15 @@
-from fastapi import FastAPI
+from fastapi import BackgroundTasks, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+
+from .jobs import create_job, get_job, run_job
+from .models import JobRecord, JobRequest, QueryResult, QuerySpec
+from .query_engine import execute_query
+from .registry import DatasetDescriptor, list_datasets
 
 app = FastAPI(
     title='va-framework API',
-    version='2.0.0',
-    description='Baseline API shell for the React-native visual analytics framework.',
+    version='2.1.0',
+    description='Data foundation API for the React-native visual analytics framework.',
 )
 
 app.add_middleware(
@@ -20,6 +25,31 @@ app.add_middleware(
 def get_health() -> dict[str, str]:
     return {
         'status': 'ok',
-        'version': '2.0.0',
-        'stage': 'baseline',
+        'version': '2.1.0',
+        'stage': 'data-foundation',
     }
+
+
+@app.get('/api/datasets', response_model=list[DatasetDescriptor])
+def get_datasets() -> list[DatasetDescriptor]:
+    return list_datasets()
+
+
+@app.post('/api/query', response_model=QueryResult)
+def post_query(query: QuerySpec) -> QueryResult:
+    return execute_query(query)
+
+
+@app.post('/api/jobs', response_model=JobRecord)
+def post_job(request: JobRequest, background_tasks: BackgroundTasks) -> JobRecord:
+    record = create_job(request)
+    background_tasks.add_task(run_job, record.id)
+    return record
+
+
+@app.get('/api/jobs/{job_id}', response_model=JobRecord)
+def get_job_status(job_id: str) -> JobRecord:
+    record = get_job(job_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail='Job not found')
+    return record

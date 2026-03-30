@@ -1,0 +1,21 @@
+{
+  "nodes": [
+    { "id": "Valjean", "group": 1 },
+    { "id": "Javert", "group": 1 },
+    { "id": "Fantine", "group": 2 },
+    { "id": "Cosette", "group": 2 },
+    { "id": "Marius", "group": 3 },
+    { "id": "Enjolras", "group": 3 },
+    { "id": "Thenardier", "group": 4 },
+    { "id": "Eponine", "group": 4 }
+  ],
+  "links": [
+    { "source": "Valjean", "target": "Javert", "value": 6 },
+    { "source": "Valjean", "target": "Fantine", "value": 4 },
+    { "source": "Valjean", "target": "Cosette", "value": 7 },
+    { "source": "Cosette", "target": "Marius", "value": 5 },
+    { "source": "Marius", "target": "Enjolras", "value": 5 },
+    { "source": "Thenardier", "target": "Eponine", "value": 3 },
+    { "source": "Thenardier", "target": "Valjean", "value": 2 }
+  ]
+}
