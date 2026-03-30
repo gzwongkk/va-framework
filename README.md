@@ -1,10 +1,11 @@
-# va-framework
+# va-framework v1.0.0
 
 This framework is designed for jump-starting a single-page Visual Analytics(VA) system.
 While many VA systems are designed for specific applications, their workflow often share similar data processing methods.
 Several demos show typical frontend-backend communication, view components' interaction, and visualization rendering.
 VA-framework employs Python's _FastAPI_ server as the backend and Javascript's _Vue_ as the frontend.
 It facilitates fast development with hot-reloads (_Vite_), typed APIs and OpenAPI docs (_FastAPI_), UI components (_Ant design_), state management (_Pinia_), and type inference (_TypeScript_).
+Version 1.0.0 is the stable baseline release of this FastAPI + Vue framework.
 
 <!-- ![image](https://github.com/gzwongkk/framework-flask-vue/blob/master/README.png) -->
 
@@ -14,17 +15,10 @@ It facilitates fast development with hot-reloads (_Vite_), typed APIs and OpenAP
 - [x] A simple comprehensive [MVVM demo](./client/src/components/Datasaurus.vue) of *Composition API*, *TypeScript*, *Pinia*, and *v-for SVG rendering*.
 - [x] A quick [legend component demo](./client/src/components/DatasaurusLegend.vue) with simple props and emits in *Composition API*, *TypeScript*, and *v-for SVG rendering*.
 ### MVC demo
-- [ ] A basic ad-hoc data processing pipeline [demo](./server/src/models.py) (Model in MVC) with *Pandas*.
-- [x] An API deisgn [demo](./client/src/stores/netflix.ts) for data transmission (Controller in MVC) with *Pinia*, *Axios*, and *Flask*.
+- [x] An API design [demo](./client/src/stores/netflix.ts) for data transmission (Controller in MVC) with *Pinia*, *Axios*, and *FastAPI*.
 - [x] A simple demo of bundling the UI components into separate components, such as [buttons](./client/src/components/D3BarButton.vue) and [tooltip](./client/src/components/NetflixDistBarTooltip.vue), with *Ant Design Vue* and *Composition API* for higher reusability and readability.
 - [x] A table with tags and tooltips [demo](./client/src/components/NetflixTable.vue) to provide detailed data.
 - [x] A basic layout for visual analytics system
-
-### Planned implementation list
-- [ ] Graph data
-- [ ] Spatio-temporal data
-- [ ] [Composition and Configuration Patterns in Multiple-View Visualizations](https://ieeexplore.ieee.org/abstract/document/9222323)
-- [ ] [The periphery plots](https://gotz.web.unc.edu/research-project/periphery-plots/)
 
 ## Run the framework
 
