@@ -7,8 +7,11 @@ export type D3ScatterPlotProps = {
   data: ScatterPlotDatum[];
   emptyLabel?: string;
   height?: number;
+  legend?: Array<{ color: string; label: string }>;
   onSelect?: (id: string) => void;
   selectedId?: string;
+  statusLabel?: string;
+  statusTone?: 'accent' | 'neutral' | 'warning' | 'error';
   subtitle?: string;
   title: string;
   xLabel: string;
@@ -30,12 +33,28 @@ function getDomain(values: number[]) {
   return [minimum - padding, maximum + padding] as const;
 }
 
+function getStatusClasses(tone: D3ScatterPlotProps['statusTone']) {
+  switch (tone) {
+    case 'accent':
+      return 'border-cyan-200/80 bg-cyan-50 text-cyan-800';
+    case 'warning':
+      return 'border-amber-200/80 bg-amber-50 text-amber-800';
+    case 'error':
+      return 'border-rose-200/80 bg-rose-50 text-rose-800';
+    default:
+      return 'border-slate-300/80 bg-white/85 text-slate-700';
+  }
+}
+
 export function D3ScatterPlot({
   data,
   emptyLabel = 'No rows match the current controls.',
   height = DEFAULT_HEIGHT,
+  legend,
   onSelect,
   selectedId,
+  statusLabel,
+  statusTone = 'neutral',
   subtitle,
   title,
   xLabel,
@@ -88,18 +107,18 @@ export function D3ScatterPlot({
       .attr('transform', `translate(0, ${DEFAULT_MARGIN.top + innerHeight})`)
       .call(xAxis)
       .call((axisGroup: Selection<SVGGElement, unknown, null, undefined>) => {
-        axisGroup.select('.domain').attr('stroke', '#94a3b8');
-        axisGroup.selectAll('line').attr('stroke', '#cbd5e1');
-        axisGroup.selectAll('text').attr('fill', '#64748b').attr('font-size', 11);
+        axisGroup.select('.domain').attr('stroke', '#8fa3b4');
+        axisGroup.selectAll('line').attr('stroke', '#c7d3dd');
+        axisGroup.selectAll('text').attr('fill', '#526172').attr('font-size', 11);
       });
 
     select(yAxisRef.current)
       .attr('transform', `translate(${DEFAULT_MARGIN.left}, 0)`)
       .call(yAxis)
       .call((axisGroup: Selection<SVGGElement, unknown, null, undefined>) => {
-        axisGroup.select('.domain').attr('stroke', '#94a3b8');
-        axisGroup.selectAll('line').attr('stroke', '#e2e8f0');
-        axisGroup.selectAll('text').attr('fill', '#64748b').attr('font-size', 11);
+        axisGroup.select('.domain').attr('stroke', '#8fa3b4');
+        axisGroup.selectAll('line').attr('stroke', '#d7e0e7');
+        axisGroup.selectAll('text').attr('fill', '#526172').attr('font-size', 11);
       });
   }, [data.length, innerHeight, xScale, yScale]);
 
@@ -108,26 +127,53 @@ export function D3ScatterPlot({
   return (
     <div
       ref={containerRef}
-      className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm shadow-slate-950/5"
+      className="overflow-hidden rounded-[26px] border border-slate-300/80 bg-[linear-gradient(180deg,_rgba(255,255,255,0.96)_0%,_rgba(246,250,252,0.98)_100%)] shadow-[0_20px_60px_-42px_rgba(15,23,42,0.45)]"
     >
-      <div className="flex flex-wrap items-end justify-between gap-4 border-b border-slate-100 px-5 py-4">
-        <div>
-          <p className="font-[family-name:var(--font-display)] text-xl text-slate-950">{title}</p>
-          <p className="mt-1 text-sm text-slate-500">{subtitle ?? `${data.length} records in the current result set`}</p>
+      <div className="border-b border-slate-300/75 bg-[linear-gradient(180deg,_rgba(249,251,252,0.98)_0%,_rgba(244,248,250,0.95)_100%)] px-5 py-4">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.26em] text-slate-500">Analysis stage</p>
+            <p className="mt-2 font-[family-name:var(--font-display)] text-[1.45rem] text-slate-950">{title}</p>
+            <p className="mt-2 text-sm text-slate-600">
+              {subtitle ?? `${data.length} records in the current result set`}
+            </p>
+          </div>
+          <div
+            className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium ${getStatusClasses(statusTone)}`}
+          >
+            <span
+              className={`size-2 rounded-full ${
+                statusTone === 'warning'
+                  ? 'animate-pulse bg-amber-500'
+                  : statusTone === 'error'
+                    ? 'bg-rose-500'
+                    : statusTone === 'accent'
+                      ? 'bg-cyan-600'
+                      : 'bg-slate-400'
+              }`}
+            />
+            {statusLabel ?? 'Preview ready'}
+          </div>
         </div>
-        <div className="rounded-full bg-slate-100 px-3 py-1 text-xs uppercase tracking-[0.18em] text-slate-500">
-          D3 Scatterplot
+        <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-slate-500">
+          <span className="font-semibold uppercase tracking-[0.2em] text-slate-500">D3 scatterplot</span>
+          {legend?.map((entry) => (
+            <span key={entry.label} className="inline-flex items-center gap-2">
+              <span className="size-2 rounded-full" style={{ backgroundColor: entry.color }} />
+              {entry.label}
+            </span>
+          ))}
         </div>
       </div>
 
       {data.length === 0 ? (
-        <div className="flex h-[420px] items-center justify-center bg-slate-50 px-6 text-sm text-slate-500">
+        <div className="flex h-[420px] items-center justify-center bg-slate-50/80 px-6 text-sm text-slate-500">
           {emptyLabel}
         </div>
       ) : (
         <svg
           aria-label={title}
-          className="block w-full bg-[linear-gradient(180deg,_rgba(244,248,251,0.95)_0%,_rgba(255,255,255,1)_100%)]"
+          className="block w-full bg-[linear-gradient(180deg,_rgba(251,253,254,0.98)_0%,_rgba(246,250,252,0.98)_100%)]"
           role="img"
           viewBox={`0 0 ${width} ${height}`}
         >
@@ -141,8 +187,8 @@ export function D3ScatterPlot({
                   x2={DEFAULT_MARGIN.left + innerWidth}
                   y1={yPosition}
                   y2={yPosition}
-                  stroke="#e2e8f0"
-                  strokeDasharray="4 8"
+                  stroke="#d7e0e7"
+                  strokeDasharray="5 8"
                 />
               );
             })}
@@ -160,8 +206,8 @@ export function D3ScatterPlot({
                     <circle
                       cx={xScale(point.x)}
                       cy={yScale(point.y)}
-                      fill={`${point.color}22`}
-                      r={18}
+                      fill={`${point.color}20`}
+                      r={20}
                     />
                   ) : null}
                   <circle
@@ -172,8 +218,8 @@ export function D3ScatterPlot({
                     fill={point.color}
                     onClick={() => onSelect?.(point.id)}
                     onMouseDown={(event) => event.preventDefault()}
-                    r={isSelected ? 8 : 6}
-                    stroke={isSelected ? '#0f172a' : 'white'}
+                    r={isSelected ? 8 : 6.2}
+                    stroke={isSelected ? '#102331' : 'rgba(255,255,255,0.96)'}
                     strokeWidth={isSelected ? 2.5 : 1.5}
                   >
                     <title>{point.subtitle ? `${point.label} - ${point.subtitle}` : point.label}</title>
@@ -184,7 +230,7 @@ export function D3ScatterPlot({
           </g>
 
           <text
-            fill="#64748b"
+            fill="#526172"
             fontSize="12"
             textAnchor="middle"
             x={DEFAULT_MARGIN.left + innerWidth / 2}
@@ -193,7 +239,7 @@ export function D3ScatterPlot({
             {xLabel}
           </text>
           <text
-            fill="#64748b"
+            fill="#526172"
             fontSize="12"
             textAnchor="middle"
             transform={`translate(18 ${DEFAULT_MARGIN.top + innerHeight / 2}) rotate(-90)`}

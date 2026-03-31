@@ -4,6 +4,7 @@ import {
   buildCarsQuery,
   CARS_DATASET_ID,
   CARS_ORIGIN_OPTIONS,
+  CARS_ORIGIN_PALETTE,
   DEFAULT_CARS_CONTROLS,
   findSelectedCar,
   normalizeCarsRows,
@@ -13,19 +14,21 @@ import {
 import { useCoordinationStore } from '@/lib/coordination-store';
 import { planExecution } from '@/lib/data/execution-planner';
 import { useDatasetCatalog, useLocalPreviewQuery, useRemotePreviewQuery } from '@/lib/data/query-hooks';
-import { Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@va/ui';
+import { Badge, Button, Separator, cn } from '@va/ui';
 import { D3ScatterPlot } from '@va/vis-core';
-import { ChartNoAxesCombined, Cpu, Filter, SlidersHorizontal } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
-
-function formatCompactNumber(value: number) {
-  return Intl.NumberFormat('en-US', {
-    maximumFractionDigits: value >= 1000 ? 0 : 1,
-    notation: value >= 1000 ? 'compact' : 'standard',
-  }).format(value);
-}
+import { ChartNoAxesCombined, Cpu, Database, Filter, SlidersHorizontal } from 'lucide-react';
+import { type KeyboardEvent, useEffect, useMemo, useState } from 'react';
 
 const VIEW_ID = 'single-view-plot';
+const EXECUTION_MODES = ['local', 'remote'] as const;
+const ORIGIN_LEGEND = CARS_ORIGIN_OPTIONS.map((origin) => ({
+  color: CARS_ORIGIN_PALETTE[origin],
+  label: origin,
+}));
+const COMPACT_NUMBER_FORMATTER = new Intl.NumberFormat('en-US', {
+  maximumFractionDigits: 0,
+  notation: 'compact',
+});
 
 function formatMetric(value: number, suffix: string) {
   if (!Number.isFinite(value) || value === 0) {
@@ -42,6 +45,127 @@ const TABLE_COLUMNS = [
   { key: 'milesPerGallon', label: 'MPG' },
   { key: 'weightInLbs', label: 'Weight (lbs)' },
 ] as const;
+
+type ConsoleStatusTone = 'accent' | 'neutral' | 'warning' | 'error';
+
+type SectionHeaderProps = {
+  title: string;
+  detail: string;
+  icon: typeof Cpu;
+};
+
+type MetricReadoutProps = {
+  label: string;
+  value: string;
+  tone?: 'accent' | 'neutral';
+};
+
+type RangeFieldProps = {
+  label: string;
+  max: number;
+  min: number;
+  onChange: (value: number) => void;
+  step?: number;
+  value: number;
+  valueLabel: string;
+};
+
+function formatCompactNumber(value: number) {
+  if (!Number.isFinite(value) || value === 0) {
+    return '0';
+  }
+
+  if (Math.abs(value) >= 1_000) {
+    return COMPACT_NUMBER_FORMATTER.format(value);
+  }
+
+  return value.toFixed(0);
+}
+
+function getStatusClasses(tone: ConsoleStatusTone) {
+  switch (tone) {
+    case 'accent':
+      return 'border-cyan-200/80 bg-cyan-50 text-cyan-800';
+    case 'warning':
+      return 'border-amber-200/80 bg-amber-50 text-amber-800';
+    case 'error':
+      return 'border-rose-200/80 bg-rose-50 text-rose-800';
+    default:
+      return 'border-slate-300/80 bg-white/80 text-slate-700';
+  }
+}
+
+function handleSelectableRowKeyDown(
+  event: KeyboardEvent<HTMLTableRowElement>,
+  onSelect: () => void,
+) {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    onSelect();
+  }
+}
+
+function SectionHeader({ detail, icon: Icon, title }: SectionHeaderProps) {
+  return (
+    <div className="flex items-start justify-between gap-3">
+      <div>
+        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-slate-500">
+          {title}
+        </p>
+        <p className="mt-2 text-sm leading-6 text-slate-600">{detail}</p>
+      </div>
+      <div className="rounded-xl border border-slate-300/80 bg-white/75 p-2.5 text-slate-600 shadow-sm shadow-slate-950/5">
+        <Icon className="size-4" />
+      </div>
+    </div>
+  );
+}
+
+function MetricReadout({ label, tone = 'neutral', value }: MetricReadoutProps) {
+  return (
+    <div
+      className={cn(
+        'grid gap-1 rounded-2xl border px-3 py-3',
+        tone === 'accent'
+          ? 'border-cyan-200/80 bg-cyan-50/70'
+          : 'border-slate-300/75 bg-white/72',
+      )}
+    >
+      <p className="text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-slate-500">{label}</p>
+      <p className="font-[family-name:var(--font-display)] text-[1.45rem] leading-none text-slate-950">{value}</p>
+    </div>
+  );
+}
+
+function RangeField({
+  label,
+  max,
+  min,
+  onChange,
+  step,
+  value,
+  valueLabel,
+}: RangeFieldProps) {
+  return (
+    <label className="grid gap-3">
+      <div className="flex items-center justify-between gap-3">
+        <span className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-slate-500">
+          {label}
+        </span>
+        <span className="text-sm font-medium text-slate-800">{valueLabel}</span>
+      </div>
+      <input
+        className="w-full"
+        max={max}
+        min={min}
+        onChange={(event) => onChange(Number(event.target.value))}
+        step={step}
+        type="range"
+        value={value}
+      />
+    </label>
+  );
+}
 
 export function CarsSingleViewShell() {
   const datasetCatalog = useDatasetCatalog();
@@ -112,192 +236,262 @@ export function CarsSingleViewShell() {
 
   const hasData = rows.length > 0;
   const initialLoading = datasetCatalog.isLoading || (activePreview.isLoading && !activePreview.data);
+  const isRefreshing = activePreview.isFetching && Boolean(activePreview.data);
   const activeError = activePreview.error;
+  const originSummary = originFilters.length > 0 ? originFilters.join(' / ') : 'All origins';
+
+  const consoleStatus = useMemo(() => {
+    if (activeError) {
+      return {
+        detail: activeError.message,
+        label: 'Query unavailable',
+        tone: 'error' as const,
+      };
+    }
+
+    if (initialLoading) {
+      return {
+        detail: 'Priming the dataset registry and preview cache.',
+        label: 'Loading workspace',
+        tone: 'neutral' as const,
+      };
+    }
+
+    if (isRefreshing) {
+      return {
+        detail: 'Controls update in the background while the current result stays visible.',
+        label: 'Refreshing preview',
+        tone: 'warning' as const,
+      };
+    }
+
+    return {
+      detail: executionPlan?.reasons[0] ?? 'Preview ready for interaction.',
+      label: resolvedExecutionMode === 'local' ? 'Browser runtime active' : 'API runtime active',
+      tone: 'accent' as const,
+    };
+  }, [activeError, executionPlan, initialLoading, isRefreshing, resolvedExecutionMode]);
+
+  const selectRecord = (id: string) =>
+    setSelection(VIEW_ID, {
+      entity: 'cars',
+      ids: [id],
+      sourceViewId: VIEW_ID,
+    });
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(31,160,189,0.18),_transparent_35%),linear-gradient(180deg,_#07131c_0%,_#081927_55%,_#eef5f8_55%,_#eef5f8_100%)] text-slate-100 xl:flex xl:items-center xl:justify-center xl:overflow-hidden">
-      <div className="mx-auto grid min-h-screen max-w-[1600px] gap-6 px-4 py-4 lg:px-6 xl:h-[calc(100vh-2rem)] xl:min-h-0 xl:w-full xl:max-w-[calc((100vh-2rem)*1.6)] xl:grid-cols-[280px_minmax(0,1fr)_320px]">
-        <Card className="border-white/10 bg-slate-950/70 text-white shadow-2xl shadow-cyan-950/20 backdrop-blur xl:h-full xl:min-h-0">
-          <CardHeader>
-            <div className="space-y-3">
-              <div className="flex flex-wrap gap-2">
-                <Badge variant="secondary">Cars analytics</Badge>
-                <Badge variant="outline">{resolvedExecutionMode}</Badge>
-                <Badge variant="outline">{hasData ? `${summary.count} rows` : 'no rows'}</Badge>
-              </div>
-              <div>
-                <CardTitle className="font-[family-name:var(--font-display)] text-3xl text-white">
-                  Single-view workspace
-                </CardTitle>
-                <CardDescription className="mt-2 text-slate-300">
-                  One chart, one query, one coordinated detail surface.
-                </CardDescription>
-              </div>
+    <main className="min-h-screen text-slate-900 xl:flex xl:items-center xl:justify-center xl:overflow-hidden">
+      <div className="mx-auto flex min-h-screen w-full max-w-[1700px] px-4 py-4 lg:px-6 xl:items-center xl:justify-center xl:px-6 xl:py-5">
+        <div className="grid min-h-[760px] w-full overflow-hidden rounded-[30px] border border-slate-300/80 bg-[linear-gradient(180deg,_rgba(255,255,255,0.92)_0%,_rgba(246,250,252,0.98)_100%)] shadow-[0_28px_90px_-48px_rgba(15,23,42,0.46)] xl:h-[min(100vh-2.5rem,900px)] xl:max-w-[calc(min(100vh-2.5rem,900px)*1.6)] xl:grid-cols-[270px_minmax(0,1fr)_310px] xl:grid-rows-[auto_minmax(0,1fr)]">
+          <header className="col-span-full flex flex-wrap items-start justify-between gap-4 border-b border-slate-300/80 bg-[linear-gradient(180deg,_rgba(247,250,252,0.96)_0%,_rgba(241,246,248,0.92)_100%)] px-5 py-4">
+            <div>
+              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.28em] text-slate-500">
+                va-framework / single-view analytics
+              </p>
+              <h1 className="mt-2 font-[family-name:var(--font-display)] text-[1.7rem] leading-none text-slate-950">
+                Cars Analysis Console
+              </h1>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+                A one-page operator workspace for filtering, inspecting, and comparing the active cars result set.
+              </p>
             </div>
 
-            <div className="grid gap-3">
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                <p className="text-xs uppercase tracking-[0.18em] text-cyan-200">Average MPG</p>
-                <p className="mt-2 font-[family-name:var(--font-display)] text-3xl">
-                  {formatMetric(summary.averageMpg, 'mpg')}
-                </p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                <p className="text-xs uppercase tracking-[0.18em] text-cyan-200">Average horsepower</p>
-                <p className="mt-2 font-[family-name:var(--font-display)] text-3xl">
-                  {formatMetric(summary.averageHorsepower, 'hp')}
-                </p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                <p className="text-xs uppercase tracking-[0.18em] text-cyan-200">Dominant origin</p>
-                <p className="mt-2 font-[family-name:var(--font-display)] text-3xl">{summary.dominantOrigin}</p>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-6 xl:overflow-auto">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Execution mode</p>
-                <Cpu className="size-4 text-slate-400" />
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {(['local', 'remote'] as const).map((mode) => (
-                  <Button
-                    key={mode}
-                    variant={preferredExecutionMode === mode ? 'default' : 'outline'}
-                    onClick={() => setPreferredExecutionMode(mode)}
-                  >
-                    {mode}
-                  </Button>
-                ))}
-              </div>
-              <p className="text-sm leading-6 text-slate-300">{executionPlan?.reasons[0] ?? 'Preparing dataset runtime.'}</p>
-            </div>
-
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Origin</p>
-                <Filter className="size-4 text-slate-400" />
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {CARS_ORIGIN_OPTIONS.map((origin) => {
-                  const active = originFilters.includes(origin);
-                  return (
-                    <Button
-                      key={origin}
-                      variant={active ? 'default' : 'outline'}
-                      onClick={() =>
-                        setOriginFilters((current) =>
-                          current.includes(origin)
-                            ? current.filter((value) => value !== origin)
-                            : [...current, origin],
-                        )
-                      }
-                    >
-                      {origin}
-                    </Button>
-                  );
-                })}
+            <div className="flex flex-wrap items-center justify-end gap-2 text-xs">
+              <Badge className="border-slate-300/80 bg-white/80 text-slate-700">{CARS_DATASET_ID}</Badge>
+              <Badge className="border-slate-300/80 bg-white/80 text-slate-700">{resolvedExecutionMode}</Badge>
+              <Badge className="border-slate-300/80 bg-white/80 text-slate-700">
+                {hasData ? `${summary.count} rows` : 'no rows'}
+              </Badge>
+              <div
+                aria-live="polite"
+                className={cn(
+                  'inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium',
+                  getStatusClasses(consoleStatus.tone),
+                )}
+              >
+                <span
+                  className={cn(
+                    'size-2 rounded-full',
+                    consoleStatus.tone === 'warning'
+                      ? 'animate-pulse bg-amber-500'
+                      : consoleStatus.tone === 'error'
+                        ? 'bg-rose-500'
+                        : consoleStatus.tone === 'accent'
+                          ? 'bg-cyan-600'
+                          : 'bg-slate-400',
+                  )}
+                />
+                {consoleStatus.label}
               </div>
             </div>
+          </header>
 
-            <label className="block space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs uppercase tracking-[0.18em] text-slate-400">Minimum horsepower</span>
-                <span className="text-sm font-medium text-white">{minHorsepower} hp</span>
-              </div>
-              <input
-                className="w-full accent-cyan-500"
-                max={180}
-                min={40}
-                onChange={(event) => setMinHorsepower(Number(event.target.value))}
-                type="range"
-                value={minHorsepower}
-              />
-            </label>
-
-            <label className="block space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs uppercase tracking-[0.18em] text-slate-400">Weight ceiling</span>
-                <span className="text-sm font-medium text-white">{formatCompactNumber(weightCeiling)} lbs</span>
-              </div>
-              <input
-                className="w-full accent-cyan-500"
-                max={3800}
-                min={1800}
-                onChange={(event) => setWeightCeiling(Number(event.target.value))}
-                step={50}
-                type="range"
-                value={weightCeiling}
-              />
-            </label>
-
-            <label className="block space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs uppercase tracking-[0.18em] text-slate-400">Row limit</span>
-                <span className="text-sm font-medium text-white">{limit}</span>
-              </div>
-              <input
-                className="w-full accent-cyan-500"
-                max={12}
-                min={4}
-                onChange={(event) => setLimit(Number(event.target.value))}
-                type="range"
-                value={limit}
-              />
-            </label>
-          </CardContent>
-        </Card>
-
-        <section className="grid gap-6 xl:h-full xl:min-h-0 xl:grid-rows-[minmax(0,1fr)_minmax(0,340px)]">
-          <D3ScatterPlot
-            data={scatterData}
-            emptyLabel={
-              activeError
-                ? activeError.message
-                : initialLoading
-                  ? 'Loading cars dataset...'
-                  : 'No rows match the current controls.'
-            }
-            onSelect={(id) =>
-              setSelection(VIEW_ID, {
-                entity: 'cars',
-                ids: [id],
-                sourceViewId: VIEW_ID,
-              })
-            }
-            selectedId={selectedCar?.id}
-            subtitle="Miles per gallon versus horsepower, drawn with D3 and kept warm during background refresh."
-            title="Horsepower vs fuel efficiency"
-            height={430}
-            xLabel="Horsepower"
-            yLabel="Miles per gallon"
-          />
-
-          <Card className="border-slate-200 bg-white text-slate-950 shadow-xl shadow-slate-950/5 xl:min-h-0">
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <div className="rounded-2xl bg-slate-100 p-3 text-slate-700">
-                  <ChartNoAxesCombined className="size-5" />
+          <aside className="border-t border-slate-300/80 bg-[linear-gradient(180deg,_rgba(241,246,248,0.96)_0%,_rgba(236,242,245,0.92)_100%)] px-4 py-4 xl:min-h-0 xl:border-t-0 xl:border-r xl:px-5 xl:py-5">
+            <div className="grid gap-5 xl:h-full xl:min-h-0 xl:grid-rows-[auto_auto_1fr]">
+              <div className="grid gap-4">
+                <SectionHeader
+                  detail="Tune the preview window and query thresholds without leaving the working surface."
+                  icon={SlidersHorizontal}
+                  title="Control rail"
+                />
+                <div className="grid gap-2">
+                  <MetricReadout label="Average MPG" tone="accent" value={formatMetric(summary.averageMpg, 'mpg')} />
+                  <MetricReadout label="Average horsepower" value={formatMetric(summary.averageHorsepower, 'hp')} />
+                  <MetricReadout label="Dominant origin" value={summary.dominantOrigin} />
                 </div>
+              </div>
+
+              <Separator className="bg-slate-300/70" />
+
+              <div className="grid gap-5 xl:min-h-0 xl:content-start xl:overflow-auto xl:pr-1">
+                <div className="grid gap-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-slate-500">
+                      Execution mode
+                    </p>
+                    <Cpu className="size-4 text-slate-500" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {EXECUTION_MODES.map((mode) => {
+                      const active = preferredExecutionMode === mode;
+                      return (
+                        <Button
+                          key={mode}
+                          className={cn(
+                            'h-10 rounded-xl border text-xs font-semibold uppercase tracking-[0.18em]',
+                            active
+                              ? 'border-cyan-200 bg-cyan-50 text-cyan-800 hover:bg-cyan-100'
+                              : 'border-slate-300/80 bg-white/80 text-slate-700 hover:bg-slate-50',
+                          )}
+                          onClick={() => setPreferredExecutionMode(mode)}
+                          type="button"
+                          variant="outline"
+                        >
+                          {mode}
+                        </Button>
+                      );
+                    })}
+                  </div>
+                  <p className="text-sm leading-6 text-slate-600">{consoleStatus.detail}</p>
+                </div>
+
+                <div className="grid gap-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-slate-500">
+                      Origin filter
+                    </p>
+                    <Filter className="size-4 text-slate-500" />
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {CARS_ORIGIN_OPTIONS.map((origin) => {
+                      const active = originFilters.includes(origin);
+                      return (
+                        <Button
+                          key={origin}
+                          className={cn(
+                            'h-10 rounded-xl border px-3 text-xs font-semibold uppercase tracking-[0.16em]',
+                            active
+                              ? 'border-slate-950 bg-slate-950 text-white hover:bg-slate-900'
+                              : 'border-slate-300/80 bg-white/80 text-slate-700 hover:bg-slate-50',
+                          )}
+                          onClick={() =>
+                            setOriginFilters((current) =>
+                              current.includes(origin)
+                                ? current.filter((value) => value !== origin)
+                                : [...current, origin],
+                            )
+                          }
+                          type="button"
+                          variant="outline"
+                        >
+                          <span
+                            className="mr-2 size-2 rounded-full"
+                            style={{ backgroundColor: CARS_ORIGIN_PALETTE[origin] }}
+                          />
+                          {origin}
+                        </Button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <RangeField
+                  label="Minimum horsepower"
+                  max={180}
+                  min={40}
+                  onChange={setMinHorsepower}
+                  value={minHorsepower}
+                  valueLabel={`${minHorsepower} hp`}
+                />
+
+                <RangeField
+                  label="Weight ceiling"
+                  max={3800}
+                  min={1800}
+                  onChange={setWeightCeiling}
+                  step={50}
+                  value={weightCeiling}
+                  valueLabel={`${formatCompactNumber(weightCeiling)} lbs`}
+                />
+
+                <RangeField
+                  label="Row limit"
+                  max={12}
+                  min={4}
+                  onChange={setLimit}
+                  value={limit}
+                  valueLabel={`${limit}`}
+                />
+              </div>
+            </div>
+          </aside>
+
+          <section className="grid border-t border-slate-300/80 bg-[linear-gradient(180deg,_rgba(255,255,255,0.98)_0%,_rgba(248,251,253,0.96)_100%)] xl:min-h-0 xl:border-t-0 xl:border-r xl:grid-rows-[minmax(0,1fr)_280px]">
+            <div className="min-h-0 px-4 py-4 xl:px-5 xl:py-5">
+              <D3ScatterPlot
+                data={scatterData}
+                emptyLabel={
+                  activeError
+                    ? activeError.message
+                    : initialLoading
+                      ? 'Loading cars dataset...'
+                      : 'No rows match the current controls.'
+                }
+                height={480}
+                legend={ORIGIN_LEGEND}
+                onSelect={selectRecord}
+                selectedId={selectedCar?.id}
+                statusLabel={consoleStatus.label}
+                statusTone={consoleStatus.tone}
+                subtitle="Horsepower versus fuel efficiency for the active result set."
+                title="Horsepower vs fuel efficiency"
+                xLabel="Horsepower"
+                yLabel="Miles per gallon"
+              />
+            </div>
+
+            <div className="grid min-h-0 border-t border-slate-300/80 bg-[linear-gradient(180deg,_rgba(248,251,253,0.96)_0%,_rgba(243,247,250,0.98)_100%)] px-4 py-4 xl:px-5 xl:py-4">
+              <div className="flex items-start justify-between gap-3">
                 <div>
-                  <CardTitle className="font-[family-name:var(--font-display)] text-2xl">Records</CardTitle>
-                  <CardDescription>
-                    The table stays synchronized with the active filters and point selection.
-                  </CardDescription>
+                  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-slate-500">Records</p>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">
+                    The table mirrors the current filters and keeps selection pinned to the focused record.
+                  </p>
+                </div>
+                <div className="rounded-xl border border-slate-300/80 bg-white/75 p-2.5 text-slate-600 shadow-sm shadow-slate-950/5">
+                  <ChartNoAxesCombined className="size-4" />
                 </div>
               </div>
-            </CardHeader>
-            <CardContent className="xl:h-full xl:min-h-0">
-              <div className="overflow-hidden rounded-2xl border border-slate-200 xl:h-full">
-                <div className="max-h-[360px] overflow-auto select-none xl:h-full xl:max-h-none">
+
+              <div className="mt-4 min-h-0 overflow-hidden rounded-[24px] border border-slate-300/80 bg-white/86">
+                <div className="h-full overflow-auto select-none">
                   <table className="min-w-full border-collapse text-sm">
-                    <thead className="sticky top-0 bg-slate-50">
+                    <thead className="sticky top-0 z-10 bg-slate-100/95 backdrop-blur">
                       <tr>
                         {TABLE_COLUMNS.map((column) => (
                           <th
                             key={column.key}
-                            className="border-b border-slate-200 px-3 py-2 text-left font-medium text-slate-600"
+                            className="border-b border-slate-300/80 px-3 py-2.5 text-left text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-slate-500"
                           >
                             {column.label}
                           </th>
@@ -307,31 +501,33 @@ export function CarsSingleViewShell() {
                     <tbody>
                       {rows.map((row) => {
                         const isActive = row.id === selectedCar?.id;
+
                         return (
                           <tr
                             key={row.id}
-                            className={isActive ? 'bg-cyan-50' : 'bg-white'}
+                            aria-pressed={isActive}
+                            className={cn(
+                              'cursor-pointer select-none border-b border-slate-200/80 text-slate-700 outline-none transition-colors',
+                              isActive
+                                ? 'bg-cyan-50/90 text-slate-950'
+                                : 'bg-white/95 hover:bg-slate-50/90 focus-visible:bg-slate-50',
+                            )}
+                            draggable={false}
+                            onClick={() => selectRecord(row.id)}
+                            onKeyDown={(event) => handleSelectableRowKeyDown(event, () => selectRecord(row.id))}
+                            onMouseDown={(event) => event.preventDefault()}
+                            role="button"
+                            tabIndex={0}
                           >
-                            {TABLE_COLUMNS.map((column) => (
+                            {TABLE_COLUMNS.map((column, columnIndex) => (
                               <td
                                 key={`${row.id}-${column.key}`}
-                                className="border-b border-slate-100 px-3 py-2 text-slate-700"
+                                className={cn(
+                                  'px-3 py-2.5',
+                                  columnIndex === 0 && isActive && 'shadow-[inset_3px_0_0_0_#2f607d] font-medium',
+                                )}
                               >
-                                <button
-                                  className="w-full cursor-pointer select-none text-left"
-                                  draggable={false}
-                                  onClick={() =>
-                                    setSelection(VIEW_ID, {
-                                      entity: 'cars',
-                                      ids: [row.id],
-                                      sourceViewId: VIEW_ID,
-                                    })
-                                  }
-                                  onMouseDown={(event) => event.preventDefault()}
-                                  type="button"
-                                >
-                                  {String(row[column.key])}
-                                </button>
+                                {String(row[column.key])}
                               </td>
                             ))}
                           </tr>
@@ -341,70 +537,84 @@ export function CarsSingleViewShell() {
                   </table>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        </section>
+            </div>
+          </section>
 
-        <Card className="border-slate-200 bg-white text-slate-950 shadow-xl shadow-slate-950/5 xl:h-full xl:min-h-0">
-          <CardHeader>
-            <div className="flex items-center gap-3">
-              <div className="rounded-2xl bg-slate-100 p-3 text-slate-700">
-                <SlidersHorizontal className="size-5" />
-              </div>
-              <div>
-                <CardTitle className="font-[family-name:var(--font-display)] text-2xl">Selection</CardTitle>
-                <CardDescription>
-                  The detail surface stays pinned to the selected point.
-                </CardDescription>
+          <aside className="border-t border-slate-300/80 bg-[linear-gradient(180deg,_rgba(243,247,249,0.96)_0%,_rgba(237,243,246,0.94)_100%)] px-4 py-4 xl:min-h-0 xl:border-t-0 xl:px-5 xl:py-5">
+            <div className="grid gap-5 xl:h-full xl:min-h-0 xl:grid-rows-[auto_1fr]">
+              <SectionHeader
+                detail="Inspect the focused record and read back the active query envelope without leaving the page."
+                icon={Database}
+                title="Detail rail"
+              />
+
+              <div className="grid gap-5 xl:min-h-0 xl:content-start xl:overflow-auto xl:pr-1">
+                {selectedCar ? (
+                  <>
+                    <div className="rounded-[24px] border border-slate-300/80 bg-white/82 p-4 shadow-sm shadow-slate-950/5">
+                      <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-slate-500">
+                        Focused record
+                      </p>
+                      <p className="mt-3 font-[family-name:var(--font-display)] text-[1.8rem] leading-tight text-slate-950">
+                        {selectedCar.name}
+                      </p>
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        <Badge className="border-slate-300/80 bg-slate-100 text-slate-700">{selectedCar.origin}</Badge>
+                        <Badge className="border-slate-300/80 bg-slate-100 text-slate-700">{selectedCar.year}</Badge>
+                        <Badge className="border-slate-300/80 bg-slate-100 text-slate-700">{selectedCar.cylinders} cyl</Badge>
+                      </div>
+                    </div>
+
+                    <div className="grid gap-2">
+                      <MetricReadout label="Horsepower" tone="accent" value={`${selectedCar.horsepower} hp`} />
+                      <MetricReadout label="Fuel efficiency" value={`${selectedCar.milesPerGallon} mpg`} />
+                      <MetricReadout label="Weight" value={`${formatCompactNumber(selectedCar.weightInLbs)} lbs`} />
+                      <MetricReadout label="Average weight" value={formatMetric(summary.averageWeight, 'lbs')} />
+                    </div>
+                  </>
+                ) : (
+                  <div className="rounded-[24px] border border-dashed border-slate-300/90 bg-white/72 p-5 text-sm leading-6 text-slate-600">
+                    Select a point in the chart or a row in the records table to inspect it here.
+                  </div>
+                )}
+
+                <Separator className="bg-slate-300/70" />
+
+                <div className="grid gap-3 rounded-[24px] border border-slate-300/80 bg-white/76 p-4 shadow-sm shadow-slate-950/5">
+                  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-slate-500">
+                    Query envelope
+                  </p>
+                  <div className="grid gap-3 text-sm text-slate-700">
+                    <div className="flex items-start justify-between gap-4">
+                      <span className="text-slate-500">Dataset</span>
+                      <span className="font-medium text-slate-900">{CARS_DATASET_ID}</span>
+                    </div>
+                    <div className="flex items-start justify-between gap-4">
+                      <span className="text-slate-500">Runtime</span>
+                      <span className="font-medium text-slate-900">{resolvedExecutionMode}</span>
+                    </div>
+                    <div className="flex items-start justify-between gap-4">
+                      <span className="text-slate-500">Origins</span>
+                      <span className="text-right font-medium text-slate-900">{originSummary}</span>
+                    </div>
+                    <div className="flex items-start justify-between gap-4">
+                      <span className="text-slate-500">Horsepower floor</span>
+                      <span className="font-medium text-slate-900">{minHorsepower} hp</span>
+                    </div>
+                    <div className="flex items-start justify-between gap-4">
+                      <span className="text-slate-500">Weight ceiling</span>
+                      <span className="font-medium text-slate-900">{formatCompactNumber(weightCeiling)} lbs</span>
+                    </div>
+                    <div className="flex items-start justify-between gap-4">
+                      <span className="text-slate-500">Row limit</span>
+                      <span className="font-medium text-slate-900">{limit}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-          </CardHeader>
-          <CardContent className="space-y-4 xl:overflow-auto">
-            {selectedCar ? (
-              <>
-                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                  <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Selected model</p>
-                  <p className="mt-2 font-[family-name:var(--font-display)] text-2xl text-slate-900">
-                    {selectedCar.name}
-                  </p>
-                  <p className="mt-2 text-sm text-slate-600">
-                    {selectedCar.origin} · {selectedCar.year}
-                  </p>
-                </div>
-                <div className="grid gap-3">
-                  <div className="rounded-2xl border border-slate-200 p-4">
-                    <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Horsepower</p>
-                    <p className="mt-2 text-2xl font-semibold text-slate-900">{selectedCar.horsepower} hp</p>
-                  </div>
-                  <div className="rounded-2xl border border-slate-200 p-4">
-                    <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Fuel efficiency</p>
-                    <p className="mt-2 text-2xl font-semibold text-slate-900">{selectedCar.milesPerGallon} mpg</p>
-                  </div>
-                  <div className="rounded-2xl border border-slate-200 p-4">
-                    <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Weight</p>
-                    <p className="mt-2 text-2xl font-semibold text-slate-900">
-                      {formatCompactNumber(selectedCar.weightInLbs)} lbs
-                    </p>
-                  </div>
-                  <div className="rounded-2xl border border-slate-200 p-4">
-                    <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Cylinders</p>
-                    <p className="mt-2 text-2xl font-semibold text-slate-900">{selectedCar.cylinders}</p>
-                  </div>
-                  <div className="rounded-2xl border border-slate-200 p-4">
-                    <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Average weight</p>
-                    <p className="mt-2 text-2xl font-semibold text-slate-900">
-                      {formatMetric(summary.averageWeight, 'lbs')}
-                    </p>
-                  </div>
-                </div>
-              </>
-            ) : (
-              <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-5 text-sm text-slate-600">
-                Select a point in the chart or a row in the table to inspect it here.
-              </div>
-            )}
-          </CardContent>
-        </Card>
+          </aside>
+        </div>
       </div>
     </main>
   );

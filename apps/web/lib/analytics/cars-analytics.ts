@@ -39,7 +39,7 @@ export const DEFAULT_CARS_CONTROLS: CarsViewControls = {
   weightCeiling: 3800,
 };
 
-const ORIGIN_COLORS: Record<string, string> = {
+export const CARS_ORIGIN_PALETTE: Record<string, string> = {
   Europe: '#3a7bd5',
   Japan: '#2aa876',
   USA: '#ef6f6c',
@@ -170,7 +170,7 @@ export function summarizeCarsRows(rows: CarRecord[]): CarsSummary {
 
 export function toScatterPlotData(rows: CarRecord[], selectedId?: string): ScatterPlotDatum[] {
   return rows.map((row) => ({
-    color: ORIGIN_COLORS[row.origin] ?? '#52606d',
+    color: CARS_ORIGIN_PALETTE[row.origin] ?? '#52606d',
     id: row.id,
     label: row.name,
     selected: row.id === selectedId,
