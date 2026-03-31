@@ -13,7 +13,6 @@ import {
 import { useCoordinationStore } from '@/lib/coordination-store';
 import { planExecution } from '@/lib/data/execution-planner';
 import { useDatasetCatalog, useLocalPreviewQuery, useRemotePreviewQuery } from '@/lib/data/query-hooks';
-import { useDebouncedValue } from '@/lib/hooks/use-debounced-value';
 import { Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@va/ui';
 import { D3ScatterPlot } from '@va/vis-core';
 import { ChartNoAxesCombined, Cpu, Filter, SlidersHorizontal } from 'lucide-react';
@@ -65,27 +64,16 @@ export function CarsSingleViewShell() {
   const [weightCeiling, setWeightCeiling] = useState(DEFAULT_CARS_CONTROLS.weightCeiling);
   const [limit, setLimit] = useState(DEFAULT_CARS_CONTROLS.limit);
 
-  const debouncedOriginFilters = useDebouncedValue(originFilters, 140);
-  const debouncedMinHorsepower = useDebouncedValue(minHorsepower, 140);
-  const debouncedWeightCeiling = useDebouncedValue(weightCeiling, 140);
-  const debouncedLimit = useDebouncedValue(limit, 140);
-
   const query = useMemo(
     () =>
       buildCarsQuery({
         executionMode: preferredExecutionMode,
-        limit: debouncedLimit,
-        minHorsepower: debouncedMinHorsepower,
-        originFilters: debouncedOriginFilters,
-        weightCeiling: debouncedWeightCeiling,
+        limit,
+        minHorsepower,
+        originFilters,
+        weightCeiling,
       }),
-    [
-      debouncedLimit,
-      debouncedMinHorsepower,
-      debouncedOriginFilters,
-      debouncedWeightCeiling,
-      preferredExecutionMode,
-    ],
+    [limit, minHorsepower, originFilters, preferredExecutionMode, weightCeiling],
   );
 
   const executionPlan = useMemo(
@@ -127,9 +115,9 @@ export function CarsSingleViewShell() {
   const activeError = activePreview.error;
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(31,160,189,0.18),_transparent_35%),linear-gradient(180deg,_#07131c_0%,_#081927_55%,_#eef5f8_55%,_#eef5f8_100%)] text-slate-100">
-      <div className="mx-auto grid min-h-screen max-w-[1600px] gap-6 px-4 py-4 lg:px-6 xl:grid-cols-[280px_minmax(0,1fr)_320px]">
-        <Card className="border-white/10 bg-slate-950/70 text-white shadow-2xl shadow-cyan-950/20 backdrop-blur">
+    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(31,160,189,0.18),_transparent_35%),linear-gradient(180deg,_#07131c_0%,_#081927_55%,_#eef5f8_55%,_#eef5f8_100%)] text-slate-100 xl:flex xl:items-center xl:justify-center xl:overflow-hidden">
+      <div className="mx-auto grid min-h-screen max-w-[1600px] gap-6 px-4 py-4 lg:px-6 xl:h-[calc(100vh-2rem)] xl:min-h-0 xl:w-full xl:max-w-[calc((100vh-2rem)*1.6)] xl:grid-cols-[280px_minmax(0,1fr)_320px]">
+        <Card className="border-white/10 bg-slate-950/70 text-white shadow-2xl shadow-cyan-950/20 backdrop-blur xl:h-full xl:min-h-0">
           <CardHeader>
             <div className="space-y-3">
               <div className="flex flex-wrap gap-2">
@@ -166,7 +154,7 @@ export function CarsSingleViewShell() {
               </div>
             </div>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-6 xl:overflow-auto">
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Execution mode</p>
@@ -261,7 +249,7 @@ export function CarsSingleViewShell() {
           </CardContent>
         </Card>
 
-        <section className="grid gap-6">
+        <section className="grid gap-6 xl:h-full xl:min-h-0 xl:grid-rows-[minmax(0,1fr)_minmax(0,340px)]">
           <D3ScatterPlot
             data={scatterData}
             emptyLabel={
@@ -281,11 +269,12 @@ export function CarsSingleViewShell() {
             selectedId={selectedCar?.id}
             subtitle="Miles per gallon versus horsepower, drawn with D3 and kept warm during background refresh."
             title="Horsepower vs fuel efficiency"
+            height={430}
             xLabel="Horsepower"
             yLabel="Miles per gallon"
           />
 
-          <Card className="border-slate-200 bg-white text-slate-950 shadow-xl shadow-slate-950/5">
+          <Card className="border-slate-200 bg-white text-slate-950 shadow-xl shadow-slate-950/5 xl:min-h-0">
             <CardHeader>
               <div className="flex items-center gap-3">
                 <div className="rounded-2xl bg-slate-100 p-3 text-slate-700">
@@ -299,9 +288,9 @@ export function CarsSingleViewShell() {
                 </div>
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="overflow-hidden rounded-2xl border border-slate-200">
-                <div className="max-h-[360px] overflow-auto">
+            <CardContent className="xl:h-full xl:min-h-0">
+              <div className="overflow-hidden rounded-2xl border border-slate-200 xl:h-full">
+                <div className="max-h-[360px] overflow-auto select-none xl:h-full xl:max-h-none">
                   <table className="min-w-full border-collapse text-sm">
                     <thead className="sticky top-0 bg-slate-50">
                       <tr>
@@ -329,7 +318,8 @@ export function CarsSingleViewShell() {
                                 className="border-b border-slate-100 px-3 py-2 text-slate-700"
                               >
                                 <button
-                                  className="w-full text-left"
+                                  className="w-full cursor-pointer select-none text-left"
+                                  draggable={false}
                                   onClick={() =>
                                     setSelection(VIEW_ID, {
                                       entity: 'cars',
@@ -337,6 +327,7 @@ export function CarsSingleViewShell() {
                                       sourceViewId: VIEW_ID,
                                     })
                                   }
+                                  onMouseDown={(event) => event.preventDefault()}
                                   type="button"
                                 >
                                   {String(row[column.key])}
@@ -354,7 +345,7 @@ export function CarsSingleViewShell() {
           </Card>
         </section>
 
-        <Card className="border-slate-200 bg-white text-slate-950 shadow-xl shadow-slate-950/5">
+        <Card className="border-slate-200 bg-white text-slate-950 shadow-xl shadow-slate-950/5 xl:h-full xl:min-h-0">
           <CardHeader>
             <div className="flex items-center gap-3">
               <div className="rounded-2xl bg-slate-100 p-3 text-slate-700">
@@ -368,7 +359,7 @@ export function CarsSingleViewShell() {
               </div>
             </div>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 xl:overflow-auto">
             {selectedCar ? (
               <>
                 <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">

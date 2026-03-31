@@ -166,11 +166,12 @@ export function D3ScatterPlot({
                   ) : null}
                   <circle
                     aria-label={point.label}
-                    className="cursor-pointer transition-[r] duration-150"
+                    className="cursor-pointer select-none touch-none transition-[r] duration-150"
                     cx={xScale(point.x)}
                     cy={yScale(point.y)}
                     fill={point.color}
                     onClick={() => onSelect?.(point.id)}
+                    onMouseDown={(event) => event.preventDefault()}
                     r={isSelected ? 8 : 6}
                     stroke={isSelected ? '#0f172a' : 'white'}
                     strokeWidth={isSelected ? 2.5 : 1.5}
