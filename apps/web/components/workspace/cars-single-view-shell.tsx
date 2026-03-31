@@ -48,7 +48,7 @@ export function CarsSingleViewShell() {
 
   const activeDatasetId = useCoordinationStore((state) => state.activeDatasetId);
   const preferredExecutionMode = useCoordinationStore((state) => state.preferredExecutionMode);
-  const selectedIds = useCoordinationStore((state) => state.selections['single-view-plot']?.ids ?? []);
+  const selectedId = useCoordinationStore((state) => state.selections['single-view-plot']?.ids[0]);
   const setActiveDatasetId = useCoordinationStore((state) => state.setActiveDatasetId);
   const setFilters = useCoordinationStore((state) => state.setFilters);
   const setLastQuery = useCoordinationStore((state) => state.setLastQuery);
@@ -97,7 +97,6 @@ export function CarsSingleViewShell() {
   const activeResult = resolvedExecutionMode === 'local' ? localPreview.data : remotePreview.data;
   const rows = useMemo(() => normalizeCarsRows(activeResult), [activeResult]);
   const summary = useMemo(() => summarizeCarsRows(rows), [rows]);
-  const selectedId = selectedIds[0];
   const selectedCar = findSelectedCar(rows, selectedId) ?? rows[0];
   const scatterData = useMemo(() => toScatterPlotData(rows, selectedId), [rows, selectedId]);
 
