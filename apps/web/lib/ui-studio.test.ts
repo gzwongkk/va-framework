@@ -49,7 +49,8 @@ describe('ui studio presets', () => {
 
     expect(vars['--ui-accent']).toBe('#8a5a35');
     expect(vars['--ui-control-height']).toBe('2.7rem');
-    expect(vars['--ui-radius-shell']).toBe('2.15rem');
+    expect(vars['--ui-radius-shell']).toBe('2.9rem');
+    expect(vars['--ui-radius-panel']).toBe('1.85rem');
     expect(chartTheme.selectionStroke).toBe('#5a3f2a');
     expect(chartTheme.textPrimary).toBe('#34291f');
   });

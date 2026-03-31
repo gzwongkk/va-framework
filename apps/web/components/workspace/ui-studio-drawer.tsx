@@ -121,7 +121,7 @@ export function UiStudioDrawer({
           </div>
         </SheetHeader>
 
-        <div className="ui-studio-stack grid overflow-auto pr-1">
+        <div className="ui-studio-stack grid min-h-0 flex-1 overflow-auto pr-1">
           <OptionGroup
             activeValue={prefs.shellPreset}
             buttonPreset={buttonPreset}
