@@ -5,13 +5,14 @@ The stable Vue release is preserved on the `release/v1.0.0` branch.
 
 ## Current milestone
 
-`v2.2.7` is the current single-view polish patch. It keeps the cars workflow intact and fixes the shell geometry and drawer mechanics:
+`v2.2.8` is the current single-view reliability patch. It keeps the cars workflow intact and focuses on the development loop:
 
 - a responsive `1600×1000` desktop target, with additional `1440×900` and workstation shell presets
-- a development-only `Devtools` drawer that is now hard-anchored to the right edge with proper full-height behavior and internal scrolling
+- a restored development-only `Devtools` drawer using a direct client import instead of an on-demand dev chunk
 - a bundled local Roboto variable font so the UI no longer depends on a remote font source
-- a lighter React dev path by splitting the large shell into smaller modules, lazy-loading the optional devtools panel, and optimizing `d3` / `lucide-react` imports in Next
+- a lighter React dev path by splitting the large shell into smaller modules and optimizing `d3` / `lucide-react` imports in Next
 - a more iOS-like default corner language, with softer shell, panel, and control radii across the workspace
+- a webpack-based default `pnpm dev:web` path for slow or NAS-backed filesystems, with `pnpm dev:web:turbo` kept as an opt-in fast path
 - a dedicated persisted UI preference store separate from the data coordination model
 - tokenized shell, control, button, badge, and chart styling driven by CSS custom properties
 - a reworked D3 scatterplot surface that now inherits theme presets alongside the surrounding shell
@@ -58,10 +59,17 @@ Or run both app processes together:
 pnpm dev
 ```
 
+If the repo stays on a NAS or another slow filesystem, prefer the default webpack-based `pnpm dev:web`.
+If you move the repo to a local SSD and want the faster compiler path, use:
+
+```bash
+pnpm dev:web:turbo
+```
+
 The frontend runs at <http://localhost:3000>.
 The backend health endpoint is available at <http://127.0.0.1:8000/api/health>.
 
-## v2.2.7 endpoints
+## v2.2.8 endpoints
 
 - `GET /api/health`
 - `GET /api/datasets`

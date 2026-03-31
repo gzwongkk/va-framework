@@ -7,8 +7,8 @@ import '@fontsource-variable/roboto/index.css';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'va-framework v2.2.7',
-  description: 'Single-view analytics workspace with iOS-inspired geometry and a corrected right-side UI studio drawer.',
+  title: 'va-framework v2.2.8',
+  description: 'Single-view analytics workspace with a restored UI studio drawer and a webpack-based dev default for slow filesystems.',
 };
 
 export default function RootLayout({
