@@ -5,15 +5,14 @@ The stable Vue release is preserved on the `release/v1.0.0` branch.
 
 ## Current milestone
 
-`v2.2.3` is the current single-view interaction patch. It keeps the v2.2.2 system-focused page and tightens the control and selection behavior:
+`v2.2.4` is the current single-view UI refresh patch. It keeps the cars workflow intact and redesigns the workspace into a cleaner operator console:
 
-- a direct single-view workspace as the home page, without release-marketing panels in the app shell
-- a D3-rendered cars scatterplot, closer to the visual style of the original v1 implementation
-- a local dataset catalog fallback so the cars workflow can render even before the backend responds
-- placeholder-cached query updates so control changes refresh in the background without flicker
-- immediate slider-driven query updates, without the extra debounce delay in the control path
-- more reliable table and chart selection by suppressing text-drag behavior on interactive marks and rows
-- a tighter desktop composition that aims for a 16:10 one-page workspace layout
+- a light-console 16:10 workspace with a dedicated control rail, analysis stage, and detail rail
+- a denser utility-first layout with release-copy removed from the app surface
+- refreshed global tokens, page background, and console-oriented range control styling
+- a reworked D3 scatterplot surface with clearer hierarchy, lighter console styling, and inline status/legend treatment
+- a denser records table and detail rail tuned for inspection instead of dashboard-card presentation
+- preserved background-refresh behavior so query updates stay quiet and non-blocking while the current result remains visible
 - shared dataset, query, and job contracts in `packages/contracts`
 - a coordination model in `packages/view-system`
 - FastAPI dataset registry, query execution, and background job endpoints
@@ -59,7 +58,7 @@ pnpm dev
 The frontend runs at <http://localhost:3000>.
 The backend health endpoint is available at <http://127.0.0.1:8000/api/health>.
 
-## v2.2.3 endpoints
+## v2.2.4 endpoints
 
 - `GET /api/health`
 - `GET /api/datasets`
