@@ -14,13 +14,17 @@ import {
 import { useCoordinationStore } from '@/lib/coordination-store';
 import { planExecution } from '@/lib/data/execution-planner';
 import { useDatasetCatalog, useLocalPreviewQuery, useRemotePreviewQuery } from '@/lib/data/query-hooks';
+import { resolveChartTheme, resolveUiStudioVars } from '@/lib/ui-studio';
+import { useUiStudioStore } from '@/lib/ui-studio-store';
+import { UiStudioDrawer } from '@/components/workspace/ui-studio-drawer';
 import { Badge, Button, Separator, cn } from '@va/ui';
 import { D3ScatterPlot } from '@va/vis-core';
-import { ChartNoAxesCombined, Cpu, Database, Filter, SlidersHorizontal } from 'lucide-react';
-import { type KeyboardEvent, useEffect, useMemo, useState } from 'react';
+import { ChartNoAxesCombined, Cpu, Database, Filter, Settings2, SlidersHorizontal } from 'lucide-react';
+import { type CSSProperties, type KeyboardEvent, useEffect, useMemo, useState } from 'react';
 
 const VIEW_ID = 'single-view-plot';
 const EXECUTION_MODES = ['local', 'remote'] as const;
+const SHOW_UI_STUDIO = process.env.NODE_ENV !== 'production';
 const ORIGIN_LEGEND = CARS_ORIGIN_OPTIONS.map((origin) => ({
   color: CARS_ORIGIN_PALETTE[origin],
   label: origin,
@@ -82,16 +86,32 @@ function formatCompactNumber(value: number) {
   return value.toFixed(0);
 }
 
-function getStatusClasses(tone: ConsoleStatusTone) {
+function getStatusStyle(tone: ConsoleStatusTone): CSSProperties {
   switch (tone) {
     case 'accent':
-      return 'border-cyan-200/80 bg-cyan-50 text-cyan-800';
+      return {
+        background: 'color-mix(in srgb, white 54%, var(--ui-accent-soft) 46%)',
+        borderColor: 'var(--ui-accent-border)',
+        color: 'var(--ui-accent-text)',
+      };
     case 'warning':
-      return 'border-amber-200/80 bg-amber-50 text-amber-800';
+      return {
+        background: '#fff7db',
+        borderColor: '#f2d489',
+        color: '#8a5b12',
+      };
     case 'error':
-      return 'border-rose-200/80 bg-rose-50 text-rose-800';
+      return {
+        background: '#ffe7eb',
+        borderColor: '#f3b4c1',
+        color: '#a43352',
+      };
     default:
-      return 'border-slate-300/80 bg-white/80 text-slate-700';
+      return {
+        background: 'color-mix(in srgb, white 78%, var(--ui-panel-background) 22%)',
+        borderColor: 'var(--ui-border)',
+        color: 'var(--ui-text-secondary)',
+      };
   }
 }
 
@@ -109,12 +129,10 @@ function SectionHeader({ detail, icon: Icon, title }: SectionHeaderProps) {
   return (
     <div className="flex items-start justify-between gap-3">
       <div>
-        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-slate-500">
-          {title}
-        </p>
-        <p className="mt-2 text-sm leading-6 text-slate-600">{detail}</p>
+        <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">{title}</p>
+        <p className="ui-studio-body mt-2">{detail}</p>
       </div>
-      <div className="rounded-xl border border-slate-300/80 bg-white/75 p-2.5 text-slate-600 shadow-sm shadow-slate-950/5">
+      <div className="ui-studio-icon-chip rounded-xl border p-2.5 shadow-sm shadow-slate-950/5">
         <Icon className="size-4" />
       </div>
     </div>
@@ -125,14 +143,12 @@ function MetricReadout({ label, tone = 'neutral', value }: MetricReadoutProps) {
   return (
     <div
       className={cn(
-        'grid gap-1 rounded-2xl border px-3 py-3',
-        tone === 'accent'
-          ? 'border-cyan-200/80 bg-cyan-50/70'
-          : 'border-slate-300/75 bg-white/72',
+        'grid gap-1 border px-3 py-3',
+        tone === 'accent' ? 'ui-studio-surface-muted' : 'ui-studio-surface',
       )}
     >
-      <p className="text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-slate-500">{label}</p>
-      <p className="font-[family-name:var(--font-display)] text-[1.45rem] leading-none text-slate-950">{value}</p>
+      <p className="ui-studio-label font-semibold uppercase tracking-[0.22em]">{label}</p>
+      <p className="ui-studio-metric-value font-[family-name:var(--font-display)] leading-none">{value}</p>
     </div>
   );
 }
@@ -149,10 +165,8 @@ function RangeField({
   return (
     <label className="grid gap-3">
       <div className="flex items-center justify-between gap-3">
-        <span className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-slate-500">
-          {label}
-        </span>
-        <span className="text-sm font-medium text-slate-800">{valueLabel}</span>
+        <span className="ui-studio-label font-semibold uppercase tracking-[0.2em]">{label}</span>
+        <span className="text-sm font-medium text-[var(--ui-text-primary)]">{valueLabel}</span>
       </div>
       <input
         className="w-full"
@@ -169,6 +183,9 @@ function RangeField({
 
 export function CarsSingleViewShell() {
   const datasetCatalog = useDatasetCatalog();
+  const uiPrefs = useUiStudioStore((state) => state.prefs);
+  const uiCssVars = useMemo(() => resolveUiStudioVars(uiPrefs), [uiPrefs]);
+  const chartTheme = useMemo(() => resolveChartTheme(uiPrefs), [uiPrefs]);
   const carsDataset = useMemo(
     () => datasetCatalog.data?.find((dataset) => dataset.id === CARS_DATASET_ID),
     [datasetCatalog.data],
@@ -187,6 +204,7 @@ export function CarsSingleViewShell() {
   const [minHorsepower, setMinHorsepower] = useState(DEFAULT_CARS_CONTROLS.minHorsepower);
   const [weightCeiling, setWeightCeiling] = useState(DEFAULT_CARS_CONTROLS.weightCeiling);
   const [limit, setLimit] = useState(DEFAULT_CARS_CONTROLS.limit);
+  const [isStudioOpen, setIsStudioOpen] = useState(false);
 
   const query = useMemo(
     () =>
@@ -280,34 +298,46 @@ export function CarsSingleViewShell() {
     });
 
   return (
-    <main className="min-h-screen text-slate-900 xl:flex xl:items-center xl:justify-center xl:overflow-hidden">
-      <div className="mx-auto flex min-h-screen w-full max-w-[1700px] px-4 py-4 lg:px-6 xl:items-center xl:justify-center xl:px-6 xl:py-5">
-        <div className="grid min-h-[760px] w-full overflow-hidden rounded-[30px] border border-slate-300/80 bg-[linear-gradient(180deg,_rgba(255,255,255,0.92)_0%,_rgba(246,250,252,0.98)_100%)] shadow-[0_28px_90px_-48px_rgba(15,23,42,0.46)] xl:h-[min(100vh-2.5rem,900px)] xl:max-w-[calc(min(100vh-2.5rem,900px)*1.6)] xl:grid-cols-[270px_minmax(0,1fr)_310px] xl:grid-rows-[auto_minmax(0,1fr)]">
-          <header className="col-span-full flex flex-wrap items-start justify-between gap-4 border-b border-slate-300/80 bg-[linear-gradient(180deg,_rgba(247,250,252,0.96)_0%,_rgba(241,246,248,0.92)_100%)] px-5 py-4">
+    <main
+      className="min-h-screen xl:flex xl:items-center xl:justify-center xl:overflow-hidden"
+      data-ui-button={uiPrefs.buttonPreset}
+      data-ui-density={uiPrefs.densityPreset}
+      data-ui-radius={uiPrefs.radiusPreset}
+      data-ui-shell={uiPrefs.shellPreset}
+      data-ui-theme={uiPrefs.themePreset}
+      style={
+        {
+          ...uiCssVars,
+          background: 'var(--ui-page-background)',
+          color: 'var(--ui-text-primary)',
+        } as CSSProperties
+      }
+    >
+      <div className="mx-auto flex min-h-screen w-full items-center justify-center px-3 py-3 sm:px-4 lg:px-5 xl:min-h-0 xl:px-6 xl:py-5">
+        <div className="ui-studio-shell grid min-h-[760px] w-full overflow-hidden border xl:h-[min(calc(100vh-2.5rem),var(--ui-shell-target-height))] xl:w-[min(calc(100vw-3rem),var(--ui-shell-target-width))] xl:grid-cols-[var(--ui-shell-left-rail)_minmax(0,1fr)_var(--ui-shell-right-rail)] xl:grid-rows-[auto_minmax(0,1fr)]">
+          <header className="ui-studio-header col-span-full flex flex-wrap items-start justify-between gap-4 border-b">
             <div>
-              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.28em] text-slate-500">
+              <p className="ui-studio-label font-semibold uppercase tracking-[0.28em]">
                 va-framework / single-view analytics
               </p>
-              <h1 className="mt-2 font-[family-name:var(--font-display)] text-[1.7rem] leading-none text-slate-950">
+              <h1 className="ui-studio-shell-title mt-2 font-[family-name:var(--font-display)] leading-none">
                 Cars Analysis Console
               </h1>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+              <p className="ui-studio-body mt-2 max-w-2xl">
                 A one-page operator workspace for filtering, inspecting, and comparing the active cars result set.
               </p>
             </div>
 
             <div className="flex flex-wrap items-center justify-end gap-2 text-xs">
-              <Badge className="border-slate-300/80 bg-white/80 text-slate-700">{CARS_DATASET_ID}</Badge>
-              <Badge className="border-slate-300/80 bg-white/80 text-slate-700">{resolvedExecutionMode}</Badge>
-              <Badge className="border-slate-300/80 bg-white/80 text-slate-700">
+              <Badge>{CARS_DATASET_ID}</Badge>
+              <Badge>{resolvedExecutionMode}</Badge>
+              <Badge>
                 {hasData ? `${summary.count} rows` : 'no rows'}
               </Badge>
               <div
                 aria-live="polite"
-                className={cn(
-                  'inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium',
-                  getStatusClasses(consoleStatus.tone),
-                )}
+                className="ui-studio-status inline-flex items-center gap-2 rounded-[var(--ui-radius-pill)] border px-3 py-1 font-medium"
+                style={getStatusStyle(consoleStatus.tone)}
               >
                 <span
                   className={cn(
@@ -323,10 +353,23 @@ export function CarsSingleViewShell() {
                 />
                 {consoleStatus.label}
               </div>
+              {SHOW_UI_STUDIO ? (
+                <Button
+                  className="ui-studio-toggle gap-2 px-3"
+                  data-active={false}
+                  data-button-style={uiPrefs.buttonPreset}
+                  onClick={() => setIsStudioOpen(true)}
+                  type="button"
+                  variant="outline"
+                >
+                  <Settings2 className="size-4" />
+                  Devtools
+                </Button>
+              ) : null}
             </div>
           </header>
 
-          <aside className="border-t border-slate-300/80 bg-[linear-gradient(180deg,_rgba(241,246,248,0.96)_0%,_rgba(236,242,245,0.92)_100%)] px-4 py-4 xl:min-h-0 xl:border-t-0 xl:border-r xl:px-5 xl:py-5">
+          <aside className="ui-studio-rail border-t xl:min-h-0 xl:border-t-0 xl:border-r">
             <div className="grid gap-5 xl:h-full xl:min-h-0 xl:grid-rows-[auto_auto_1fr]">
               <div className="grid gap-4">
                 <SectionHeader
@@ -334,22 +377,22 @@ export function CarsSingleViewShell() {
                   icon={SlidersHorizontal}
                   title="Control rail"
                 />
-                <div className="grid gap-2">
+                <div className="ui-studio-metric-stack grid">
                   <MetricReadout label="Average MPG" tone="accent" value={formatMetric(summary.averageMpg, 'mpg')} />
                   <MetricReadout label="Average horsepower" value={formatMetric(summary.averageHorsepower, 'hp')} />
                   <MetricReadout label="Dominant origin" value={summary.dominantOrigin} />
                 </div>
               </div>
 
-              <Separator className="bg-slate-300/70" />
+              <Separator className="ui-studio-divider" />
 
               <div className="grid gap-5 xl:min-h-0 xl:content-start xl:overflow-auto xl:pr-1">
                 <div className="grid gap-3">
                   <div className="flex items-center justify-between gap-3">
-                    <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-slate-500">
+                    <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">
                       Execution mode
                     </p>
-                    <Cpu className="size-4 text-slate-500" />
+                    <Cpu className="size-4 text-[var(--ui-text-muted)]" />
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     {EXECUTION_MODES.map((mode) => {
@@ -357,30 +400,27 @@ export function CarsSingleViewShell() {
                       return (
                         <Button
                           key={mode}
-                          className={cn(
-                            'h-10 rounded-xl border text-xs font-semibold uppercase tracking-[0.18em]',
-                            active
-                              ? 'border-cyan-200 bg-cyan-50 text-cyan-800 hover:bg-cyan-100'
-                              : 'border-slate-300/80 bg-white/80 text-slate-700 hover:bg-slate-50',
-                          )}
+                          className="ui-studio-toggle text-xs font-semibold uppercase tracking-[0.18em]"
+                          data-active={active}
+                          data-button-style={uiPrefs.buttonPreset}
                           onClick={() => setPreferredExecutionMode(mode)}
                           type="button"
-                          variant="outline"
+                          variant={active ? 'default' : 'outline'}
                         >
                           {mode}
                         </Button>
                       );
                     })}
                   </div>
-                  <p className="text-sm leading-6 text-slate-600">{consoleStatus.detail}</p>
+                  <p className="ui-studio-body">{consoleStatus.detail}</p>
                 </div>
 
                 <div className="grid gap-3">
                   <div className="flex items-center justify-between gap-3">
-                    <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-slate-500">
+                    <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">
                       Origin filter
                     </p>
-                    <Filter className="size-4 text-slate-500" />
+                    <Filter className="size-4 text-[var(--ui-text-muted)]" />
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {CARS_ORIGIN_OPTIONS.map((origin) => {
@@ -388,12 +428,9 @@ export function CarsSingleViewShell() {
                       return (
                         <Button
                           key={origin}
-                          className={cn(
-                            'h-10 rounded-xl border px-3 text-xs font-semibold uppercase tracking-[0.16em]',
-                            active
-                              ? 'border-slate-950 bg-slate-950 text-white hover:bg-slate-900'
-                              : 'border-slate-300/80 bg-white/80 text-slate-700 hover:bg-slate-50',
-                          )}
+                          className="ui-studio-toggle px-3 text-xs font-semibold uppercase tracking-[0.16em]"
+                          data-active={active}
+                          data-button-style={uiPrefs.buttonPreset}
                           onClick={() =>
                             setOriginFilters((current) =>
                               current.includes(origin)
@@ -402,7 +439,7 @@ export function CarsSingleViewShell() {
                             )
                           }
                           type="button"
-                          variant="outline"
+                          variant={active ? 'default' : 'outline'}
                         >
                           <span
                             className="mr-2 size-2 rounded-full"
@@ -446,8 +483,8 @@ export function CarsSingleViewShell() {
             </div>
           </aside>
 
-          <section className="grid border-t border-slate-300/80 bg-[linear-gradient(180deg,_rgba(255,255,255,0.98)_0%,_rgba(248,251,253,0.96)_100%)] xl:min-h-0 xl:border-t-0 xl:border-r xl:grid-rows-[minmax(0,1fr)_280px]">
-            <div className="min-h-0 px-4 py-4 xl:px-5 xl:py-5">
+          <section className="ui-studio-stage grid border-t xl:min-h-0 xl:border-t-0 xl:border-r xl:grid-rows-[minmax(0,1fr)_var(--ui-shell-table-height)]">
+            <div className="ui-studio-stage-panel min-h-0">
               <D3ScatterPlot
                 data={scatterData}
                 emptyLabel={
@@ -464,34 +501,35 @@ export function CarsSingleViewShell() {
                 statusLabel={consoleStatus.label}
                 statusTone={consoleStatus.tone}
                 subtitle="Horsepower versus fuel efficiency for the active result set."
+                theme={chartTheme}
                 title="Horsepower vs fuel efficiency"
                 xLabel="Horsepower"
                 yLabel="Miles per gallon"
               />
             </div>
 
-            <div className="grid min-h-0 border-t border-slate-300/80 bg-[linear-gradient(180deg,_rgba(248,251,253,0.96)_0%,_rgba(243,247,250,0.98)_100%)] px-4 py-4 xl:px-5 xl:py-4">
+            <div className="ui-studio-stage-table grid min-h-0 border-t">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-slate-500">Records</p>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">
+                  <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">Records</p>
+                  <p className="ui-studio-body mt-2">
                     The table mirrors the current filters and keeps selection pinned to the focused record.
                   </p>
                 </div>
-                <div className="rounded-xl border border-slate-300/80 bg-white/75 p-2.5 text-slate-600 shadow-sm shadow-slate-950/5">
+                <div className="ui-studio-icon-chip rounded-xl border p-2.5 shadow-sm shadow-slate-950/5">
                   <ChartNoAxesCombined className="size-4" />
                 </div>
               </div>
 
-              <div className="mt-4 min-h-0 overflow-hidden rounded-[24px] border border-slate-300/80 bg-white/86">
+              <div className="ui-studio-surface mt-4 min-h-0 overflow-hidden border">
                 <div className="h-full overflow-auto select-none">
                   <table className="min-w-full border-collapse text-sm">
-                    <thead className="sticky top-0 z-10 bg-slate-100/95 backdrop-blur">
+                    <thead className="ui-studio-record-head sticky top-0 z-10 backdrop-blur">
                       <tr>
                         {TABLE_COLUMNS.map((column) => (
                           <th
                             key={column.key}
-                            className="border-b border-slate-300/80 px-3 py-2.5 text-left text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-slate-500"
+                            className="ui-studio-table-cell border-b text-left text-[0.72rem] font-semibold uppercase tracking-[0.18em]"
                           >
                             {column.label}
                           </th>
@@ -506,12 +544,8 @@ export function CarsSingleViewShell() {
                           <tr
                             key={row.id}
                             aria-pressed={isActive}
-                            className={cn(
-                              'cursor-pointer select-none border-b border-slate-200/80 text-slate-700 outline-none transition-colors',
-                              isActive
-                                ? 'bg-cyan-50/90 text-slate-950'
-                                : 'bg-white/95 hover:bg-slate-50/90 focus-visible:bg-slate-50',
-                            )}
+                            className="ui-studio-record-row cursor-pointer select-none outline-none transition-colors"
+                            data-active={isActive}
                             draggable={false}
                             onClick={() => selectRecord(row.id)}
                             onKeyDown={(event) => handleSelectableRowKeyDown(event, () => selectRecord(row.id))}
@@ -523,8 +557,10 @@ export function CarsSingleViewShell() {
                               <td
                                 key={`${row.id}-${column.key}`}
                                 className={cn(
-                                  'px-3 py-2.5',
-                                  columnIndex === 0 && isActive && 'shadow-[inset_3px_0_0_0_#2f607d] font-medium',
+                                  'ui-studio-table-cell',
+                                  columnIndex === 0 &&
+                                    isActive &&
+                                    'shadow-[inset_3px_0_0_0_var(--ui-accent)] font-medium text-[var(--ui-text-primary)]',
                                 )}
                               >
                                 {String(row[column.key])}
@@ -540,7 +576,7 @@ export function CarsSingleViewShell() {
             </div>
           </section>
 
-          <aside className="border-t border-slate-300/80 bg-[linear-gradient(180deg,_rgba(243,247,249,0.96)_0%,_rgba(237,243,246,0.94)_100%)] px-4 py-4 xl:min-h-0 xl:border-t-0 xl:px-5 xl:py-5">
+          <aside className="ui-studio-detail border-t xl:min-h-0 xl:border-t-0">
             <div className="grid gap-5 xl:h-full xl:min-h-0 xl:grid-rows-[auto_1fr]">
               <SectionHeader
                 detail="Inspect the focused record and read back the active query envelope without leaving the page."
@@ -551,21 +587,21 @@ export function CarsSingleViewShell() {
               <div className="grid gap-5 xl:min-h-0 xl:content-start xl:overflow-auto xl:pr-1">
                 {selectedCar ? (
                   <>
-                    <div className="rounded-[24px] border border-slate-300/80 bg-white/82 p-4 shadow-sm shadow-slate-950/5">
-                      <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-slate-500">
+                    <div className="ui-studio-surface border p-4 shadow-sm shadow-slate-950/5">
+                      <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">
                         Focused record
                       </p>
-                      <p className="mt-3 font-[family-name:var(--font-display)] text-[1.8rem] leading-tight text-slate-950">
+                      <p className="mt-3 font-[family-name:var(--font-display)] text-[1.8rem] leading-tight text-[var(--ui-text-primary)]">
                         {selectedCar.name}
                       </p>
                       <div className="mt-3 flex flex-wrap gap-2">
-                        <Badge className="border-slate-300/80 bg-slate-100 text-slate-700">{selectedCar.origin}</Badge>
-                        <Badge className="border-slate-300/80 bg-slate-100 text-slate-700">{selectedCar.year}</Badge>
-                        <Badge className="border-slate-300/80 bg-slate-100 text-slate-700">{selectedCar.cylinders} cyl</Badge>
+                        <Badge variant="secondary">{selectedCar.origin}</Badge>
+                        <Badge>{selectedCar.year}</Badge>
+                        <Badge>{selectedCar.cylinders} cyl</Badge>
                       </div>
                     </div>
 
-                    <div className="grid gap-2">
+                    <div className="ui-studio-metric-stack grid">
                       <MetricReadout label="Horsepower" tone="accent" value={`${selectedCar.horsepower} hp`} />
                       <MetricReadout label="Fuel efficiency" value={`${selectedCar.milesPerGallon} mpg`} />
                       <MetricReadout label="Weight" value={`${formatCompactNumber(selectedCar.weightInLbs)} lbs`} />
@@ -573,41 +609,41 @@ export function CarsSingleViewShell() {
                     </div>
                   </>
                 ) : (
-                  <div className="rounded-[24px] border border-dashed border-slate-300/90 bg-white/72 p-5 text-sm leading-6 text-slate-600">
+                  <div className="ui-studio-surface border border-dashed p-5 text-sm leading-6 text-[var(--ui-text-secondary)]">
                     Select a point in the chart or a row in the records table to inspect it here.
                   </div>
                 )}
 
-                <Separator className="bg-slate-300/70" />
+                <Separator className="ui-studio-divider" />
 
-                <div className="grid gap-3 rounded-[24px] border border-slate-300/80 bg-white/76 p-4 shadow-sm shadow-slate-950/5">
-                  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-slate-500">
+                <div className="ui-studio-surface grid gap-3 border p-4 shadow-sm shadow-slate-950/5">
+                  <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">
                     Query envelope
                   </p>
-                  <div className="grid gap-3 text-sm text-slate-700">
+                  <div className="grid gap-3 text-sm text-[var(--ui-text-secondary)]">
                     <div className="flex items-start justify-between gap-4">
-                      <span className="text-slate-500">Dataset</span>
-                      <span className="font-medium text-slate-900">{CARS_DATASET_ID}</span>
+                      <span className="text-[var(--ui-text-muted)]">Dataset</span>
+                      <span className="font-medium text-[var(--ui-text-primary)]">{CARS_DATASET_ID}</span>
                     </div>
                     <div className="flex items-start justify-between gap-4">
-                      <span className="text-slate-500">Runtime</span>
-                      <span className="font-medium text-slate-900">{resolvedExecutionMode}</span>
+                      <span className="text-[var(--ui-text-muted)]">Runtime</span>
+                      <span className="font-medium text-[var(--ui-text-primary)]">{resolvedExecutionMode}</span>
                     </div>
                     <div className="flex items-start justify-between gap-4">
-                      <span className="text-slate-500">Origins</span>
-                      <span className="text-right font-medium text-slate-900">{originSummary}</span>
+                      <span className="text-[var(--ui-text-muted)]">Origins</span>
+                      <span className="text-right font-medium text-[var(--ui-text-primary)]">{originSummary}</span>
                     </div>
                     <div className="flex items-start justify-between gap-4">
-                      <span className="text-slate-500">Horsepower floor</span>
-                      <span className="font-medium text-slate-900">{minHorsepower} hp</span>
+                      <span className="text-[var(--ui-text-muted)]">Horsepower floor</span>
+                      <span className="font-medium text-[var(--ui-text-primary)]">{minHorsepower} hp</span>
                     </div>
                     <div className="flex items-start justify-between gap-4">
-                      <span className="text-slate-500">Weight ceiling</span>
-                      <span className="font-medium text-slate-900">{formatCompactNumber(weightCeiling)} lbs</span>
+                      <span className="text-[var(--ui-text-muted)]">Weight ceiling</span>
+                      <span className="font-medium text-[var(--ui-text-primary)]">{formatCompactNumber(weightCeiling)} lbs</span>
                     </div>
                     <div className="flex items-start justify-between gap-4">
-                      <span className="text-slate-500">Row limit</span>
-                      <span className="font-medium text-slate-900">{limit}</span>
+                      <span className="text-[var(--ui-text-muted)]">Row limit</span>
+                      <span className="font-medium text-[var(--ui-text-primary)]">{limit}</span>
                     </div>
                   </div>
                 </div>
@@ -615,6 +651,13 @@ export function CarsSingleViewShell() {
             </div>
           </aside>
         </div>
+        {SHOW_UI_STUDIO ? (
+          <UiStudioDrawer
+            buttonPreset={uiPrefs.buttonPreset}
+            onOpenChange={setIsStudioOpen}
+            open={isStudioOpen}
+          />
+        ) : null}
       </div>
     </main>
   );
