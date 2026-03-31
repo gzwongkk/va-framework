@@ -164,7 +164,7 @@ export const queryResultSchema = z.object({
   executionMode: executionModeSchema,
   queryKey: z.string(),
   durationMs: z.number().nonnegative(),
-  source: z.enum(['api', 'duckdb-worker']),
+  source: z.enum(['api', 'duckdb-worker', 'browser-runtime']),
 });
 export type QueryResult = z.infer<typeof queryResultSchema>;
 

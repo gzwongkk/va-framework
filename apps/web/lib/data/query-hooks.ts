@@ -2,15 +2,18 @@
 
 import type { DatasetDescriptor, JobRequest, JobRecord, QueryResult, QuerySpec } from '@va/contracts';
 import { jobRequestSchema, normalizeQuerySpec, queryKeys } from '@va/contracts';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 
 import { createRemoteJob, executeRemoteQuery, fetchDatasetCatalog, fetchJob } from './api-client';
+import { starterDatasets } from './starter-datasets';
 import { executeLocalQuery } from '../workers/local-query-client';
 
 export function useDatasetCatalog() {
   return useQuery({
+    initialData: starterDatasets,
     queryKey: queryKeys.datasets(),
     queryFn: fetchDatasetCatalog,
+    placeholderData: keepPreviousData,
   });
 }
 
@@ -19,6 +22,7 @@ export function useRemotePreviewQuery(query: QuerySpec, enabled = true) {
 
   return useQuery<QueryResult>({
     enabled,
+    placeholderData: keepPreviousData,
     queryKey: queryKeys.preview(normalized, 'remote'),
     queryFn: () => executeRemoteQuery(normalized),
   });
@@ -33,6 +37,7 @@ export function useLocalPreviewQuery(
 
   return useQuery<QueryResult>({
     enabled: enabled && Boolean(dataset),
+    placeholderData: keepPreviousData,
     queryKey: queryKeys.preview(normalized, 'local'),
     queryFn: () => executeLocalQuery(dataset!, normalized),
   });
