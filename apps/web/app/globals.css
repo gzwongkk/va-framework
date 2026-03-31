@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-body: "Inter", "Segoe UI", sans-serif;
-  --font-display: "Space Grotesk", "Inter", "Segoe UI", sans-serif;
+  --font-body: "Roboto Variable", "Roboto", "Segoe UI", sans-serif;
+  --font-display: "Roboto Variable", "Roboto", "Segoe UI", sans-serif;
   --color-background: oklch(0.975 0.004 228);
   --color-foreground: oklch(0.23 0.02 246);
   --color-card: oklch(1 0 0);
@@ -87,6 +87,26 @@
   --ui-shell-left-rail: 284px;
   --ui-shell-right-rail: 324px;
   --ui-shell-table-height: 308px;
+}
+
+@keyframes ui-overlay-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ui-drawer-in {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 * {

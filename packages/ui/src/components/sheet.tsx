@@ -40,7 +40,7 @@ export function Sheet({
     <div className="fixed inset-0 z-50 flex justify-end">
       <button
         aria-label="Close panel"
-        className="absolute inset-0 bg-slate-950/28 backdrop-blur-[2px]"
+        className="absolute inset-0 bg-slate-950/28 backdrop-blur-[2px] animate-[ui-overlay-fade_180ms_ease-out]"
         onClick={() => onOpenChange(false)}
         type="button"
       />
@@ -58,9 +58,10 @@ export function SheetContent({
   return (
     <div
       className={cn(
-        'relative z-10 flex h-full w-full max-w-[min(420px,100vw)] flex-col border-l border-[var(--ui-border,var(--color-border))] bg-[var(--ui-panel-background,var(--color-card))] shadow-[-24px_0_60px_-36px_rgba(15,23,42,0.4)]',
+        'relative z-10 ml-auto flex h-full w-full max-w-[min(440px,100vw)] flex-col border-l border-[var(--ui-border,var(--color-border))] bg-[var(--ui-panel-background,var(--color-card))] shadow-[-24px_0_60px_-36px_rgba(15,23,42,0.4)] animate-[ui-drawer-in_220ms_cubic-bezier(0.22,1,0.36,1)]',
         className,
       )}
+      data-side="right"
       role="dialog"
       aria-modal="true"
       {...props}
