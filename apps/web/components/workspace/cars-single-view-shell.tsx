@@ -128,7 +128,7 @@ export function CarsSingleViewShell() {
       <Card className="border-white/10 bg-slate-950/60 text-white shadow-2xl shadow-cyan-950/20 backdrop-blur">
         <CardHeader className="gap-6">
           <div className="flex flex-wrap items-center gap-3">
-            <Badge variant="secondary">v2.2.0 single-view analytics</Badge>
+            <Badge variant="secondary">v2.2.1 single-view analytics</Badge>
             <Badge variant="outline">Cars workflow</Badge>
             <Badge variant="outline">{resolvedExecutionMode} execution</Badge>
           </div>

@@ -5,7 +5,7 @@ The stable Vue release is preserved on the `release/v1.0.0` branch.
 
 ## Current milestone
 
-`v2.2.0` is the current release candidate. It turns the new data substrate into a concrete single-view workflow:
+`v2.2.1` is the current hotfix release on top of the single-view analytics milestone. It keeps the same workflow and fixes the first runtime coordination loop:
 
 - a cars analysis workflow with one chart, one control rail, one detail panel, and one supporting table
 - a reusable scatterplot primitive in `packages/vis-core`
@@ -54,7 +54,7 @@ pnpm dev
 The frontend runs at <http://localhost:3000>.
 The backend health endpoint is available at <http://127.0.0.1:8000/api/health>.
 
-## v2.2.0 endpoints
+## v2.2.1 endpoints
 
 - `GET /api/health`
 - `GET /api/datasets`
