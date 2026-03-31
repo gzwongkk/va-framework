@@ -35,7 +35,7 @@ export default function HomePage() {
           <Card className="border-white/10 bg-slate-950/55 text-white shadow-2xl shadow-cyan-950/30 backdrop-blur">
             <CardHeader className="gap-6">
               <div className="flex flex-wrap items-center gap-3">
-                <Badge variant="secondary">v2.2.0 in progress</Badge>
+                <Badge variant="secondary">v2.2.0 current release</Badge>
                 <Badge variant="outline">Next.js App Router</Badge>
                 <Badge variant="outline">FastAPI</Badge>
               </div>

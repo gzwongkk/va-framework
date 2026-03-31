@@ -5,8 +5,10 @@ The stable Vue release is preserved on the `release/v1.0.0` branch.
 
 ## Current milestone
 
-`v2.1.0` is the current release candidate. It establishes the data foundation for the React rewrite:
+`v2.2.0` is the current release candidate. It turns the new data substrate into a concrete single-view workflow:
 
+- a cars analysis workflow with one chart, one control rail, one detail panel, and one supporting table
+- a reusable scatterplot primitive in `packages/vis-core`
 - shared dataset, query, and job contracts in `packages/contracts`
 - a coordination model in `packages/view-system`
 - FastAPI dataset registry, query execution, and background job endpoints
@@ -52,7 +54,7 @@ pnpm dev
 The frontend runs at <http://localhost:3000>.
 The backend health endpoint is available at <http://127.0.0.1:8000/api/health>.
 
-## v2.1.0 endpoints
+## v2.2.0 endpoints
 
 - `GET /api/health`
 - `GET /api/datasets`
