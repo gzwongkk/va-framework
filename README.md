@@ -5,14 +5,14 @@ The stable Vue release is preserved on the `release/v1.0.0` branch.
 
 ## Current milestone
 
-`v2.2.4` is the current single-view UI refresh patch. It keeps the cars workflow intact and redesigns the workspace into a cleaner operator console:
+`v2.2.5` is the current single-view UI studio patch. It keeps the cars workflow intact and extends the operator console with a larger, customizable shell:
 
-- a light-console 16:10 workspace with a dedicated control rail, analysis stage, and detail rail
-- a denser utility-first layout with release-copy removed from the app surface
-- refreshed global tokens, page background, and console-oriented range control styling
-- a reworked D3 scatterplot surface with clearer hierarchy, lighter console styling, and inline status/legend treatment
-- a denser records table and detail rail tuned for inspection instead of dashboard-card presentation
-- preserved background-refresh behavior so query updates stay quiet and non-blocking while the current result remains visible
+- a responsive `1600×1000` desktop target, with additional `1440×900` and workstation shell presets
+- a development-only `Devtools` drawer for quick shell-size, theme, density, radius, and button-style changes
+- a dedicated persisted UI preference store separate from the data coordination model
+- tokenized shell, control, button, badge, and chart styling driven by CSS custom properties
+- a reworked D3 scatterplot surface that now inherits theme presets alongside the surrounding shell
+- persisted local UI preferences so the active studio preset survives a refresh
 - shared dataset, query, and job contracts in `packages/contracts`
 - a coordination model in `packages/view-system`
 - FastAPI dataset registry, query execution, and background job endpoints
@@ -58,7 +58,7 @@ pnpm dev
 The frontend runs at <http://localhost:3000>.
 The backend health endpoint is available at <http://127.0.0.1:8000/api/health>.
 
-## v2.2.4 endpoints
+## v2.2.5 endpoints
 
 - `GET /api/health`
 - `GET /api/datasets`
