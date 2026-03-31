@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-body: var(--font-body);
-  --font-display: var(--font-display);
+  --font-body: "Inter", "Segoe UI", sans-serif;
+  --font-display: "Space Grotesk", "Inter", "Segoe UI", sans-serif;
   --color-background: oklch(0.975 0.004 228);
   --color-foreground: oklch(0.23 0.02 246);
   --color-card: oklch(1 0 0);
