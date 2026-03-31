@@ -2,13 +2,17 @@
 
 import {
   Button,
+  ScrollArea,
   Separator,
+  SheetClose,
   Sheet,
   SheetContent,
   SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
+  ToggleGroup,
+  ToggleGroupItem,
   cn,
 } from '@va/ui';
 import { Palette, LayoutDashboard, Radius, Rows3, SquareDashedMousePointer } from 'lucide-react';
@@ -59,30 +63,28 @@ function OptionGroup<T extends string>({
         </div>
       </div>
 
-      <div className="grid gap-2">
-        {options.map((option) => {
-          const active = option.value === activeValue;
-
-          return (
-            <Button
-              key={option.value}
-              className={cn(
-                'ui-studio-toggle grid h-auto w-full justify-start gap-1 px-3 py-3 text-left normal-case tracking-normal',
-                active && 'shadow-sm shadow-slate-950/5',
-              )}
-              data-active={active}
-              data-button-style={buttonPreset}
-              onClick={() => onChange(option.value)}
-              size="default"
-              type="button"
-              variant={active ? 'default' : 'outline'}
-            >
-              <span className="text-sm font-semibold">{option.label}</span>
-              <span className="text-xs font-normal opacity-80">{option.description}</span>
-            </Button>
-          );
-        })}
-      </div>
+      <ToggleGroup
+        className="grid gap-2"
+        onValueChange={(value) => {
+          if (value) {
+            onChange(value as T);
+          }
+        }}
+        type="single"
+        value={activeValue}
+      >
+        {options.map((option) => (
+          <ToggleGroupItem
+            key={option.value}
+            className="grid h-auto w-full justify-start gap-1 px-3 py-3 text-left normal-case tracking-normal shadow-sm shadow-slate-950/5"
+            data-button-style={buttonPreset}
+            value={option.value}
+          >
+            <span className="text-sm font-semibold">{option.label}</span>
+            <span className="text-xs font-normal opacity-80">{option.description}</span>
+          </ToggleGroupItem>
+        ))}
+      </ToggleGroup>
     </section>
   );
 }
@@ -102,7 +104,7 @@ export function UiStudioDrawer({
 
   return (
     <Sheet onOpenChange={onOpenChange} open={open}>
-      <SheetContent className="ui-studio-drawer">
+      <SheetContent className="ui-studio-drawer" side="right">
         <SheetHeader className="pb-5">
           <div className="flex items-start justify-between gap-3">
             <div>
@@ -121,65 +123,67 @@ export function UiStudioDrawer({
           </div>
         </SheetHeader>
 
-        <div className="ui-studio-stack grid min-h-0 flex-1 overflow-auto pr-1">
-          <OptionGroup
-            activeValue={prefs.shellPreset}
-            buttonPreset={buttonPreset}
-            description="Switch the overall desktop frame and working-canvas footprint."
-            icon={LayoutDashboard}
-            onChange={setShellPreset}
-            options={uiShellOptions}
-            title="Shell Size"
-          />
+        <ScrollArea className="min-h-0 flex-1 pr-1">
+          <div className="ui-studio-stack grid">
+            <OptionGroup
+              activeValue={prefs.shellPreset}
+              buttonPreset={buttonPreset}
+              description="Switch the overall desktop frame and working-canvas footprint."
+              icon={LayoutDashboard}
+              onChange={setShellPreset}
+              options={uiShellOptions}
+              title="Shell Size"
+            />
 
-          <Separator className="ui-studio-divider" />
+            <Separator className="ui-studio-divider" />
 
-          <OptionGroup
-            activeValue={prefs.themePreset}
-            buttonPreset={buttonPreset}
-            description="Swap the shell chrome, surfaces, accents, and analytical canvas tone."
-            icon={Palette}
-            onChange={setThemePreset}
-            options={uiThemeOptions}
-            title="Color Scheme"
-          />
+            <OptionGroup
+              activeValue={prefs.themePreset}
+              buttonPreset={buttonPreset}
+              description="Swap the shell chrome, surfaces, accents, and analytical canvas tone."
+              icon={Palette}
+              onChange={setThemePreset}
+              options={uiThemeOptions}
+              title="Color Scheme"
+            />
 
-          <Separator className="ui-studio-divider" />
+            <Separator className="ui-studio-divider" />
 
-          <OptionGroup
-            activeValue={prefs.densityPreset}
-            buttonPreset={buttonPreset}
-            description="Tune spacing, control height, and table compactness."
-            icon={Rows3}
-            onChange={setDensityPreset}
-            options={uiDensityOptions}
-            title="Density"
-          />
+            <OptionGroup
+              activeValue={prefs.densityPreset}
+              buttonPreset={buttonPreset}
+              description="Tune spacing, control height, and table compactness."
+              icon={Rows3}
+              onChange={setDensityPreset}
+              options={uiDensityOptions}
+              title="Density"
+            />
 
-          <Separator className="ui-studio-divider" />
+            <Separator className="ui-studio-divider" />
 
-          <OptionGroup
-            activeValue={prefs.radiusPreset}
-            buttonPreset={buttonPreset}
-            description="Adjust panel and control corner geometry without changing the layout."
-            icon={Radius}
-            onChange={setRadiusPreset}
-            options={uiRadiusOptions}
-            title="Corner Radius"
-          />
+            <OptionGroup
+              activeValue={prefs.radiusPreset}
+              buttonPreset={buttonPreset}
+              description="Adjust panel and control corner geometry without changing the layout."
+              icon={Radius}
+              onChange={setRadiusPreset}
+              options={uiRadiusOptions}
+              title="Corner Radius"
+            />
 
-          <Separator className="ui-studio-divider" />
+            <Separator className="ui-studio-divider" />
 
-          <OptionGroup
-            activeValue={prefs.buttonPreset}
-            buttonPreset={buttonPreset}
-            description="Restyle the segmented controls and quick-action buttons used across the shell."
-            icon={SquareDashedMousePointer}
-            onChange={setButtonPreset}
-            options={uiButtonOptions}
-            title="Button Style"
-          />
-        </div>
+            <OptionGroup
+              activeValue={prefs.buttonPreset}
+              buttonPreset={buttonPreset}
+              description="Restyle the segmented controls and quick-action buttons used across the shell."
+              icon={SquareDashedMousePointer}
+              onChange={setButtonPreset}
+              options={uiButtonOptions}
+              title="Button Style"
+            />
+          </div>
+        </ScrollArea>
 
         <SheetFooter className="border-t border-[var(--ui-border)] pt-5">
           <Button
@@ -192,16 +196,17 @@ export function UiStudioDrawer({
           >
             Reset to Default
           </Button>
-          <Button
-            className="ui-studio-toggle"
-            data-active
-            data-button-style={buttonPreset}
-            onClick={() => onOpenChange(false)}
-            type="button"
-            variant="default"
-          >
-            Close
-          </Button>
+          <SheetClose asChild>
+            <Button
+              className="ui-studio-toggle"
+              data-active
+              data-button-style={buttonPreset}
+              type="button"
+              variant="default"
+            >
+              Close
+            </Button>
+          </SheetClose>
         </SheetFooter>
       </SheetContent>
     </Sheet>

@@ -1,7 +1,7 @@
 'use client';
 
 import type { CarRecord } from '@/lib/analytics/cars-analytics';
-import { cn } from '@va/ui';
+import { cn, ScrollArea, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@va/ui';
 
 import { handleSelectableRowKeyDown } from './cars-shell-primitives';
 
@@ -26,26 +26,26 @@ export function CarsRecordsTable({
 }: CarsRecordsTableProps) {
   return (
     <div className="ui-studio-surface mt-4 min-h-0 overflow-hidden border">
-      <div className="h-full overflow-auto select-none">
-        <table className="min-w-full border-collapse text-sm">
-          <thead className="ui-studio-record-head sticky top-0 z-10 backdrop-blur">
-            <tr>
+      <ScrollArea className="h-full select-none">
+        <Table className="min-w-full border-collapse text-sm">
+          <TableHeader className="ui-studio-record-head sticky top-0 z-10 backdrop-blur">
+            <TableRow>
               {TABLE_COLUMNS.map((column) => (
-                <th
+                <TableHead
                   key={column.key}
                   className="ui-studio-table-cell border-b text-left text-[0.72rem] font-semibold uppercase tracking-[0.18em]"
                 >
                   {column.label}
-                </th>
+                </TableHead>
               ))}
-            </tr>
-          </thead>
-          <tbody>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {rows.map((row) => {
               const isActive = row.id === selectedId;
 
               return (
-                <tr
+                <TableRow
                   key={row.id}
                   aria-pressed={isActive}
                   className="ui-studio-record-row cursor-pointer select-none outline-none transition-colors"
@@ -58,7 +58,7 @@ export function CarsRecordsTable({
                   tabIndex={0}
                 >
                   {TABLE_COLUMNS.map((column, columnIndex) => (
-                    <td
+                    <TableCell
                       key={`${row.id}-${column.key}`}
                       className={cn(
                         'ui-studio-table-cell',
@@ -68,14 +68,14 @@ export function CarsRecordsTable({
                       )}
                     >
                       {String(row[column.key])}
-                    </td>
+                    </TableCell>
                   ))}
-                </tr>
+                </TableRow>
               );
             })}
-          </tbody>
-        </table>
-      </div>
+          </TableBody>
+        </Table>
+      </ScrollArea>
     </div>
   );
 }

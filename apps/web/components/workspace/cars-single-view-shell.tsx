@@ -26,7 +26,7 @@ import { planExecution } from '@/lib/data/execution-planner';
 import { useDatasetCatalog, useLocalPreviewQuery, useRemotePreviewQuery } from '@/lib/data/query-hooks';
 import { resolveChartTheme, resolveUiStudioVars } from '@/lib/ui-studio';
 import { useUiStudioStore } from '@/lib/ui-studio-store';
-import { Badge, Button, Separator } from '@va/ui';
+import { Badge, Button, Separator, ToggleGroup, ToggleGroupItem } from '@va/ui';
 import { D3ScatterPlot } from '@va/vis-core';
 import { ChartNoAxesCombined, Cpu, Database, Filter, Settings2, SlidersHorizontal } from 'lucide-react';
 import { type CSSProperties, useEffect, useMemo, useState } from 'react';
@@ -235,22 +235,27 @@ export function CarsSingleViewShell() {
                     <Cpu className="size-4 text-[var(--ui-text-muted)]" />
                   </div>
                   <div className="grid grid-cols-2 gap-2">
-                    {EXECUTION_MODES.map((mode) => {
-                      const active = preferredExecutionMode === mode;
-                      return (
-                        <Button
+                    <ToggleGroup
+                      className="grid w-full grid-cols-2 gap-2"
+                      onValueChange={(value) => {
+                        if (value === 'local' || value === 'remote') {
+                          setPreferredExecutionMode(value);
+                        }
+                      }}
+                      type="single"
+                      value={preferredExecutionMode}
+                    >
+                      {EXECUTION_MODES.map((mode) => (
+                        <ToggleGroupItem
                           key={mode}
-                          className="ui-studio-toggle text-xs font-semibold uppercase tracking-[0.18em]"
-                          data-active={active}
+                          className="w-full text-xs font-semibold uppercase tracking-[0.18em]"
                           data-button-style={uiPrefs.buttonPreset}
-                          onClick={() => setPreferredExecutionMode(mode)}
-                          type="button"
-                          variant={active ? 'default' : 'outline'}
+                          value={mode}
                         >
                           {mode}
-                        </Button>
-                      );
-                    })}
+                        </ToggleGroupItem>
+                      ))}
+                    </ToggleGroup>
                   </div>
                   <p className="ui-studio-body">{consoleStatus.detail}</p>
                 </div>
@@ -262,34 +267,27 @@ export function CarsSingleViewShell() {
                     </p>
                     <Filter className="size-4 text-[var(--ui-text-muted)]" />
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    {CARS_ORIGIN_OPTIONS.map((origin) => {
-                      const active = originFilters.includes(origin);
-                      return (
-                        <Button
-                          key={origin}
-                          className="ui-studio-toggle px-3 text-xs font-semibold uppercase tracking-[0.16em]"
-                          data-active={active}
-                          data-button-style={uiPrefs.buttonPreset}
-                          onClick={() =>
-                            setOriginFilters((current) =>
-                              current.includes(origin)
-                                ? current.filter((value) => value !== origin)
-                                : [...current, origin],
-                            )
-                          }
-                          type="button"
-                          variant={active ? 'default' : 'outline'}
-                        >
-                          <span
-                            className="mr-2 size-2 rounded-full"
-                            style={{ backgroundColor: CARS_ORIGIN_PALETTE[origin] }}
-                          />
-                          {origin}
-                        </Button>
-                      );
-                    })}
-                  </div>
+                  <ToggleGroup
+                    className="flex flex-wrap gap-2"
+                    onValueChange={(value) => setOriginFilters(value)}
+                    type="multiple"
+                    value={originFilters}
+                  >
+                    {CARS_ORIGIN_OPTIONS.map((origin) => (
+                      <ToggleGroupItem
+                        key={origin}
+                        className="px-3 text-xs font-semibold uppercase tracking-[0.16em]"
+                        data-button-style={uiPrefs.buttonPreset}
+                        value={origin}
+                      >
+                        <span
+                          className="mr-2 size-2 rounded-full"
+                          style={{ backgroundColor: CARS_ORIGIN_PALETTE[origin] }}
+                        />
+                        {origin}
+                      </ToggleGroupItem>
+                    ))}
+                  </ToggleGroup>
                 </div>
 
                 <RangeField
