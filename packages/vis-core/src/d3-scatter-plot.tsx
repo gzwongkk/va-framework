@@ -3,6 +3,21 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import type { ScatterPlotDatum } from './scatter-plot';
 
+export type D3ScatterPlotTheme = {
+  axisDomainColor: string;
+  axisTickColor: string;
+  borderColor: string;
+  emptyBackground: string;
+  frameBackground: string;
+  gridColor: string;
+  headerBackground: string;
+  plotBackground: string;
+  selectionStroke: string;
+  shadow: string;
+  textPrimary: string;
+  textSecondary: string;
+};
+
 export type D3ScatterPlotProps = {
   data: ScatterPlotDatum[];
   emptyLabel?: string;
@@ -13,6 +28,7 @@ export type D3ScatterPlotProps = {
   statusLabel?: string;
   statusTone?: 'accent' | 'neutral' | 'warning' | 'error';
   subtitle?: string;
+  theme?: D3ScatterPlotTheme;
   title: string;
   xLabel: string;
   yLabel: string;
@@ -21,6 +37,20 @@ export type D3ScatterPlotProps = {
 const DEFAULT_WIDTH = 880;
 const DEFAULT_HEIGHT = 520;
 const DEFAULT_MARGIN = { top: 30, right: 28, bottom: 56, left: 64 };
+const DEFAULT_THEME: D3ScatterPlotTheme = {
+  axisDomainColor: '#8fa3b4',
+  axisTickColor: '#526172',
+  borderColor: 'rgba(146, 164, 180, 0.46)',
+  emptyBackground: 'rgba(243, 247, 250, 0.9)',
+  frameBackground: 'linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(246,250,252,0.98) 100%)',
+  gridColor: '#d7e0e7',
+  headerBackground: 'linear-gradient(180deg, rgba(249,251,252,0.98) 0%, rgba(244,248,250,0.95) 100%)',
+  plotBackground: 'linear-gradient(180deg, rgba(251,253,254,0.98) 0%, rgba(246,250,252,0.98) 100%)',
+  selectionStroke: '#102331',
+  shadow: '0 20px 60px -42px rgba(15,23,42,0.45)',
+  textPrimary: '#0f172a',
+  textSecondary: '#526172',
+};
 
 function getDomain(values: number[]) {
   const [minimum = 0, maximum = 1] = extent(values);
@@ -33,16 +63,35 @@ function getDomain(values: number[]) {
   return [minimum - padding, maximum + padding] as const;
 }
 
-function getStatusClasses(tone: D3ScatterPlotProps['statusTone']) {
+function getStatusStyle(
+  tone: D3ScatterPlotProps['statusTone'],
+  theme: D3ScatterPlotTheme,
+) {
   switch (tone) {
     case 'accent':
-      return 'border-cyan-200/80 bg-cyan-50 text-cyan-800';
+      return {
+        background: 'color-mix(in srgb, white 55%, var(--ui-accent-soft) 45%)',
+        borderColor: 'var(--ui-accent-border)',
+        color: 'var(--ui-accent-text)',
+      };
     case 'warning':
-      return 'border-amber-200/80 bg-amber-50 text-amber-800';
+      return {
+        background: '#fff7db',
+        borderColor: '#f2d489',
+        color: '#8a5b12',
+      };
     case 'error':
-      return 'border-rose-200/80 bg-rose-50 text-rose-800';
+      return {
+        background: '#ffe7eb',
+        borderColor: '#f3b4c1',
+        color: '#a43352',
+      };
     default:
-      return 'border-slate-300/80 bg-white/85 text-slate-700';
+      return {
+        background: 'color-mix(in srgb, white 82%, var(--chart-border-color, rgba(146, 164, 180, 0.46)) 18%)',
+        borderColor: theme.borderColor,
+        color: theme.textSecondary,
+      };
   }
 }
 
@@ -56,6 +105,7 @@ export function D3ScatterPlot({
   statusLabel,
   statusTone = 'neutral',
   subtitle,
+  theme = DEFAULT_THEME,
   title,
   xLabel,
   yLabel,
@@ -107,39 +157,52 @@ export function D3ScatterPlot({
       .attr('transform', `translate(0, ${DEFAULT_MARGIN.top + innerHeight})`)
       .call(xAxis)
       .call((axisGroup: Selection<SVGGElement, unknown, null, undefined>) => {
-        axisGroup.select('.domain').attr('stroke', '#8fa3b4');
-        axisGroup.selectAll('line').attr('stroke', '#c7d3dd');
-        axisGroup.selectAll('text').attr('fill', '#526172').attr('font-size', 11);
+        axisGroup.select('.domain').attr('stroke', theme.axisDomainColor);
+        axisGroup.selectAll('line').attr('stroke', theme.gridColor);
+        axisGroup.selectAll('text').attr('fill', theme.axisTickColor).attr('font-size', 11);
       });
 
     select(yAxisRef.current)
       .attr('transform', `translate(${DEFAULT_MARGIN.left}, 0)`)
       .call(yAxis)
       .call((axisGroup: Selection<SVGGElement, unknown, null, undefined>) => {
-        axisGroup.select('.domain').attr('stroke', '#8fa3b4');
-        axisGroup.selectAll('line').attr('stroke', '#d7e0e7');
-        axisGroup.selectAll('text').attr('fill', '#526172').attr('font-size', 11);
+        axisGroup.select('.domain').attr('stroke', theme.axisDomainColor);
+        axisGroup.selectAll('line').attr('stroke', theme.gridColor);
+        axisGroup.selectAll('text').attr('fill', theme.axisTickColor).attr('font-size', 11);
       });
-  }, [data.length, innerHeight, xScale, yScale]);
+  }, [data.length, innerHeight, theme.axisDomainColor, theme.axisTickColor, theme.gridColor, xScale, yScale]);
 
   const yTicks = yScale.ticks(6);
 
   return (
     <div
       ref={containerRef}
-      className="overflow-hidden rounded-[26px] border border-slate-300/80 bg-[linear-gradient(180deg,_rgba(255,255,255,0.96)_0%,_rgba(246,250,252,0.98)_100%)] shadow-[0_20px_60px_-42px_rgba(15,23,42,0.45)]"
+      className="overflow-hidden rounded-[var(--ui-radius-panel)] border"
+      style={{
+        background: theme.frameBackground,
+        borderColor: theme.borderColor,
+        boxShadow: theme.shadow,
+      }}
     >
-      <div className="border-b border-slate-300/75 bg-[linear-gradient(180deg,_rgba(249,251,252,0.98)_0%,_rgba(244,248,250,0.95)_100%)] px-5 py-4">
+      <div
+        className="border-b px-[var(--ui-panel-padding)] py-[var(--ui-stage-padding)]"
+        style={{ background: theme.headerBackground, borderColor: theme.borderColor }}
+      >
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.26em] text-slate-500">Analysis stage</p>
-            <p className="mt-2 font-[family-name:var(--font-display)] text-[1.45rem] text-slate-950">{title}</p>
-            <p className="mt-2 text-sm text-slate-600">
+            <p className="ui-studio-label font-semibold uppercase tracking-[0.26em]" style={{ color: theme.textSecondary }}>
+              Analysis stage
+            </p>
+            <p className="mt-2 font-[family-name:var(--font-display)] text-[1.45rem]" style={{ color: theme.textPrimary }}>
+              {title}
+            </p>
+            <p className="mt-2 text-sm" style={{ color: theme.textSecondary }}>
               {subtitle ?? `${data.length} records in the current result set`}
             </p>
           </div>
           <div
-            className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium ${getStatusClasses(statusTone)}`}
+            className="inline-flex items-center gap-2 rounded-[var(--ui-radius-pill)] border px-3 py-1 text-xs font-medium"
+            style={getStatusStyle(statusTone, theme)}
           >
             <span
               className={`size-2 rounded-full ${
@@ -155,8 +218,8 @@ export function D3ScatterPlot({
             {statusLabel ?? 'Preview ready'}
           </div>
         </div>
-        <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-slate-500">
-          <span className="font-semibold uppercase tracking-[0.2em] text-slate-500">D3 scatterplot</span>
+        <div className="mt-4 flex flex-wrap items-center gap-3 text-xs" style={{ color: theme.textSecondary }}>
+          <span className="font-semibold uppercase tracking-[0.2em]">D3 scatterplot</span>
           {legend?.map((entry) => (
             <span key={entry.label} className="inline-flex items-center gap-2">
               <span className="size-2 rounded-full" style={{ backgroundColor: entry.color }} />
@@ -167,14 +230,18 @@ export function D3ScatterPlot({
       </div>
 
       {data.length === 0 ? (
-        <div className="flex h-[420px] items-center justify-center bg-slate-50/80 px-6 text-sm text-slate-500">
+        <div
+          className="flex h-[420px] items-center justify-center px-6 text-sm"
+          style={{ background: theme.emptyBackground, color: theme.textSecondary }}
+        >
           {emptyLabel}
         </div>
       ) : (
         <svg
           aria-label={title}
-          className="block w-full bg-[linear-gradient(180deg,_rgba(251,253,254,0.98)_0%,_rgba(246,250,252,0.98)_100%)]"
+          className="block w-full"
           role="img"
+          style={{ background: theme.plotBackground }}
           viewBox={`0 0 ${width} ${height}`}
         >
           <g>
@@ -187,7 +254,7 @@ export function D3ScatterPlot({
                   x2={DEFAULT_MARGIN.left + innerWidth}
                   y1={yPosition}
                   y2={yPosition}
-                  stroke="#d7e0e7"
+                  stroke={theme.gridColor}
                   strokeDasharray="5 8"
                 />
               );
@@ -219,7 +286,7 @@ export function D3ScatterPlot({
                     onClick={() => onSelect?.(point.id)}
                     onMouseDown={(event) => event.preventDefault()}
                     r={isSelected ? 8 : 6.2}
-                    stroke={isSelected ? '#102331' : 'rgba(255,255,255,0.96)'}
+                    stroke={isSelected ? theme.selectionStroke : 'rgba(255,255,255,0.96)'}
                     strokeWidth={isSelected ? 2.5 : 1.5}
                   >
                     <title>{point.subtitle ? `${point.label} - ${point.subtitle}` : point.label}</title>
@@ -230,7 +297,7 @@ export function D3ScatterPlot({
           </g>
 
           <text
-            fill="#526172"
+            fill={theme.textSecondary}
             fontSize="12"
             textAnchor="middle"
             x={DEFAULT_MARGIN.left + innerWidth / 2}
@@ -239,7 +306,7 @@ export function D3ScatterPlot({
             {xLabel}
           </text>
           <text
-            fill="#526172"
+            fill={theme.textSecondary}
             fontSize="12"
             textAnchor="middle"
             transform={`translate(18 ${DEFAULT_MARGIN.top + innerHeight / 2}) rotate(-90)`}

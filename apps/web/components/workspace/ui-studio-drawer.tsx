@@ -1,0 +1,209 @@
+'use client';
+
+import {
+  Button,
+  Separator,
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  cn,
+} from '@va/ui';
+import { Palette, LayoutDashboard, Radius, Rows3, SquareDashedMousePointer } from 'lucide-react';
+
+import { useUiStudioStore } from '@/lib/ui-studio-store';
+import {
+  uiButtonOptions,
+  uiDensityOptions,
+  uiRadiusOptions,
+  uiShellOptions,
+  uiThemeOptions,
+} from '@/lib/ui-studio';
+
+type UiStudioDrawerProps = {
+  buttonPreset: string;
+  onOpenChange: (open: boolean) => void;
+  open: boolean;
+};
+
+type OptionGroupProps<T extends string> = {
+  activeValue: T;
+  buttonPreset: string;
+  description: string;
+  icon: typeof Palette;
+  onChange: (value: T) => void;
+  options: Array<{ description: string; label: string; value: T }>;
+  title: string;
+};
+
+function OptionGroup<T extends string>({
+  activeValue,
+  buttonPreset,
+  description,
+  icon: Icon,
+  onChange,
+  options,
+  title,
+}: OptionGroupProps<T>) {
+  return (
+    <section className="grid gap-3">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="ui-studio-label font-semibold uppercase tracking-[0.22em]">{title}</p>
+          <p className="ui-studio-body mt-2">{description}</p>
+        </div>
+        <div className="ui-studio-icon-chip rounded-xl border p-2.5 shadow-sm shadow-slate-950/5">
+          <Icon className="size-4" />
+        </div>
+      </div>
+
+      <div className="grid gap-2">
+        {options.map((option) => {
+          const active = option.value === activeValue;
+
+          return (
+            <Button
+              key={option.value}
+              className={cn(
+                'ui-studio-toggle grid h-auto w-full justify-start gap-1 px-3 py-3 text-left normal-case tracking-normal',
+                active && 'shadow-sm shadow-slate-950/5',
+              )}
+              data-active={active}
+              data-button-style={buttonPreset}
+              onClick={() => onChange(option.value)}
+              size="default"
+              type="button"
+              variant={active ? 'default' : 'outline'}
+            >
+              <span className="text-sm font-semibold">{option.label}</span>
+              <span className="text-xs font-normal opacity-80">{option.description}</span>
+            </Button>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+export function UiStudioDrawer({
+  buttonPreset,
+  onOpenChange,
+  open,
+}: UiStudioDrawerProps) {
+  const prefs = useUiStudioStore((state) => state.prefs);
+  const resetPrefs = useUiStudioStore((state) => state.resetPrefs);
+  const setShellPreset = useUiStudioStore((state) => state.setShellPreset);
+  const setThemePreset = useUiStudioStore((state) => state.setThemePreset);
+  const setDensityPreset = useUiStudioStore((state) => state.setDensityPreset);
+  const setRadiusPreset = useUiStudioStore((state) => state.setRadiusPreset);
+  const setButtonPreset = useUiStudioStore((state) => state.setButtonPreset);
+
+  return (
+    <Sheet onOpenChange={onOpenChange} open={open}>
+      <SheetContent className="ui-studio-drawer">
+        <SheetHeader className="pb-5">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <div className="flex flex-wrap gap-2">
+                <span className="ui-studio-badge inline-flex items-center rounded-[var(--ui-radius-pill)] border px-3 py-1 text-xs font-medium uppercase tracking-[0.16em]">
+                  Development only
+                </span>
+              </div>
+              <SheetTitle className="mt-3 font-[family-name:var(--font-display)] text-2xl text-[var(--ui-text-primary)]">
+                UI Studio
+              </SheetTitle>
+              <SheetDescription className="ui-studio-body mt-2">
+                Quick workspace twists for shell size, theme, density, corner radius, and control treatment.
+              </SheetDescription>
+            </div>
+          </div>
+        </SheetHeader>
+
+        <div className="ui-studio-stack grid overflow-auto pr-1">
+          <OptionGroup
+            activeValue={prefs.shellPreset}
+            buttonPreset={buttonPreset}
+            description="Switch the overall desktop frame and working-canvas footprint."
+            icon={LayoutDashboard}
+            onChange={setShellPreset}
+            options={uiShellOptions}
+            title="Shell Size"
+          />
+
+          <Separator className="ui-studio-divider" />
+
+          <OptionGroup
+            activeValue={prefs.themePreset}
+            buttonPreset={buttonPreset}
+            description="Swap the shell chrome, surfaces, accents, and analytical canvas tone."
+            icon={Palette}
+            onChange={setThemePreset}
+            options={uiThemeOptions}
+            title="Color Scheme"
+          />
+
+          <Separator className="ui-studio-divider" />
+
+          <OptionGroup
+            activeValue={prefs.densityPreset}
+            buttonPreset={buttonPreset}
+            description="Tune spacing, control height, and table compactness."
+            icon={Rows3}
+            onChange={setDensityPreset}
+            options={uiDensityOptions}
+            title="Density"
+          />
+
+          <Separator className="ui-studio-divider" />
+
+          <OptionGroup
+            activeValue={prefs.radiusPreset}
+            buttonPreset={buttonPreset}
+            description="Adjust panel and control corner geometry without changing the layout."
+            icon={Radius}
+            onChange={setRadiusPreset}
+            options={uiRadiusOptions}
+            title="Corner Radius"
+          />
+
+          <Separator className="ui-studio-divider" />
+
+          <OptionGroup
+            activeValue={prefs.buttonPreset}
+            buttonPreset={buttonPreset}
+            description="Restyle the segmented controls and quick-action buttons used across the shell."
+            icon={SquareDashedMousePointer}
+            onChange={setButtonPreset}
+            options={uiButtonOptions}
+            title="Button Style"
+          />
+        </div>
+
+        <SheetFooter className="border-t border-[var(--ui-border)] pt-5">
+          <Button
+            className="ui-studio-toggle"
+            data-active={false}
+            data-button-style={buttonPreset}
+            onClick={resetPrefs}
+            type="button"
+            variant="outline"
+          >
+            Reset to Default
+          </Button>
+          <Button
+            className="ui-studio-toggle"
+            data-active
+            data-button-style={buttonPreset}
+            onClick={() => onOpenChange(false)}
+            type="button"
+            variant="default"
+          >
+            Close
+          </Button>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
+  );
+}
