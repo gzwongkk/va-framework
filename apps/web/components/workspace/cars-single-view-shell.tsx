@@ -1,7 +1,5 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-
 import {
   buildCarsQuery,
   CARS_DATASET_ID,
@@ -22,6 +20,7 @@ import {
   SectionHeader,
   StatusPill,
 } from '@/components/workspace/cars-shell-primitives';
+import { UiStudioDrawer } from '@/components/workspace/ui-studio-drawer';
 import { useCoordinationStore } from '@/lib/coordination-store';
 import { planExecution } from '@/lib/data/execution-planner';
 import { useDatasetCatalog, useLocalPreviewQuery, useRemotePreviewQuery } from '@/lib/data/query-hooks';
@@ -35,10 +34,6 @@ import { type CSSProperties, useEffect, useMemo, useState } from 'react';
 const VIEW_ID = 'single-view-plot';
 const EXECUTION_MODES = ['local', 'remote'] as const;
 const SHOW_UI_STUDIO = process.env.NODE_ENV !== 'production';
-const UiStudioDrawer = dynamic(
-  () => import('@/components/workspace/ui-studio-drawer').then((module) => module.UiStudioDrawer),
-  { ssr: false },
-);
 const ORIGIN_LEGEND = CARS_ORIGIN_OPTIONS.map((origin) => ({
   color: CARS_ORIGIN_PALETTE[origin],
   label: origin,

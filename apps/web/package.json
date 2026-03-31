@@ -1,11 +1,12 @@
 {
   "name": "@va/web",
   "private": true,
-  "version": "2.2.7",
+  "version": "2.2.8",
   "type": "module",
   "scripts": {
     "build": "next build --webpack",
-    "dev": "next dev --turbopack",
+    "dev": "next dev --webpack",
+    "dev:turbo": "next dev --turbopack",
     "lint": "eslint .",
     "test": "vitest run --pool threads --passWithNoTests",
     "typecheck": "tsc --noEmit"
