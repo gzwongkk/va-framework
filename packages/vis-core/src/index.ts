@@ -11,4 +11,5 @@ export type ChartFrame = {
   margin: { top: number; right: number; bottom: number; left: number };
 };
 
+export * from './d3-scatter-plot';
 export * from './scatter-plot';
