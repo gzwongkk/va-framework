@@ -1,5 +1,7 @@
 'use client';
 
+import dynamic from 'next/dynamic';
+
 import {
   buildCarsQuery,
   CARS_DATASET_ID,
@@ -11,175 +13,36 @@ import {
   summarizeCarsRows,
   toScatterPlotData,
 } from '@/lib/analytics/cars-analytics';
+import { CarsRecordsTable } from '@/components/workspace/cars-records-table';
+import {
+  formatCompactNumber,
+  formatMetric,
+  MetricReadout,
+  RangeField,
+  SectionHeader,
+  StatusPill,
+} from '@/components/workspace/cars-shell-primitives';
 import { useCoordinationStore } from '@/lib/coordination-store';
 import { planExecution } from '@/lib/data/execution-planner';
 import { useDatasetCatalog, useLocalPreviewQuery, useRemotePreviewQuery } from '@/lib/data/query-hooks';
 import { resolveChartTheme, resolveUiStudioVars } from '@/lib/ui-studio';
 import { useUiStudioStore } from '@/lib/ui-studio-store';
-import { UiStudioDrawer } from '@/components/workspace/ui-studio-drawer';
-import { Badge, Button, Separator, cn } from '@va/ui';
+import { Badge, Button, Separator } from '@va/ui';
 import { D3ScatterPlot } from '@va/vis-core';
 import { ChartNoAxesCombined, Cpu, Database, Filter, Settings2, SlidersHorizontal } from 'lucide-react';
-import { type CSSProperties, type KeyboardEvent, useEffect, useMemo, useState } from 'react';
+import { type CSSProperties, useEffect, useMemo, useState } from 'react';
 
 const VIEW_ID = 'single-view-plot';
 const EXECUTION_MODES = ['local', 'remote'] as const;
 const SHOW_UI_STUDIO = process.env.NODE_ENV !== 'production';
+const UiStudioDrawer = dynamic(
+  () => import('@/components/workspace/ui-studio-drawer').then((module) => module.UiStudioDrawer),
+  { ssr: false },
+);
 const ORIGIN_LEGEND = CARS_ORIGIN_OPTIONS.map((origin) => ({
   color: CARS_ORIGIN_PALETTE[origin],
   label: origin,
 }));
-const COMPACT_NUMBER_FORMATTER = new Intl.NumberFormat('en-US', {
-  maximumFractionDigits: 0,
-  notation: 'compact',
-});
-
-function formatMetric(value: number, suffix: string) {
-  if (!Number.isFinite(value) || value === 0) {
-    return `0 ${suffix}`;
-  }
-
-  return `${value.toFixed(1)} ${suffix}`;
-}
-
-const TABLE_COLUMNS = [
-  { key: 'name', label: 'Model' },
-  { key: 'origin', label: 'Origin' },
-  { key: 'horsepower', label: 'Horsepower' },
-  { key: 'milesPerGallon', label: 'MPG' },
-  { key: 'weightInLbs', label: 'Weight (lbs)' },
-] as const;
-
-type ConsoleStatusTone = 'accent' | 'neutral' | 'warning' | 'error';
-
-type SectionHeaderProps = {
-  title: string;
-  detail: string;
-  icon: typeof Cpu;
-};
-
-type MetricReadoutProps = {
-  label: string;
-  value: string;
-  tone?: 'accent' | 'neutral';
-};
-
-type RangeFieldProps = {
-  label: string;
-  max: number;
-  min: number;
-  onChange: (value: number) => void;
-  step?: number;
-  value: number;
-  valueLabel: string;
-};
-
-function formatCompactNumber(value: number) {
-  if (!Number.isFinite(value) || value === 0) {
-    return '0';
-  }
-
-  if (Math.abs(value) >= 1_000) {
-    return COMPACT_NUMBER_FORMATTER.format(value);
-  }
-
-  return value.toFixed(0);
-}
-
-function getStatusStyle(tone: ConsoleStatusTone): CSSProperties {
-  switch (tone) {
-    case 'accent':
-      return {
-        background: 'color-mix(in srgb, white 54%, var(--ui-accent-soft) 46%)',
-        borderColor: 'var(--ui-accent-border)',
-        color: 'var(--ui-accent-text)',
-      };
-    case 'warning':
-      return {
-        background: '#fff7db',
-        borderColor: '#f2d489',
-        color: '#8a5b12',
-      };
-    case 'error':
-      return {
-        background: '#ffe7eb',
-        borderColor: '#f3b4c1',
-        color: '#a43352',
-      };
-    default:
-      return {
-        background: 'color-mix(in srgb, white 78%, var(--ui-panel-background) 22%)',
-        borderColor: 'var(--ui-border)',
-        color: 'var(--ui-text-secondary)',
-      };
-  }
-}
-
-function handleSelectableRowKeyDown(
-  event: KeyboardEvent<HTMLTableRowElement>,
-  onSelect: () => void,
-) {
-  if (event.key === 'Enter' || event.key === ' ') {
-    event.preventDefault();
-    onSelect();
-  }
-}
-
-function SectionHeader({ detail, icon: Icon, title }: SectionHeaderProps) {
-  return (
-    <div className="flex items-start justify-between gap-3">
-      <div>
-        <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">{title}</p>
-        <p className="ui-studio-body mt-2">{detail}</p>
-      </div>
-      <div className="ui-studio-icon-chip rounded-xl border p-2.5 shadow-sm shadow-slate-950/5">
-        <Icon className="size-4" />
-      </div>
-    </div>
-  );
-}
-
-function MetricReadout({ label, tone = 'neutral', value }: MetricReadoutProps) {
-  return (
-    <div
-      className={cn(
-        'grid gap-1 border px-3 py-3',
-        tone === 'accent' ? 'ui-studio-surface-muted' : 'ui-studio-surface',
-      )}
-    >
-      <p className="ui-studio-label font-semibold uppercase tracking-[0.22em]">{label}</p>
-      <p className="ui-studio-metric-value font-[family-name:var(--font-display)] leading-none">{value}</p>
-    </div>
-  );
-}
-
-function RangeField({
-  label,
-  max,
-  min,
-  onChange,
-  step,
-  value,
-  valueLabel,
-}: RangeFieldProps) {
-  return (
-    <label className="grid gap-3">
-      <div className="flex items-center justify-between gap-3">
-        <span className="ui-studio-label font-semibold uppercase tracking-[0.2em]">{label}</span>
-        <span className="text-sm font-medium text-[var(--ui-text-primary)]">{valueLabel}</span>
-      </div>
-      <input
-        className="w-full"
-        max={max}
-        min={min}
-        onChange={(event) => onChange(Number(event.target.value))}
-        step={step}
-        type="range"
-        value={value}
-      />
-    </label>
-  );
-}
 
 export function CarsSingleViewShell() {
   const datasetCatalog = useDatasetCatalog();
@@ -334,25 +197,7 @@ export function CarsSingleViewShell() {
               <Badge>
                 {hasData ? `${summary.count} rows` : 'no rows'}
               </Badge>
-              <div
-                aria-live="polite"
-                className="ui-studio-status inline-flex items-center gap-2 rounded-[var(--ui-radius-pill)] border px-3 py-1 font-medium"
-                style={getStatusStyle(consoleStatus.tone)}
-              >
-                <span
-                  className={cn(
-                    'size-2 rounded-full',
-                    consoleStatus.tone === 'warning'
-                      ? 'animate-pulse bg-amber-500'
-                      : consoleStatus.tone === 'error'
-                        ? 'bg-rose-500'
-                        : consoleStatus.tone === 'accent'
-                          ? 'bg-cyan-600'
-                          : 'bg-slate-400',
-                  )}
-                />
-                {consoleStatus.label}
-              </div>
+              <StatusPill label={consoleStatus.label} tone={consoleStatus.tone} />
               {SHOW_UI_STUDIO ? (
                 <Button
                   className="ui-studio-toggle gap-2 px-3"
@@ -521,58 +366,7 @@ export function CarsSingleViewShell() {
                 </div>
               </div>
 
-              <div className="ui-studio-surface mt-4 min-h-0 overflow-hidden border">
-                <div className="h-full overflow-auto select-none">
-                  <table className="min-w-full border-collapse text-sm">
-                    <thead className="ui-studio-record-head sticky top-0 z-10 backdrop-blur">
-                      <tr>
-                        {TABLE_COLUMNS.map((column) => (
-                          <th
-                            key={column.key}
-                            className="ui-studio-table-cell border-b text-left text-[0.72rem] font-semibold uppercase tracking-[0.18em]"
-                          >
-                            {column.label}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {rows.map((row) => {
-                        const isActive = row.id === selectedCar?.id;
-
-                        return (
-                          <tr
-                            key={row.id}
-                            aria-pressed={isActive}
-                            className="ui-studio-record-row cursor-pointer select-none outline-none transition-colors"
-                            data-active={isActive}
-                            draggable={false}
-                            onClick={() => selectRecord(row.id)}
-                            onKeyDown={(event) => handleSelectableRowKeyDown(event, () => selectRecord(row.id))}
-                            onMouseDown={(event) => event.preventDefault()}
-                            role="button"
-                            tabIndex={0}
-                          >
-                            {TABLE_COLUMNS.map((column, columnIndex) => (
-                              <td
-                                key={`${row.id}-${column.key}`}
-                                className={cn(
-                                  'ui-studio-table-cell',
-                                  columnIndex === 0 &&
-                                    isActive &&
-                                    'shadow-[inset_3px_0_0_0_var(--ui-accent)] font-medium text-[var(--ui-text-primary)]',
-                                )}
-                              >
-                                {String(row[column.key])}
-                              </td>
-                            ))}
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+              <CarsRecordsTable onSelect={selectRecord} rows={rows} selectedId={selectedCar?.id} />
             </div>
           </section>
 
