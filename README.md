@@ -5,10 +5,14 @@ The stable Vue release is preserved on the `release/v1.0.0` branch.
 
 ## Current milestone
 
-`v2.2.8` is the current single-view reliability patch. It keeps the cars workflow intact and focuses on the development loop:
+`v2.2.9` is the final `v2.2` update. It keeps the cars workflow intact and sets the UI layer on a real `shadcn/ui + Radix` foundation:
 
 - a responsive `1600×1000` desktop target, with additional `1440×900` and workstation shell presets
-- a restored development-only `Devtools` drawer using a direct client import instead of an on-demand dev chunk
+- a `shadcn/ui`-style shared source package in `packages/ui`, backed by Radix primitives instead of custom overlay/toggle implementations
+- a Radix `Sheet`-based right drawer for the development-only `Devtools` panel
+- Radix `ToggleGroup` controls for execution mode, origin filters, and UI studio presets
+- Radix `ScrollArea` and `Separator` primitives in the shared UI layer, plus a shadcn-style `Table` baseline for records
+- a root `tsconfig.json` so the shadcn CLI can recognize the monorepo instead of failing at the repo root
 - a bundled local Roboto variable font so the UI no longer depends on a remote font source
 - a lighter React dev path by splitting the large shell into smaller modules and optimizing `d3` / `lucide-react` imports in Next
 - a more iOS-like default corner language, with softer shell, panel, and control radii across the workspace
@@ -69,7 +73,7 @@ pnpm dev:web:turbo
 The frontend runs at <http://localhost:3000>.
 The backend health endpoint is available at <http://127.0.0.1:8000/api/health>.
 
-## v2.2.8 endpoints
+## v2.2.9 endpoints
 
 - `GET /api/health`
 - `GET /api/datasets`
