@@ -5,10 +5,12 @@ The stable Vue release is preserved on the `release/v1.0.0` branch.
 
 ## Current milestone
 
-`v2.2.5` is the current single-view UI studio patch. It keeps the cars workflow intact and extends the operator console with a larger, customizable shell:
+`v2.2.6` is the current single-view dev-experience patch. It keeps the cars workflow intact and improves both the editing loop and the shell polish:
 
 - a responsive `1600×1000` desktop target, with additional `1440×900` and workstation shell presets
-- a development-only `Devtools` drawer for quick shell-size, theme, density, radius, and button-style changes
+- a development-only `Devtools` drawer that now reads as a right-side drawer instead of a generic overlay panel
+- a bundled local Roboto variable font so the UI no longer depends on a remote font source
+- a lighter React dev path by splitting the large shell into smaller modules, lazy-loading the optional devtools panel, and optimizing `d3` / `lucide-react` imports in Next
 - a dedicated persisted UI preference store separate from the data coordination model
 - tokenized shell, control, button, badge, and chart styling driven by CSS custom properties
 - a reworked D3 scatterplot surface that now inherits theme presets alongside the surrounding shell
@@ -58,7 +60,7 @@ pnpm dev
 The frontend runs at <http://localhost:3000>.
 The backend health endpoint is available at <http://127.0.0.1:8000/api/health>.
 
-## v2.2.5 endpoints
+## v2.2.6 endpoints
 
 - `GET /api/health`
 - `GET /api/datasets`
