@@ -33,6 +33,15 @@ export type MatrixSelectionSummary = {
   withinGroupEdges: number;
 };
 
+export type MatrixSelectionEdge = {
+  sourceId: string;
+  sourceLabel: string;
+  targetId: string;
+  targetLabel: string;
+  value: number;
+  withinGroup: boolean;
+};
+
 export type HierarchyNode = {
   attributes: GraphNode['attributes'];
   children: HierarchyNode[];
@@ -224,6 +233,34 @@ export function summarizeMatrixSelection(
     visibleNodeCount: matrix.visibleNodeCount,
     withinGroupEdges,
   };
+}
+
+export function getMatrixSelectionEdges(
+  matrix: AdjacencyMatrixModel,
+  selectedIds: string[],
+  limit = 6,
+): MatrixSelectionEdge[] {
+  const selected = new Set(selectedIds);
+  const nodeById = new Map(matrix.nodes.map((node) => [node.id, node]));
+
+  return matrix.cells
+    .filter(
+      (cell) =>
+        cell.rowIndex < cell.columnIndex &&
+        cell.value > 0 &&
+        selected.has(cell.sourceId) &&
+        selected.has(cell.targetId),
+    )
+    .map((cell) => ({
+      sourceId: cell.sourceId,
+      sourceLabel: nodeById.get(cell.sourceId)?.label ?? cell.sourceId,
+      targetId: cell.targetId,
+      targetLabel: nodeById.get(cell.targetId)?.label ?? cell.targetId,
+      value: cell.value,
+      withinGroup: cell.withinGroup,
+    }))
+    .sort((left, right) => right.value - left.value || left.sourceLabel.localeCompare(right.sourceLabel))
+    .slice(0, limit);
 }
 
 export function buildHierarchyTree(result: GraphQueryResult | undefined): HierarchyNode | undefined {

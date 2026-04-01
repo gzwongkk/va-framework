@@ -55,6 +55,7 @@ import {
   buildAdjacencyMatrixModel,
   buildHierarchyTree,
   deriveMultivariateNodes,
+  getMatrixSelectionEdges,
   getMultivariateFieldOptions,
   getMultivariateValue,
   getTechniqueHelp,
@@ -430,6 +431,10 @@ export function GraphSingleViewShell() {
     () => summarizeMatrixSelection(matrixModel, selectedNodeIds),
     [matrixModel, selectedNodeIds],
   );
+  const matrixSelectionEdges = useMemo(
+    () => getMatrixSelectionEdges(matrixModel, selectedNodeIds),
+    [matrixModel, selectedNodeIds],
+  );
   const hierarchyRoot = useMemo(() => buildHierarchyTree(graphResult), [graphResult]);
   const hierarchySummary = useMemo(() => summarizeHierarchyTree(hierarchyRoot), [hierarchyRoot]);
   const multivariateNodes = useMemo(
@@ -635,6 +640,7 @@ export function GraphSingleViewShell() {
           datasetLabel={datasetLabel}
           matrix={matrixModel}
           onSelectIds={selectNodes}
+          ordering={ordering}
           selectedIds={selectedNodeIds}
           statusLabel={effectiveStatusLabel}
           statusTone={effectiveStatusTone}
@@ -1330,6 +1336,32 @@ export function GraphSingleViewShell() {
                         <div className="flex items-start justify-between gap-4"><span className="text-[var(--ui-text-muted)]">Cross-group links</span><span className="font-medium text-[var(--ui-text-primary)]">{matrixSelectionSummary.crossGroupEdges}</span></div>
                         <div className="flex items-start justify-between gap-4"><span className="text-[var(--ui-text-muted)]">Visible nodes</span><span className="font-medium text-[var(--ui-text-primary)]">{matrixModel.visibleNodeCount}{matrixModel.truncated ? ` of ${matrixModel.totalNodeCount}` : ''}</span></div>
                       </div>
+                    </div>
+                    <div className="ui-studio-surface grid gap-3 border p-4 shadow-sm shadow-slate-950/5">
+                      <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">Selected block links</p>
+                      {matrixSelectionEdges.length > 0 ? (
+                        <div className="grid gap-3 text-sm text-[var(--ui-text-secondary)]">
+                          {matrixSelectionEdges.map((edge) => (
+                            <button
+                              key={`${edge.sourceId}:${edge.targetId}`}
+                              className="ui-studio-record-row rounded-[var(--ui-radius-control)] border p-3 text-left"
+                              onClick={() => selectNodes([edge.sourceId, edge.targetId])}
+                              onMouseDown={(event) => event.preventDefault()}
+                              type="button"
+                            >
+                              <div className="flex items-center justify-between gap-3">
+                                <span className="font-medium text-[var(--ui-text-primary)]">{edge.sourceLabel} / {edge.targetLabel}</span>
+                                <Badge variant={edge.withinGroup ? 'secondary' : 'outline'}>{edge.value.toFixed(1)}</Badge>
+                              </div>
+                              <p className="mt-1 text-xs text-[var(--ui-text-muted)]">
+                                {edge.withinGroup ? 'Within-group' : 'Cross-group'} connection
+                              </p>
+                            </button>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="ui-studio-body">Brush or click matrix cells to inspect the strongest links inside the selected block.</p>
+                      )}
                     </div>
                   </>
                 ) : null}

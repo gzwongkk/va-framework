@@ -261,6 +261,10 @@ export function AdjacencyMatrixBrush({
                 key={`${cell.sourceId}:${cell.targetId}`}
                 fill={cell.value > 0 ? layout.valueScale(cell.value) : 'rgba(239,245,248,0.8)'}
                 height={layout.cellSize - 1}
+                onClick={() => onSelectIds?.([cell.sourceId, cell.targetId])}
+                onMouseEnter={() => setHoveredIndex(cell.rowIndex)}
+                onMouseLeave={() => setHoveredIndex(undefined)}
+                style={{ cursor: cell.value > 0 ? 'pointer' : 'default' }}
                 stroke={isSelected ? theme.selectionStroke : isHovered ? theme.axisTickColor : 'rgba(255,255,255,0.42)'}
                 strokeWidth={isSelected ? 1.5 : isHovered ? 1 : 0.5}
                 width={layout.cellSize - 1}

@@ -5,6 +5,7 @@ import {
   buildAdjacencyMatrixModel,
   buildHierarchyTree,
   deriveMultivariateNodes,
+  getMatrixSelectionEdges,
   getMultivariateFieldOptions,
   getTechniqueHelp,
   orderGraphNodes,
@@ -91,6 +92,7 @@ describe('graph workbench analytics', () => {
   it('builds a brushable adjacency matrix and summarizes selected blocks', () => {
     const matrix = buildAdjacencyMatrixModel(sampleGraphResult, 'degree');
     const summary = summarizeMatrixSelection(matrix, ['Valjean', 'Cosette', 'Javert']);
+    const selectedEdges = getMatrixSelectionEdges(matrix, ['Valjean', 'Cosette', 'Javert']);
 
     expect(matrix.visibleNodeCount).toBe(4);
     expect(matrix.cells.some((cell) => cell.sourceId === 'Valjean' && cell.targetId === 'Cosette' && cell.value === 7)).toBe(true);
@@ -101,6 +103,14 @@ describe('graph workbench analytics', () => {
       selectedNodeCount: 3,
       visibleNodeCount: 4,
       withinGroupEdges: 1,
+    });
+    expect(selectedEdges[0]).toEqual({
+      sourceId: 'Cosette',
+      sourceLabel: 'Cosette',
+      targetId: 'Valjean',
+      targetLabel: 'Valjean',
+      value: 7,
+      withinGroup: false,
     });
   });
 
