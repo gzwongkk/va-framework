@@ -5,14 +5,14 @@ The stable Vue release is preserved on the `release/v1.0.0` branch.
 
 ## Current milestone
 
-`v2.3.11` is the example-gallery foundation release.
+`v2.3.12` is the shared control system release.
 
-The home route at `/` remains the graph workbench. This release adds the gallery foundation:
+The home route at `/` remains the graph workbench. This release standardizes example switching and shared controls:
 
-- a new `/gallery` route now browses registry-backed examples
-- `/examples/[exampleId]` is now the generic example route for registered workbench entries
-- the shared coordination model now tracks the active visualization id and example-scoped control values
-- the first app-level visualization catalog now registers graph home, matrix, multivariate, hierarchy, and cars entries
+- a persistent top-level action bar now exposes Graph Home, Gallery, Cars, and Open Example actions
+- the gallery now browses examples through visible category tabs instead of only route-local cards
+- the workbench header now uses registry-backed shared controls for technique, dataset, and ordering
+- a command-based example switcher now opens registered examples without relying on hidden keyboard-first flows
 
 The `v2.3` line now consists of:
 
@@ -28,6 +28,7 @@ The `v2.3` line now consists of:
 - `v2.3.9`: graph workbench hardening, guidance, accessibility labels, and regression coverage
 - `v2.3.10`: canonical Les Miserables dataset import, duplicate-key fix, and remote runtime cleanup
 - `v2.3.11`: example gallery foundation, visualization catalog, and generic example routes
+- `v2.3.12`: shared control system, command-based example switching, and gallery category tabs
 
 The core stack now includes:
 
@@ -54,6 +55,7 @@ The release ladder remains:
 - `v2.3.9`: graph workbench hardening
 - `v2.3.10`: canonical Les Miserables dataset and remote runtime fixes
 - `v2.3.11`: example gallery foundation
+- `v2.3.12`: shared control system
 - `v2.4.0`: spatio-temporal data
 - `v2.5.0`: multi-view coordination
 - `v2.6.0`: spatial-ready foundations

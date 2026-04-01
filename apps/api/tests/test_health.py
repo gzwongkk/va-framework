@@ -9,5 +9,5 @@ def test_health_endpoint() -> None:
     response = client.get('/api/health')
 
     assert response.status_code == 200
-    assert response.json()['version'] == '2.3.11'
-    assert response.json()['stage'] == 'example-gallery-foundation'
+    assert response.json()['version'] == '2.3.12'
+    assert response.json()['stage'] == 'shared-control-system'

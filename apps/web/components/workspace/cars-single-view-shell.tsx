@@ -20,8 +20,8 @@ import {
   SectionHeader,
   StatusPill,
 } from '@/components/workspace/cars-shell-primitives';
-import { WorkspaceRouteNav } from '@/components/workspace/workspace-route-nav';
 import { UiStudioDrawer } from '@/components/workspace/ui-studio-drawer';
+import { WorkspaceActionBar } from '@/components/workspace/workspace-action-bar';
 import { useCoordinationStore } from '@/lib/coordination-store';
 import { planExecution } from '@/lib/data/execution-planner';
 import { useDatasetCatalog, useLocalPreviewQuery, useRemotePreviewQuery } from '@/lib/data/query-hooks';
@@ -64,6 +64,7 @@ export function CarsSingleViewShell({ visualizationId = 'cars-scatter' }: CarsSi
   const setLastQuery = useCoordinationStore((state) => state.setLastQuery);
   const setPreferredExecutionMode = useCoordinationStore((state) => state.setPreferredExecutionMode);
   const setSelection = useCoordinationStore((state) => state.setSelection);
+  const setVisualizationControlValues = useCoordinationStore((state) => state.setVisualizationControlValues);
 
   const [originFilters, setOriginFilters] = useState<string[]>(DEFAULT_CARS_CONTROLS.originFilters);
   const [minHorsepower, setMinHorsepower] = useState(DEFAULT_CARS_CONTROLS.minHorsepower);
@@ -115,6 +116,12 @@ export function CarsSingleViewShell({ visualizationId = 'cars-scatter' }: CarsSi
   useEffect(() => {
     setActiveVisualizationId(visualizationId);
   }, [setActiveVisualizationId, visualizationId]);
+
+  useEffect(() => {
+    setVisualizationControlValues(visualizationId, {
+      execution: preferredExecutionMode,
+    });
+  }, [preferredExecutionMode, setVisualizationControlValues, visualizationId]);
 
   useEffect(() => {
     setFilters(query.filters);
@@ -201,7 +208,7 @@ export function CarsSingleViewShell({ visualizationId = 'cars-scatter' }: CarsSi
             </div>
 
             <div className="flex flex-wrap items-center justify-end gap-2 text-xs">
-              <WorkspaceRouteNav buttonPreset={uiPrefs.buttonPreset} />
+              <WorkspaceActionBar buttonPreset={uiPrefs.buttonPreset} />
               <Badge>{CARS_DATASET_ID}</Badge>
               <Badge>{resolvedExecutionMode}</Badge>
               <Badge>

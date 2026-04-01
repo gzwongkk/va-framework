@@ -12,7 +12,39 @@ export const visualizationCatalog: VisualizationExampleDefinition[] = [
     routePath: '/examples/graph-force',
     provenanceLabel: 'Vega Miserables + native D3 force graph',
     provenanceUrl: 'https://vega.github.io/vega-datasets/data/miserables.json',
-    controlSpecs: [],
+    controlSpecs: [
+      {
+        id: 'technique',
+        label: 'Technique',
+        type: 'button-group',
+        options: [
+          { label: 'Force', value: 'force' },
+          { label: 'Matrix', value: 'matrix' },
+          { label: 'Tree', value: 'tree' },
+          { label: 'Multivariate', value: 'multivariate' },
+        ],
+      },
+      {
+        id: 'dataset',
+        label: 'Dataset',
+        type: 'select',
+        options: [
+          { label: 'Les Miserables', value: 'miserables' },
+          { label: 'Flare', value: 'flare' },
+        ],
+      },
+      {
+        id: 'ordering',
+        label: 'Ordering',
+        type: 'button-group',
+        options: [
+          { label: 'Original', value: 'original' },
+          { label: 'Alpha', value: 'alphabetical' },
+          { label: 'Degree', value: 'degree' },
+          { label: 'Group', value: 'group' },
+        ],
+      },
+    ],
     presets: [
       {
         id: 'full-force',
@@ -36,7 +68,39 @@ export const visualizationCatalog: VisualizationExampleDefinition[] = [
     routePath: '/examples/graph-matrix',
     provenanceLabel: 'Observable adjacency matrix brush, rebuilt natively',
     provenanceUrl: 'https://observablehq.com/@jannespeeters/adjacency-matrix-brush',
-    controlSpecs: [],
+    controlSpecs: [
+      {
+        id: 'technique',
+        label: 'Technique',
+        type: 'button-group',
+        options: [
+          { label: 'Force', value: 'force' },
+          { label: 'Matrix', value: 'matrix' },
+          { label: 'Tree', value: 'tree' },
+          { label: 'Multivariate', value: 'multivariate' },
+        ],
+      },
+      {
+        id: 'dataset',
+        label: 'Dataset',
+        type: 'select',
+        options: [
+          { label: 'Les Miserables', value: 'miserables' },
+          { label: 'Flare', value: 'flare' },
+        ],
+      },
+      {
+        id: 'ordering',
+        label: 'Ordering',
+        type: 'button-group',
+        options: [
+          { label: 'Original', value: 'original' },
+          { label: 'Alpha', value: 'alphabetical' },
+          { label: 'Degree', value: 'degree' },
+          { label: 'Group', value: 'group' },
+        ],
+      },
+    ],
   },
   {
     id: 'graph-multivariate',
@@ -49,7 +113,39 @@ export const visualizationCatalog: VisualizationExampleDefinition[] = [
     routePath: '/examples/graph-multivariate',
     provenanceLabel: 'MVNV-inspired native graph workbench',
     provenanceUrl: 'https://vdl.sci.utah.edu/mvnv/',
-    controlSpecs: [],
+    controlSpecs: [
+      {
+        id: 'technique',
+        label: 'Technique',
+        type: 'button-group',
+        options: [
+          { label: 'Force', value: 'force' },
+          { label: 'Matrix', value: 'matrix' },
+          { label: 'Tree', value: 'tree' },
+          { label: 'Multivariate', value: 'multivariate' },
+        ],
+      },
+      {
+        id: 'dataset',
+        label: 'Dataset',
+        type: 'select',
+        options: [
+          { label: 'Les Miserables', value: 'miserables' },
+          { label: 'Flare', value: 'flare' },
+        ],
+      },
+      {
+        id: 'ordering',
+        label: 'Ordering',
+        type: 'button-group',
+        options: [
+          { label: 'Original', value: 'original' },
+          { label: 'Alpha', value: 'alphabetical' },
+          { label: 'Degree', value: 'degree' },
+          { label: 'Group', value: 'group' },
+        ],
+      },
+    ],
   },
   {
     id: 'hierarchy-suite',
@@ -62,7 +158,39 @@ export const visualizationCatalog: VisualizationExampleDefinition[] = [
     routePath: '/examples/hierarchy-suite',
     provenanceLabel: 'treevis taxonomy mapped onto native D3 hierarchy views',
     provenanceUrl: 'https://treevis.net/',
-    controlSpecs: [],
+    controlSpecs: [
+      {
+        id: 'technique',
+        label: 'Technique',
+        type: 'button-group',
+        options: [
+          { label: 'Force', value: 'force' },
+          { label: 'Matrix', value: 'matrix' },
+          { label: 'Tree', value: 'tree' },
+          { label: 'Multivariate', value: 'multivariate' },
+        ],
+      },
+      {
+        id: 'dataset',
+        label: 'Dataset',
+        type: 'select',
+        options: [
+          { label: 'Les Miserables', value: 'miserables' },
+          { label: 'Flare', value: 'flare' },
+        ],
+      },
+      {
+        id: 'ordering',
+        label: 'Ordering',
+        type: 'button-group',
+        options: [
+          { label: 'Original', value: 'original' },
+          { label: 'Alpha', value: 'alphabetical' },
+          { label: 'Degree', value: 'degree' },
+          { label: 'Group', value: 'group' },
+        ],
+      },
+    ],
   },
   {
     id: 'cars-scatter',
@@ -75,7 +203,17 @@ export const visualizationCatalog: VisualizationExampleDefinition[] = [
     routePath: '/examples/cars-scatter',
     provenanceLabel: 'Vega Cars dataset + native D3 scatterplot',
     provenanceUrl: 'https://vega.github.io/vega-datasets/data/cars.json',
-    controlSpecs: [],
+    controlSpecs: [
+      {
+        id: 'execution',
+        label: 'Execution',
+        type: 'button-group',
+        options: [
+          { label: 'Local', value: 'local' },
+          { label: 'Remote', value: 'remote' },
+        ],
+      },
+    ],
   },
 ];
 

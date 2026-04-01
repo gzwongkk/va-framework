@@ -50,7 +50,8 @@ import { GraphWorkbenchMatrixPanel } from '@/components/workspace/graph-workbenc
 import { GraphWorkbenchMultivariatePanel } from '@/components/workspace/graph-workbench-multivariate-panel';
 import { GraphWorkbenchTreePanel } from '@/components/workspace/graph-workbench-tree-panel';
 import { UiStudioDrawer } from '@/components/workspace/ui-studio-drawer';
-import { WorkspaceRouteNav } from '@/components/workspace/workspace-route-nav';
+import { VisualizationControlStrip } from '@/components/workspace/visualization-control-strip';
+import { WorkspaceActionBar } from '@/components/workspace/workspace-action-bar';
 import {
   buildAdjacencyMatrixModel,
   buildHierarchyTree,
@@ -85,8 +86,6 @@ import { useCoordinationStore } from '@/lib/coordination-store';
 import { planExecution } from '@/lib/data/execution-planner';
 import { useDatasetCatalog, useLocalPreviewQuery, useRemotePreviewQuery } from '@/lib/data/query-hooks';
 import {
-  graphDatasetOptions,
-  graphTechniqueOptions,
   isGraphWorkbenchDatasetId,
   isGraphTechnique,
   multivariateLayoutOptions,
@@ -106,6 +105,7 @@ import {
 } from '@/lib/graph-workbench-store';
 import { resolveChartTheme, resolveUiStudioVars } from '@/lib/ui-studio';
 import { useUiStudioStore } from '@/lib/ui-studio-store';
+import { getVisualizationExample } from '@/lib/visualization-catalog';
 
 const VIEW_ID = 'graph-canvas';
 const EMPTY_SELECTION_IDS: string[] = [];
@@ -300,6 +300,7 @@ export function GraphSingleViewShell({
   const setLastQuery = useCoordinationStore((state) => state.setLastQuery);
   const setPreferredExecutionMode = useCoordinationStore((state) => state.setPreferredExecutionMode);
   const setSelection = useCoordinationStore((state) => state.setSelection);
+  const setVisualizationControlValues = useCoordinationStore((state) => state.setVisualizationControlValues);
 
   const [selectedGroups, setSelectedGroups] = useState<number[]>(DEFAULT_GRAPH_CONTROLS.selectedGroups);
   const [minEdgeWeight, setMinEdgeWeight] = useState(DEFAULT_GRAPH_CONTROLS.minEdgeWeight);
@@ -487,6 +488,41 @@ export function GraphSingleViewShell({
   const selectedNodeSet = useMemo(() => new Set(selectedNodeIds), [selectedNodeIds]);
   const techniqueHelp = useMemo(() => getTechniqueHelp(activeTechnique), [activeTechnique]);
   const treeTechniqueRequiresFlare = needsFlareTreeDataset(activeDatasetId, activeTechnique);
+  const activeVisualization = useMemo(
+    () => getVisualizationExample(visualizationId),
+    [visualizationId],
+  );
+  const sharedControlValues = useMemo(
+    () => ({
+      dataset: activeDatasetId,
+      ordering,
+      technique: activeTechnique,
+    }),
+    [activeDatasetId, activeTechnique, ordering],
+  );
+
+  function handleSharedControlValueChange(controlId: string, value: string | number | boolean | null | string[]) {
+    if (typeof value !== 'string') {
+      return;
+    }
+
+    if (controlId === 'technique' && isGraphTechnique(value)) {
+      activateTechnique(value);
+      return;
+    }
+
+    if (controlId === 'dataset' && isGraphWorkbenchDatasetId(value)) {
+      activateDataset(value);
+      return;
+    }
+
+    if (
+      controlId === 'ordering' &&
+      ORDERING_OPTIONS.some((option) => option.value === value)
+    ) {
+      setOrdering(value as (typeof ORDERING_OPTIONS)[number]['value']);
+    }
+  }
 
   useEffect(() => {
     const safeEncodingJson = JSON.stringify(safeEncodingConfig);
@@ -509,6 +545,10 @@ export function GraphSingleViewShell({
   useEffect(() => {
     setActiveVisualizationId(visualizationId);
   }, [setActiveVisualizationId, visualizationId]);
+
+  useEffect(() => {
+    setVisualizationControlValues(visualizationId, sharedControlValues);
+  }, [setVisualizationControlValues, sharedControlValues, visualizationId]);
 
   useEffect(() => {
     setFilters(query.filters);
@@ -762,7 +802,7 @@ export function GraphSingleViewShell({
             </div>
 
             <div className="flex flex-wrap items-center justify-end gap-2 text-xs">
-              <WorkspaceRouteNav buttonPreset={uiPrefs.buttonPreset} />
+              <WorkspaceActionBar buttonPreset={uiPrefs.buttonPreset} />
               <Badge>{activeTechnique}</Badge>
               <Badge>{activeDatasetId}</Badge>
               <Badge>{resolvedExecutionMode}</Badge>
@@ -771,66 +811,22 @@ export function GraphSingleViewShell({
               {SHOW_UI_STUDIO ? <UiStudioDrawer buttonPreset={uiPrefs.buttonPreset} /> : null}
             </div>
 
-            <div className="grid w-full gap-3 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-start">
-              <div className="grid gap-3">
-                <div className="flex items-center justify-between gap-3">
-                  <p className="ui-studio-label font-semibold uppercase tracking-[0.22em]">Technique</p>
-                  <Workflow className="size-4 text-[var(--ui-text-muted)]" />
+            <div className="ui-studio-surface grid w-full gap-4 border p-4 shadow-sm shadow-slate-950/5">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="ui-studio-label font-semibold uppercase tracking-[0.22em]">Shared example controls</p>
+                  <p className="ui-studio-body mt-2">
+                    Switch technique, dataset, and matrix ordering through the shared gallery control model.
+                  </p>
                 </div>
-                <ToggleGroup
-                  aria-label="Graph technique"
-                  className="grid gap-2 md:grid-cols-4"
-                  onValueChange={(value) => {
-                    if (isGraphTechnique(value)) {
-                      activateTechnique(value);
-                    }
-                  }}
-                  type="single"
-                  value={activeTechnique}
-                >
-                  {graphTechniqueOptions.map((option) => (
-                    <ToggleGroupItem
-                      key={option.value}
-                      className="grid h-auto w-full justify-start gap-1 px-3 py-3 text-left normal-case tracking-normal"
-                      data-button-style={uiPrefs.buttonPreset}
-                      value={option.value}
-                    >
-                      <span className="text-sm font-semibold">{option.label}</span>
-                      <span className="text-xs font-normal opacity-80">{option.description}</span>
-                    </ToggleGroupItem>
-                  ))}
-                </ToggleGroup>
+                <Workflow className="size-4 text-[var(--ui-text-muted)]" />
               </div>
-
-              <div className="grid min-w-[280px] gap-3">
-                <div className="flex items-center justify-between gap-3">
-                  <p className="ui-studio-label font-semibold uppercase tracking-[0.22em]">Dataset</p>
-                  <Database className="size-4 text-[var(--ui-text-muted)]" />
-                </div>
-                <ToggleGroup
-                  aria-label="Graph dataset"
-                  className="grid gap-2"
-                  onValueChange={(value) => {
-                    if (isGraphWorkbenchDatasetId(value)) {
-                      activateDataset(value);
-                    }
-                  }}
-                  type="single"
-                  value={activeDatasetId}
-                >
-                  {graphDatasetOptions.map((option) => (
-                    <ToggleGroupItem
-                      key={option.value}
-                      className="grid h-auto w-full justify-start gap-1 px-3 py-3 text-left normal-case tracking-normal"
-                      data-button-style={uiPrefs.buttonPreset}
-                      value={option.value}
-                    >
-                      <span className="text-sm font-semibold">{option.label}</span>
-                      <span className="text-xs font-normal opacity-80">{option.description}</span>
-                    </ToggleGroupItem>
-                  ))}
-                </ToggleGroup>
-              </div>
+              <VisualizationControlStrip
+                buttonPreset={uiPrefs.buttonPreset}
+                onValueChange={handleSharedControlValueChange}
+                specs={activeVisualization?.controlSpecs ?? []}
+                values={sharedControlValues}
+              />
             </div>
           </header>
 
@@ -1676,7 +1672,7 @@ export function GraphSingleViewShell({
                         ))}
                       </ul>
                     </div>
-                    <p className="text-xs uppercase tracking-[0.18em] text-[var(--ui-text-muted)]">Shortcuts: 1 force, 2 matrix, 3 tree, 4 multivariate, / search, Esc clear selection.</p>
+                    <p className="text-xs uppercase tracking-[0.18em] text-[var(--ui-text-muted)]">Use the shared controls and Open Example command to switch techniques and jump across the workbench line. Keyboard shortcuts remain available as secondary access.</p>
                   </div>
                 </div>
               </div>
