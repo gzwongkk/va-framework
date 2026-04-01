@@ -38,6 +38,17 @@ export const fieldSpecSchema = z.object({
 });
 export type FieldSpec = z.infer<typeof fieldSpecSchema>;
 
+export const datasetEntitySchema = z.object({
+  fields: z.array(fieldSpecSchema).default([]),
+  primaryKey: z.array(z.string()).default([]),
+  rowCount: z.number().int().nonnegative().optional(),
+  labelField: z.string().optional(),
+  sourceField: z.string().optional(),
+  targetField: z.string().optional(),
+  weightField: z.string().optional(),
+});
+export type DatasetEntity = z.infer<typeof datasetEntitySchema>;
+
 export const datasetSchemaSchema = z.object({
   entity: z.string().default('rows'),
   fields: z.array(fieldSpecSchema).default([]),
@@ -45,6 +56,7 @@ export const datasetSchemaSchema = z.object({
   rowCount: z.number().int().nonnegative().optional(),
   timeField: z.string().optional(),
   labelField: z.string().optional(),
+  entities: z.record(z.string(), datasetEntitySchema).optional(),
 });
 export type DatasetSchema = z.infer<typeof datasetSchemaSchema>;
 
@@ -143,6 +155,14 @@ export const transformSpecSchema = z.object({
 });
 export type TransformSpec = z.infer<typeof transformSpecSchema>;
 
+export const graphQuerySchema = z.object({
+  focusNodeId: z.string().optional(),
+  neighborDepth: z.union([z.literal(1), z.literal(2)]).default(1),
+  minEdgeWeight: z.number().nonnegative().default(0),
+  includeIsolates: z.boolean().default(true),
+});
+export type GraphQuery = z.infer<typeof graphQuerySchema>;
+
 export const querySpecSchema = z.object({
   datasetId: z.string(),
   entity: z.string().optional(),
@@ -153,10 +173,15 @@ export const querySpecSchema = z.object({
   aggregates: z.array(aggregateSpecSchema).default([]),
   limit: z.number().int().positive().max(1000).optional(),
   executionMode: executionModeSchema.optional(),
+  graph: graphQuerySchema.optional(),
 });
 export type QuerySpec = z.infer<typeof querySpecSchema>;
 
-export const queryResultSchema = z.object({
+const querySourceSchema = z.enum(['api', 'duckdb-worker', 'browser-runtime', 'graphology-local']);
+export type QuerySource = z.infer<typeof querySourceSchema>;
+
+export const tabularQueryResultSchema = z.object({
+  resultKind: z.literal('table'),
   datasetId: z.string(),
   columns: z.array(z.string()).default([]),
   rows: z.array(z.record(z.string(), z.unknown())).default([]),
@@ -164,8 +189,62 @@ export const queryResultSchema = z.object({
   executionMode: executionModeSchema,
   queryKey: z.string(),
   durationMs: z.number().nonnegative(),
-  source: z.enum(['api', 'duckdb-worker', 'browser-runtime']),
+  source: querySourceSchema,
 });
+export type TabularQueryResult = z.infer<typeof tabularQueryResultSchema>;
+
+export const graphNodeSchema = z.object({
+  id: z.string(),
+  label: z.string(),
+  group: z.number().int().nonnegative(),
+  degree: z.number().int().nonnegative(),
+  weightedDegree: z.number().nonnegative(),
+});
+export type GraphNode = z.infer<typeof graphNodeSchema>;
+
+export const graphEdgeSchema = z.object({
+  id: z.string(),
+  source: z.string(),
+  target: z.string(),
+  value: z.number().nonnegative(),
+});
+export type GraphEdge = z.infer<typeof graphEdgeSchema>;
+
+export const graphSummaryTopNodeSchema = z.object({
+  id: z.string(),
+  group: z.number().int().nonnegative(),
+  degree: z.number().int().nonnegative(),
+  weightedDegree: z.number().nonnegative(),
+});
+export type GraphSummaryTopNode = z.infer<typeof graphSummaryTopNodeSchema>;
+
+export const graphSummarySchema = z.object({
+  groupCount: z.number().int().nonnegative(),
+  averageDegree: z.number().nonnegative(),
+  focusedNodeId: z.string().optional(),
+  topNodes: z.array(graphSummaryTopNodeSchema).default([]),
+});
+export type GraphSummary = z.infer<typeof graphSummarySchema>;
+
+export const graphQueryResultSchema = z.object({
+  resultKind: z.literal('graph'),
+  datasetId: z.string(),
+  nodes: z.array(graphNodeSchema).default([]),
+  edges: z.array(graphEdgeSchema).default([]),
+  nodeCount: z.number().int().nonnegative(),
+  edgeCount: z.number().int().nonnegative(),
+  summary: graphSummarySchema,
+  executionMode: executionModeSchema,
+  queryKey: z.string(),
+  durationMs: z.number().nonnegative(),
+  source: querySourceSchema,
+});
+export type GraphQueryResult = z.infer<typeof graphQueryResultSchema>;
+
+export const queryResultSchema = z.discriminatedUnion('resultKind', [
+  tabularQueryResultSchema,
+  graphQueryResultSchema,
+]);
 export type QueryResult = z.infer<typeof queryResultSchema>;
 
 export const jobStatusSchema = z.enum(['queued', 'running', 'completed', 'failed']);
@@ -208,6 +287,14 @@ function sortKeys(value: unknown): unknown {
 
 export function normalizeQuerySpec(spec: QuerySpec): QuerySpec {
   return querySpecSchema.parse(spec);
+}
+
+export function isTabularQueryResult(result: QueryResult | undefined): result is TabularQueryResult {
+  return result?.resultKind === 'table';
+}
+
+export function isGraphQueryResult(result: QueryResult | undefined): result is GraphQueryResult {
+  return result?.resultKind === 'graph';
 }
 
 export function createQueryFingerprint(spec: QuerySpec): string {

@@ -26,6 +26,12 @@ export type CoordinationQuery = {
     as: string;
   }>;
   limit?: number;
+  graph?: {
+    focusNodeId?: string;
+    neighborDepth?: 1 | 2;
+    minEdgeWeight?: number;
+    includeIsolates?: boolean;
+  };
 };
 
 export type ViewDefinition = {
@@ -104,7 +110,7 @@ export const starterViews: ViewDefinition[] = [
   {
     id: 'graph-canvas',
     label: 'Graph canvas',
-    summary: 'Graph-native surface reserved for the v2.3.0 milestone.',
+    summary: 'Graph-native surface for the v2.3.0 graph exploration workspace.',
     coordinateSpace: 'screen-2d',
     supportedKinds: ['graph'],
     signals: ['selection', 'hover', 'filter', 'query'],
