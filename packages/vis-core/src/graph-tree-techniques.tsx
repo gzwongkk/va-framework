@@ -20,6 +20,7 @@ export type GraphTreeTechniquesProps = {
   emptyLabel?: string;
   onSelect?: (id: string) => void;
   root: TechniqueHierarchyNode | undefined;
+  selectedPathIds?: string[];
   selectedId?: string;
   statusLabel?: string;
   statusTone?: 'accent' | 'neutral' | 'warning' | 'error';
@@ -89,6 +90,7 @@ export function GraphTreeTechniques({
   onSelect,
   root,
   selectedId,
+  selectedPathIds = [],
   statusLabel,
   statusTone = 'neutral',
   subtitle,
@@ -178,6 +180,7 @@ export function GraphTreeTechniques({
   const isRadialNodeLink = mode === 'node-link' && alignment === 'radial';
   const isIcicle = mode === 'icicle';
   const isSunburst = mode === 'sunburst';
+  const selectedPathIdSet = useMemo(() => new Set(selectedPathIds), [selectedPathIds]);
 
   return (
     <div
@@ -221,11 +224,13 @@ export function GraphTreeTechniques({
               const sourceY = Math.sin(sourceAngle) * (link.source.y ?? 0);
               const targetX = Math.cos(targetAngle) * (link.target.y ?? 0);
               const targetY = Math.sin(targetAngle) * (link.target.y ?? 0);
+              const isSelectedPath =
+                selectedPathIdSet.has(link.source.data.id) && selectedPathIdSet.has(link.target.data.id);
               return (
                 <line
                   key={`${link.source.data.id}:${link.target.data.id}`}
-                  stroke={theme.gridColor}
-                  strokeWidth={1}
+                  stroke={isSelectedPath ? theme.selectionStroke : theme.gridColor}
+                  strokeWidth={isSelectedPath ? 2.2 : 1}
                   x1={sourceX}
                   x2={targetX}
                   y1={sourceY}
@@ -238,16 +243,28 @@ export function GraphTreeTechniques({
               const x = Math.cos(angle) * (node.y ?? 0);
               const y = Math.sin(angle) * (node.y ?? 0);
               const isSelected = node.data.id === selectedId;
+              const isPathNode = selectedPathIdSet.has(node.data.id);
               return (
                 <g key={node.data.id} transform={`translate(${x} ${y})`}>
                   <circle
                     fill={colorForGroup(node.data.group)}
                     onClick={() => onSelect?.(node.data.id)}
-                    r={isSelected ? 6.5 : 4.6}
-                    stroke={isSelected ? theme.selectionStroke : 'rgba(255,255,255,0.92)'}
-                    strokeWidth={isSelected ? 2 : 1}
+                    r={isSelected ? 6.5 : isPathNode ? 5.5 : 4.6}
+                    stroke={isSelected || isPathNode ? theme.selectionStroke : 'rgba(255,255,255,0.92)'}
+                    strokeWidth={isSelected ? 2.2 : isPathNode ? 1.4 : 1}
                     style={{ cursor: 'pointer' }}
                   />
+                  {(node.depth < 2 || isSelected || isPathNode) ? (
+                    <text
+                      fill={theme.textSecondary}
+                      fontSize="10"
+                      textAnchor={x >= 0 ? 'start' : 'end'}
+                      x={x >= 0 ? 8 : -8}
+                      y={3}
+                    >
+                      {node.data.label}
+                    </text>
+                  ) : null}
                 </g>
               );
             })}
@@ -256,28 +273,33 @@ export function GraphTreeTechniques({
 
         {mode === 'node-link' && alignment === 'axis-parallel' ? (
           <g transform={`translate(${layoutData.margin.left}, ${layoutData.margin.top})`}>
-            {layoutData.rootNode.links().map((link: any) => (
-              <path
-                key={`${link.source.data.id}:${link.target.data.id}`}
-                d={`M${link.source.y ?? 0},${link.source.x ?? 0}C${((link.source.y ?? 0) + (link.target.y ?? 0)) / 2},${link.source.x ?? 0} ${((link.source.y ?? 0) + (link.target.y ?? 0)) / 2},${link.target.x ?? 0} ${link.target.y ?? 0},${link.target.x ?? 0}`}
-                fill="none"
-                stroke={theme.gridColor}
-                strokeWidth={1.1}
-              />
-            ))}
+            {layoutData.rootNode.links().map((link: any) => {
+              const isSelectedPath =
+                selectedPathIdSet.has(link.source.data.id) && selectedPathIdSet.has(link.target.data.id);
+              return (
+                <path
+                  key={`${link.source.data.id}:${link.target.data.id}`}
+                  d={`M${link.source.y ?? 0},${link.source.x ?? 0}C${((link.source.y ?? 0) + (link.target.y ?? 0)) / 2},${link.source.x ?? 0} ${((link.source.y ?? 0) + (link.target.y ?? 0)) / 2},${link.target.x ?? 0} ${link.target.y ?? 0},${link.target.x ?? 0}`}
+                  fill="none"
+                  stroke={isSelectedPath ? theme.selectionStroke : theme.gridColor}
+                  strokeWidth={isSelectedPath ? 2.1 : 1.1}
+                />
+              );
+            })}
             {layoutData.rootNode.descendants().map((node: any) => {
               const isSelected = node.data.id === selectedId;
+              const isPathNode = selectedPathIdSet.has(node.data.id);
               return (
                 <g key={node.data.id} transform={`translate(${node.y ?? 0} ${node.x ?? 0})`}>
                   <circle
                     fill={colorForGroup(node.data.group)}
                     onClick={() => onSelect?.(node.data.id)}
-                    r={isSelected ? 6.4 : 4.6}
-                    stroke={isSelected ? theme.selectionStroke : 'rgba(255,255,255,0.92)'}
-                    strokeWidth={isSelected ? 2 : 1}
+                    r={isSelected ? 6.4 : isPathNode ? 5.6 : 4.6}
+                    stroke={isSelected || isPathNode ? theme.selectionStroke : 'rgba(255,255,255,0.92)'}
+                    strokeWidth={isSelected ? 2.2 : isPathNode ? 1.4 : 1}
                     style={{ cursor: 'pointer' }}
                   />
-                  {node.depth < 3 ? (
+                  {node.depth < 3 || isPathNode ? (
                     <text fill={theme.textSecondary} fontSize="10" x={8} y={4}>
                       {node.data.label}
                     </text>
@@ -292,15 +314,16 @@ export function GraphTreeTechniques({
           <g transform={`translate(${layoutData.margin.left}, ${layoutData.margin.top})`}>
             {layoutData.rootNode.descendants().map((node: any) => {
               const isSelected = node.data.id === selectedId;
+              const isPathNode = selectedPathIdSet.has(node.data.id);
               return (
                 <g key={node.data.id}>
                   <rect
                     fill={colorForGroup(node.data.group)}
-                    fillOpacity={isSelected ? 1 : 0.88}
+                    fillOpacity={isSelected ? 1 : isPathNode ? 0.94 : 0.82}
                     height={Math.max(0, node.y1 - node.y0 - 1)}
                     onClick={() => onSelect?.(node.data.id)}
-                    stroke={isSelected ? theme.selectionStroke : 'rgba(255,255,255,0.65)'}
-                    strokeWidth={isSelected ? 1.5 : 0.8}
+                    stroke={isSelected || isPathNode ? theme.selectionStroke : 'rgba(255,255,255,0.65)'}
+                    strokeWidth={isSelected ? 1.6 : isPathNode ? 1.1 : 0.8}
                     style={{ cursor: 'pointer' }}
                     width={Math.max(0, node.x1 - node.x0 - 1)}
                     x={node.x0}
@@ -321,15 +344,16 @@ export function GraphTreeTechniques({
           <g transform={`translate(${width / 2}, ${height / 2 + 24})`}>
             {layoutData.rootNode.descendants().map((node: any) => {
               const isSelected = node.data.id === selectedId;
+              const isPathNode = selectedPathIdSet.has(node.data.id);
               return (
                 <path
                   key={node.data.id}
                   d={arcGenerator(node) ?? undefined}
                   fill={colorForGroup(node.data.group)}
-                  fillOpacity={isSelected ? 1 : 0.9}
+                  fillOpacity={isSelected ? 1 : isPathNode ? 0.96 : 0.84}
                   onClick={() => onSelect?.(node.data.id)}
-                  stroke={isSelected ? theme.selectionStroke : 'rgba(255,255,255,0.55)'}
-                  strokeWidth={isSelected ? 1.5 : 0.8}
+                  stroke={isSelected || isPathNode ? theme.selectionStroke : 'rgba(255,255,255,0.55)'}
+                  strokeWidth={isSelected ? 1.5 : isPathNode ? 1.1 : 0.8}
                   style={{ cursor: 'pointer' }}
                 />
               );

@@ -683,6 +683,7 @@ export function GraphSingleViewShell() {
           onSelect={selectNode}
           root={hierarchyRoot}
           selectedId={selectedNodeId}
+          selectedPathIds={hierarchyPath.map((node) => node.id)}
           statusLabel={effectiveStatusLabel}
           statusTone={effectiveStatusTone}
           theme={chartTheme}

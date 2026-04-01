@@ -14,6 +14,7 @@ type GraphWorkbenchTreePanelProps = {
   onSelect: (id: string) => void;
   root: HierarchyNode | undefined;
   selectedId?: string;
+  selectedPathIds?: string[];
   statusLabel: string;
   statusTone: 'accent' | 'neutral' | 'warning' | 'error';
   theme: D3ScatterPlotTheme;
@@ -26,6 +27,7 @@ export function GraphWorkbenchTreePanel({
   onSelect,
   root,
   selectedId,
+  selectedPathIds,
   statusLabel,
   statusTone,
   theme,
@@ -37,6 +39,7 @@ export function GraphWorkbenchTreePanel({
       onSelect={onSelect}
       root={root}
       selectedId={selectedId}
+      selectedPathIds={selectedPathIds}
       statusLabel={statusLabel}
       statusTone={statusTone}
       subtitle={`Hierarchy exploration for ${datasetLabel} with explicit and implicit tree techniques.`}
