@@ -103,6 +103,12 @@ export type MultivariateFieldProfile = {
   missingCount: number;
 };
 
+export type MultivariateFacetSummary = {
+  count: number;
+  label: string;
+  share: number;
+};
+
 const MAX_MATRIX_NODES = 72;
 
 function createEdgeKey(left: string, right: string) {
@@ -677,6 +683,41 @@ export function getMultivariateFieldProfiles(
         : profile,
     )
     .sort((left, right) => left.field.localeCompare(right.field));
+}
+
+export function summarizeMultivariateFacets(
+  nodes: EnrichedGraphNode[],
+  field?: string,
+): MultivariateFacetSummary[] {
+  if (!field || nodes.length === 0) {
+    return [];
+  }
+
+  const counts = new Map<string, number>();
+
+  for (const node of nodes) {
+    const value = getMultivariateValue(node, field);
+    const label =
+      typeof value === 'string' || typeof value === 'number'
+        ? String(value)
+        : 'Missing';
+
+    counts.set(label, (counts.get(label) ?? 0) + 1);
+  }
+
+  return [...counts.entries()]
+    .map(([label, count]) => ({
+      count,
+      label,
+      share: Number((count / nodes.length).toFixed(3)),
+    }))
+    .sort((left, right) => {
+      if (right.count !== left.count) {
+        return right.count - left.count;
+      }
+
+      return left.label.localeCompare(right.label);
+    });
 }
 
 export function getTechniqueHelp(technique: GraphTechnique): TechniqueHelp {

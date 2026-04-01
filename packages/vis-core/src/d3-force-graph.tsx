@@ -44,6 +44,7 @@ export type D3ForceGraphProps = {
   emptyLabel?: string;
   height?: number;
   legend?: Array<{ color: string; label: string }>;
+  legendTitle?: string;
   nodes: ForceGraphNodeDatum[];
   onHover?: (id?: string) => void;
   onSelect?: (id: string) => void;
@@ -51,6 +52,7 @@ export type D3ForceGraphProps = {
   statusLabel?: string;
   statusTone?: 'accent' | 'neutral' | 'warning' | 'error';
   subtitle?: string;
+  summaryItems?: Array<{ label: string; value: string }>;
   theme?: D3ScatterPlotTheme;
   title: string;
 };
@@ -125,6 +127,7 @@ export function D3ForceGraph({
   emptyLabel = 'No nodes match the current filters.',
   height = DEFAULT_HEIGHT,
   legend,
+  legendTitle,
   nodes,
   onHover,
   onSelect,
@@ -132,6 +135,7 @@ export function D3ForceGraph({
   statusLabel,
   statusTone = 'neutral',
   subtitle,
+  summaryItems,
   theme = DEFAULT_THEME,
   title,
 }: D3ForceGraphProps) {
@@ -341,7 +345,9 @@ export function D3ForceGraph({
           </div>
         </div>
         <div className="mt-4 flex flex-wrap items-center gap-3 text-xs" style={{ color: theme.textSecondary }}>
-          <span className="font-semibold uppercase tracking-[0.2em]">D3 force graph</span>
+          <span className="font-semibold uppercase tracking-[0.2em]">
+            {legendTitle ?? 'D3 force graph'}
+          </span>
           {legend?.map((entry) => (
             <span key={entry.label} className="inline-flex items-center gap-2">
               <span className="size-2 rounded-full" style={{ backgroundColor: entry.color }} />
@@ -349,6 +355,20 @@ export function D3ForceGraph({
             </span>
           ))}
         </div>
+        {summaryItems?.length ? (
+          <div className="mt-3 flex flex-wrap gap-2 text-xs" style={{ color: theme.textSecondary }}>
+            {summaryItems.map((item) => (
+              <span
+                key={`${item.label}:${item.value}`}
+                className="inline-flex items-center gap-2 rounded-[var(--ui-radius-pill)] border px-3 py-1"
+                style={{ borderColor: theme.borderColor }}
+              >
+                <span className="font-semibold uppercase tracking-[0.18em]">{item.label}</span>
+                <span style={{ color: theme.textPrimary }}>{item.value}</span>
+              </span>
+            ))}
+          </div>
+        ) : null}
       </div>
 
       {nodes.length === 0 ? (

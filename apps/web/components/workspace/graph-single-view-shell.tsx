@@ -62,6 +62,7 @@ import {
   getMultivariateFieldOptions,
   getMultivariateValue,
   getTechniqueHelp,
+  summarizeMultivariateFacets,
   summarizeHierarchyTree,
   summarizeMatrixSelection,
   type EnrichedGraphNode,
@@ -457,6 +458,10 @@ export function GraphSingleViewShell() {
   const multivariateFieldProfiles = useMemo(
     () => getMultivariateFieldProfiles(multivariateNodes),
     [multivariateNodes],
+  );
+  const multivariateFacetSummary = useMemo(
+    () => summarizeMultivariateFacets(multivariateNodes, safeEncodingConfig.facetField),
+    [multivariateNodes, safeEncodingConfig.facetField],
   );
   const selectedMultivariateNode = useMemo(
     () => multivariateNodes.find((node) => node.id === selectedNodeId),
@@ -1484,16 +1489,38 @@ export function GraphSingleViewShell() {
                             return (
                               <div key={field} className="flex items-start justify-between gap-4">
                                 <span className="text-[var(--ui-text-muted)]">{formatFieldLabel(field)}</span>
-                                <span className="text-right font-medium text-[var(--ui-text-primary)]">
-                                  {profile?.kind === 'numeric'
-                                    ? `${profile.min?.toFixed(3)} to ${profile.max?.toFixed(3)}`
-                                    : `${profile?.categoryCount ?? 0} categories`}
-                                </span>
+                                <div className="text-right font-medium text-[var(--ui-text-primary)]">
+                                  <div>
+                                    {profile?.kind === 'numeric'
+                                      ? `${profile.min?.toFixed(3)} to ${profile.max?.toFixed(3)}`
+                                      : `${profile?.categoryCount ?? 0} categories`}
+                                  </div>
+                                  {profile?.missingCount ? (
+                                    <div className="text-xs font-normal text-[var(--ui-text-muted)]">
+                                      {profile.missingCount} missing
+                                    </div>
+                                  ) : null}
+                                </div>
                               </div>
                             );
                           })}
                       </div>
                     </div>
+                    {safeEncodingConfig.layoutMode === 'faceted' && multivariateFacetSummary.length > 0 ? (
+                      <div className="ui-studio-surface grid gap-3 border p-4 shadow-sm shadow-slate-950/5">
+                        <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">Facet distribution</p>
+                        <div className="grid gap-3 text-sm text-[var(--ui-text-secondary)]">
+                          {multivariateFacetSummary.map((facet) => (
+                            <div key={facet.label} className="flex items-start justify-between gap-4">
+                              <span className="text-[var(--ui-text-muted)]">{facet.label}</span>
+                              <span className="text-right font-medium text-[var(--ui-text-primary)]">
+                                {facet.count} nodes · {Math.round(facet.share * 100)}%
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : null}
                   </>
                 ) : null}
 

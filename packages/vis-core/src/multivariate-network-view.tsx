@@ -24,9 +24,14 @@ export type MultivariateViewEdge = {
 export type MultivariateLayoutMode = 'attribute-position' | 'faceted';
 
 export type MultivariateNetworkViewProps = {
+  encodingSummary?: Array<{ label: string; value: string }>;
   edges: MultivariateViewEdge[];
   emptyLabel?: string;
+  facetSummary?: Array<{ count: number; label: string; share: number }>;
   layoutMode: MultivariateLayoutMode;
+  legend?: Array<{ color: string; label: string }>;
+  legendTitle?: string;
+  layoutLabel?: string;
   nodes: MultivariateViewNode[];
   onSelect?: (id: string) => void;
   selectedId?: string;
@@ -97,9 +102,14 @@ function getStatusStyle(
 }
 
 export function MultivariateNetworkView({
+  encodingSummary,
   edges,
   emptyLabel = 'No multivariate nodes are available for the current graph state.',
+  facetSummary,
   layoutMode,
+  legend,
+  legendTitle,
+  layoutLabel,
   nodes,
   onSelect,
   selectedId,
@@ -222,11 +232,65 @@ export function MultivariateNetworkView({
             {statusLabel ?? 'Multivariate view ready'}
           </div>
         </div>
+        {encodingSummary?.length ? (
+          <div className="mt-4 flex flex-wrap gap-2 text-xs" style={{ color: theme.textSecondary }}>
+            {(layoutLabel ? [{ label: 'Layout', value: layoutLabel }, ...encodingSummary] : encodingSummary).map((item) => (
+              <span
+                key={`${item.label}:${item.value}`}
+                className="inline-flex items-center gap-2 rounded-[var(--ui-radius-pill)] border px-3 py-1"
+                style={{ borderColor: theme.borderColor }}
+              >
+                <span className="font-semibold uppercase tracking-[0.18em]">{item.label}</span>
+                <span style={{ color: theme.textPrimary }}>{item.value}</span>
+              </span>
+            ))}
+          </div>
+        ) : null}
+        {legend?.length ? (
+          <div className="mt-3 flex flex-wrap items-center gap-3 text-xs" style={{ color: theme.textSecondary }}>
+            <span className="font-semibold uppercase tracking-[0.2em]">
+              {legendTitle ?? 'Color legend'}
+            </span>
+            {legend.map((entry) => (
+              <span key={entry.label} className="inline-flex items-center gap-2">
+                <span className="size-2 rounded-full" style={{ backgroundColor: entry.color }} />
+                {entry.label}
+              </span>
+            ))}
+          </div>
+        ) : null}
       </div>
 
       <svg aria-label={title} className="block w-full" role="img" viewBox={`0 0 ${width} ${height}`} style={{ background: theme.plotBackground }}>
         {layoutMode === 'attribute-position' ? (
           <>
+            {[0.25, 0.5, 0.75].map((fraction) => {
+              const x = margin.left + (width - margin.left - margin.right) * fraction;
+              const y = margin.top + (height - margin.top - margin.bottom) * fraction;
+
+              return (
+                <g key={`grid-${fraction}`}>
+                  <line
+                    stroke={theme.gridColor}
+                    strokeDasharray="4 4"
+                    strokeWidth={0.85}
+                    x1={x}
+                    x2={x}
+                    y1={margin.top}
+                    y2={height - margin.bottom}
+                  />
+                  <line
+                    stroke={theme.gridColor}
+                    strokeDasharray="4 4"
+                    strokeWidth={0.85}
+                    x1={margin.left}
+                    x2={width - margin.right}
+                    y1={y}
+                    y2={y}
+                  />
+                </g>
+              );
+            })}
             <line stroke={theme.axisDomainColor} strokeWidth={1} x1={margin.left} x2={width - margin.right} y1={height - margin.bottom} y2={height - margin.bottom} />
             <line stroke={theme.axisDomainColor} strokeWidth={1} x1={margin.left} x2={margin.left} y1={margin.top} y2={height - margin.bottom} />
             <text fill={theme.textSecondary} fontSize="11" textAnchor="middle" x={(margin.left + width - margin.right) / 2} y={height - 18}>
@@ -341,6 +405,27 @@ export function MultivariateNetworkView({
           );
         })}
       </svg>
+      {layoutMode === 'faceted' && facetSummary?.length ? (
+        <div
+          className="border-t px-[var(--ui-panel-padding)] py-3"
+          style={{ background: theme.headerBackground, borderColor: theme.borderColor }}
+        >
+          <div className="flex flex-wrap items-center gap-2 text-xs" style={{ color: theme.textSecondary }}>
+            <span className="font-semibold uppercase tracking-[0.2em]">Facet summary</span>
+            {facetSummary.map((facet) => (
+              <span
+                key={facet.label}
+                className="inline-flex items-center gap-2 rounded-[var(--ui-radius-pill)] border px-3 py-1"
+                style={{ borderColor: theme.borderColor }}
+              >
+                <span style={{ color: theme.textPrimary }}>{facet.label}</span>
+                <span>{facet.count} nodes</span>
+                <span>{Math.round(facet.share * 100)}%</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -9,6 +9,7 @@ import {
   getHierarchyLeafPreview,
   getHierarchyPath,
   getMatrixSelectionEdges,
+  summarizeMultivariateFacets,
   getMultivariateFieldOptions,
   getTechniqueHelp,
   orderGraphNodes,
@@ -155,6 +156,11 @@ describe('graph workbench analytics', () => {
     expect(profiles.find((profile) => profile.field === 'id')).toEqual(
       expect.objectContaining({ categoryCount: 4, kind: 'categorical' }),
     );
+    expect(summarizeMultivariateFacets(nodes, 'community')).toEqual([
+      { count: 2, label: '1', share: 0.5 },
+      { count: 1, label: '2', share: 0.25 },
+      { count: 1, label: '3', share: 0.25 },
+    ]);
   });
 
   it('returns technique-specific reference guidance', () => {
