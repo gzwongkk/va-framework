@@ -5,15 +5,14 @@ The stable Vue release is preserved on the `release/v1.0.0` branch.
 
 ## Current milestone
 
-`v2.3.5` is the tree data-foundation patch.
+`v2.3.6` is the tree-techniques patch.
 
-The home route at `/` remains the graph workbench. This patch strengthens the tree line before the later tree-visual polish milestone:
+The home route at `/` remains the graph workbench. This patch turns the tree views into more legible analytical techniques:
 
-- hierarchy-path tracing from the selected flare node back to the root
-- leaf previews for the largest hierarchy leaves in the current tree slice
-- explicit display of hierarchy metadata such as root id, parent field, and depth field
-- stronger analytics helpers for hierarchy path lookup and leaf summarization
-- API test coverage for the flare hierarchy metadata exposed by `/api/datasets`
+- selected-path highlighting across node-link, icicle, and sunburst tree layouts
+- stronger emphasis for the active branch instead of only the clicked node
+- improved radial readability with shallow labels on the circular tree layout
+- preserved tree detail-rail path chips and leaf previews on top of the visual path highlighting
 
 The `v2.3` line now consists of:
 
@@ -23,6 +22,7 @@ The `v2.3` line now consists of:
 - `v2.3.3`: adjacency matrix brushing plus first integrated tree and multivariate technique renderers
 - `v2.3.4`: matrix ordering and graph-analysis polish
 - `v2.3.5`: tree data foundation, hierarchy pathing, and flare metadata checks
+- `v2.3.6`: explicit and implicit tree-technique polish with selected-path highlighting
 
 The core stack now includes:
 
