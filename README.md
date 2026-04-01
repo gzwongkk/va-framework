@@ -5,9 +5,17 @@ The stable Vue release is preserved on the `release/v1.0.0` branch.
 
 ## Current milestone
 
-`v2.3.0` is the graph-data release. The default home route is now a graph-first single-view analytics workspace built around the Les Miserables network, while the cars workflow remains available at `/cars` as the tabular reference path.
+`v2.3.1` is the graph-data polish patch. The default home route stays on the Les Miserables graph workspace, but the shell now keeps the full network visible by default, exposes route switching clearly between `/` and `/cars`, and uses a real right-side Radix drawer for the development-only UI studio.
 
-This release adds:
+This patch adds:
+
+- full-graph default scope for the Les Miserables workspace, with neighborhood filtering available as an explicit mode instead of an implicit side effect of node selection
+- a visible route switcher in the workspace header so the graph and cars views can be traversed in both directions
+- a real Radix `Sheet` trigger-driven devtools drawer from the right edge of the screen
+- tighter default radius tokens so the shell corners are less blunt across panels, controls, and header chrome
+- a more compact D3 force layout so the full graph reads better inside the single-view canvas
+
+The `v2.3` release line adds:
 
 - graph-native query contracts in `packages/contracts`, including discriminated `table` and `graph` result types
 - dataset entity metadata so graph datasets can describe `nodes` and `links` alongside tabular schemas
@@ -34,6 +42,7 @@ The release ladder remains:
 - `v2.1.0`: data foundation with shared contracts, coordinated state, and local/remote execution
 - `v2.2.0`: single-view analytics
 - `v2.3.0`: graph data
+- `v2.3.1`: graph shell polish
 - `v2.4.0`: spatio-temporal data
 - `v2.5.0`: multi-view coordination
 - `v2.6.0`: spatial-ready foundations
@@ -78,7 +87,7 @@ Routes:
 - `/`: Les Miserables graph workspace
 - `/cars`: cars single-view reference workflow
 
-## v2.3.0 endpoints
+## v2.3.1 endpoints
 
 - `GET /api/health`
 - `GET /api/datasets`
