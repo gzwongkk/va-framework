@@ -1,4 +1,4 @@
-import { arc, cluster, hierarchy, partition, tree } from 'd3';
+import { arc, cluster, hierarchy, partition, tree, treemap } from 'd3';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import type { D3ScatterPlotTheme } from './d3-scatter-plot';
@@ -12,7 +12,7 @@ export type TechniqueHierarchyNode = {
   value: number;
 };
 
-export type TreeTechniqueMode = 'node-link' | 'icicle' | 'sunburst';
+export type TreeTechniqueMode = 'node-link' | 'icicle' | 'sunburst' | 'treemap';
 export type TreeAlignment = 'axis-parallel' | 'radial';
 
 export type GraphTreeTechniquesProps = {
@@ -161,6 +161,15 @@ export function GraphTreeTechniques({
       return { margin, radius, rootNode };
     }
 
+    if (mode === 'treemap') {
+      const rootNode = hierarchyRoot.copy() as any;
+      treemap<TechniqueHierarchyNode>()
+        .size([width - margin.left - margin.right, height - margin.top - margin.bottom])
+        .paddingInner(1)
+        .paddingOuter(2)(rootNode);
+      return { margin, radius, rootNode };
+    }
+
     const rootNode = hierarchyRoot.copy() as any;
     partition<TechniqueHierarchyNode>().size([Math.PI * 2, radius])(rootNode);
     return { margin, radius, rootNode };
@@ -180,6 +189,7 @@ export function GraphTreeTechniques({
   const isRadialNodeLink = mode === 'node-link' && alignment === 'radial';
   const isIcicle = mode === 'icicle';
   const isSunburst = mode === 'sunburst';
+  const isTreemap = mode === 'treemap';
   const selectedPathIdSet = useMemo(() => new Set(selectedPathIds), [selectedPathIds]);
 
   return (
@@ -326,6 +336,36 @@ export function GraphTreeTechniques({
                     strokeWidth={isSelected ? 1.6 : isPathNode ? 1.1 : 0.8}
                     style={{ cursor: 'pointer' }}
                     width={Math.max(0, node.x1 - node.x0 - 1)}
+                    x={node.x0}
+                    y={node.y0}
+                  />
+                  {node.depth < 2 ? (
+                    <text fill={theme.textPrimary} fontSize="10" x={node.x0 + 6} y={node.y0 + 14}>
+                      {node.data.label}
+                    </text>
+                  ) : null}
+                </g>
+              );
+            })}
+          </g>
+        ) : null}
+
+        {isTreemap ? (
+          <g transform={`translate(${layoutData.margin.left}, ${layoutData.margin.top})`}>
+            {layoutData.rootNode.descendants().map((node: any) => {
+              const isSelected = node.data.id === selectedId;
+              const isPathNode = selectedPathIdSet.has(node.data.id);
+              return (
+                <g key={node.data.id}>
+                  <rect
+                    fill={colorForGroup(node.data.group)}
+                    fillOpacity={isSelected ? 1 : isPathNode ? 0.96 : 0.84}
+                    height={Math.max(0, node.y1 - node.y0)}
+                    onClick={() => onSelect?.(node.data.id)}
+                    stroke={isSelected || isPathNode ? theme.selectionStroke : 'rgba(255,255,255,0.65)'}
+                    strokeWidth={isSelected ? 1.7 : isPathNode ? 1.1 : 0.8}
+                    style={{ cursor: 'pointer' }}
+                    width={Math.max(0, node.x1 - node.x0)}
                     x={node.x0}
                     y={node.y0}
                   />

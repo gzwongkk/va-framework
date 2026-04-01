@@ -5,6 +5,7 @@ import { AlertCircle, ArrowRight } from 'lucide-react';
 import { CarsSingleViewShell } from '@/components/workspace/cars-single-view-shell';
 import { EnergySankeyShell } from '@/components/workspace/energy-sankey-shell';
 import { GraphSingleViewShell } from '@/components/workspace/graph-single-view-shell';
+import { HierarchySuiteShell } from '@/components/workspace/hierarchy-suite-shell';
 import { PenguinsSplomShell } from '@/components/workspace/penguins-splom-shell';
 import { VisualizationPendingShell } from '@/components/workspace/visualization-pending-shell';
 import { Button } from '@va/ui';
@@ -34,7 +35,7 @@ export function VisualizationExampleRouter({ exampleId }: VisualizationExampleRo
   }
 
   if (exampleId === 'hierarchy-suite') {
-    return <GraphSingleViewShell initialDatasetId="flare" initialTechnique="tree" visualizationId={exampleId} />;
+    return <HierarchySuiteShell visualizationId={exampleId} />;
   }
 
   if (exampleId === 'cars-scatter') {

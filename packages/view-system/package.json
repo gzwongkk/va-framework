@@ -1,6 +1,6 @@
 {
   "name": "@va/view-system",
-  "version": "2.3.15",
+  "version": "2.3.16",
   "private": true,
   "type": "module",
   "main": "./src/index.ts",

@@ -5,14 +5,14 @@ The stable Vue release is preserved on the `release/v1.0.0` branch.
 
 ## Current milestone
 
-`v2.3.15` is the native Sankey flow release.
+`v2.3.16` is the hierarchy technique suite release.
 
-The home route at `/` remains the graph workbench. This release adds the first native flow example:
+The home route at `/` remains the graph workbench. This release turns `flare` into a first-class hierarchy example family:
 
-- `/examples/energy-sankey` now delivers a native React + D3 Sankey workbench on the vendored `energy` graph dataset
-- the flow example reuses the shared graph query contract, local/remote execution path, gallery routing model, and persisted coordination state
-- source-stage and target-stage filtering, minimum-flow thresholds, node selection, and link inspection now run inside the same shell used by the rest of the gallery line
-- the previous Sankey placeholder route has been replaced with a real registry-backed example and flow-specific detail summaries
+- `/examples/hierarchy-suite` now delivers a dedicated hierarchy shell on the vendored `flare` dataset
+- tidy tree, radial cluster, icicle, sunburst, and treemap variants now share one local/remote query path and one registry-backed workbench shell
+- the hierarchy example preserves selected-path inspection while switching between explicit and implicit techniques
+- `flare` is no longer only a graph-home fallback dataset; it now has a dedicated example route in the gallery line
 
 The `v2.3` line now consists of:
 
@@ -32,6 +32,7 @@ The `v2.3` line now consists of:
 - `v2.3.13`: dataset-pack import, gallery dataset cards, and placeholder example registration
 - `v2.3.14`: brushable scatterplot matrix on penguins
 - `v2.3.15`: native Sankey flow example on energy
+- `v2.3.16`: hierarchy technique suite on flare
 
 The core stack now includes:
 
@@ -62,6 +63,7 @@ The release ladder remains:
 - `v2.3.13`: dataset pack import
 - `v2.3.14`: brushable scatterplot matrix
 - `v2.3.15`: flow example
+- `v2.3.16`: tree and hierarchy suite
 - `v2.4.0`: spatio-temporal data
 - `v2.5.0`: multi-view coordination
 - `v2.6.0`: spatial-ready foundations
