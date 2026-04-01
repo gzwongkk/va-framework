@@ -29,8 +29,6 @@ export type GraphWorkspaceSummary = {
   strongestLinkWeight: number;
 };
 
-export const GRAPH_DATASET_ID = 'miserables';
-export const GRAPH_GROUP_OPTIONS = [1, 2, 3, 4] as const;
 export const DEFAULT_GRAPH_CONTROLS: GraphViewControls = {
   executionMode: 'local',
   minEdgeWeight: 0,
@@ -40,23 +38,33 @@ export const DEFAULT_GRAPH_CONTROLS: GraphViewControls = {
   selectedGroups: [],
 };
 
-export const GRAPH_GROUP_PALETTE: Record<number, string> = {
-  1: '#2f607d',
-  2: '#2aa876',
-  3: '#d97745',
-  4: '#7b6bb7',
-};
+const DEFAULT_GRAPH_GROUPS = [1, 2, 3, 4] as const;
+const GRAPH_GROUP_COLORS = ['#2f607d', '#2aa876', '#d97745', '#7b6bb7', '#bc5b7d', '#4d8bc6', '#8a9b3f', '#ce9b34'];
+
+export function getGraphGroupColor(group: number) {
+  const normalizedGroup = Math.max(0, Math.round(group));
+  const colorIndex = normalizedGroup === 0 ? 0 : (normalizedGroup - 1) % GRAPH_GROUP_COLORS.length;
+  return GRAPH_GROUP_COLORS[colorIndex] ?? GRAPH_GROUP_COLORS[0];
+}
+
+export function getGraphGroupOptions(result: GraphQueryResult | undefined) {
+  const groups = result
+    ? Array.from(new Set(result.nodes.map((node) => node.group))).sort((left, right) => left - right)
+    : [...DEFAULT_GRAPH_GROUPS];
+
+  return groups.length > 0 ? groups : [...DEFAULT_GRAPH_GROUPS];
+}
 
 function clampNodeRadius(degree: number) {
   return Math.max(8, Math.min(18, 8 + degree * 1.65));
 }
 
-export function buildGraphQuery(controls: GraphViewControls): QuerySpec {
+export function buildGraphQuery(datasetId: string, controls: GraphViewControls): QuerySpec {
   const focusNodeId =
     controls.scopeMode === 'focused-neighborhood' ? controls.selectedNodeId : undefined;
 
   return {
-    datasetId: GRAPH_DATASET_ID,
+    datasetId,
     entity: 'nodes',
     executionMode: controls.executionMode,
     filters:
@@ -108,7 +116,7 @@ export function toForceGraphData(
       value: edge.value,
     })),
     nodes: result.nodes.map((node) => ({
-      color: GRAPH_GROUP_PALETTE[node.group] ?? '#526172',
+      color: getGraphGroupColor(node.group),
       degree: node.degree,
       group: node.group,
       id: node.id,

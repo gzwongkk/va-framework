@@ -4,15 +4,16 @@ import type { GraphQueryResult } from '@va/contracts';
 import {
   buildGraphQuery,
   DEFAULT_GRAPH_CONTROLS,
+  getGraphGroupOptions,
   getNodeNeighbors,
-  GRAPH_DATASET_ID,
+  getGraphGroupColor,
   normalizeGraphResult,
   summarizeGraphResult,
   toForceGraphData,
 } from './graph-analytics';
 
 const sampleGraphResult: GraphQueryResult = {
-  datasetId: GRAPH_DATASET_ID,
+  datasetId: 'miserables',
   durationMs: 7.2,
   edgeCount: 3,
   edges: [
@@ -23,10 +24,10 @@ const sampleGraphResult: GraphQueryResult = {
   executionMode: 'local',
   nodeCount: 4,
   nodes: [
-    { degree: 2, group: 1, id: 'Valjean', label: 'Valjean', weightedDegree: 13 },
-    { degree: 2, group: 2, id: 'Cosette', label: 'Cosette', weightedDegree: 12 },
-    { degree: 1, group: 1, id: 'Javert', label: 'Javert', weightedDegree: 6 },
-    { degree: 1, group: 3, id: 'Marius', label: 'Marius', weightedDegree: 5 },
+    { attributes: { group: 1, id: 'Valjean' }, degree: 2, group: 1, id: 'Valjean', label: 'Valjean', weightedDegree: 13 },
+    { attributes: { group: 2, id: 'Cosette' }, degree: 2, group: 2, id: 'Cosette', label: 'Cosette', weightedDegree: 12 },
+    { attributes: { group: 1, id: 'Javert' }, degree: 1, group: 1, id: 'Javert', label: 'Javert', weightedDegree: 6 },
+    { attributes: { group: 3, id: 'Marius' }, degree: 1, group: 3, id: 'Marius', label: 'Marius', weightedDegree: 5 },
   ],
   queryKey: 'graph-sample',
   resultKind: 'graph',
@@ -45,7 +46,7 @@ const sampleGraphResult: GraphQueryResult = {
 describe('graph analytics helpers', () => {
   it('builds a graph query from the graph workspace controls', () => {
     expect(
-      buildGraphQuery({
+      buildGraphQuery('miserables', {
         ...DEFAULT_GRAPH_CONTROLS,
         executionMode: 'remote',
         minEdgeWeight: 3,
@@ -56,7 +57,7 @@ describe('graph analytics helpers', () => {
       }),
     ).toEqual({
       aggregates: [],
-      datasetId: GRAPH_DATASET_ID,
+      datasetId: 'miserables',
       entity: 'nodes',
       executionMode: 'remote',
       filters: [
@@ -80,7 +81,7 @@ describe('graph analytics helpers', () => {
 
   it('keeps the full graph visible by default even when a node is selected', () => {
     expect(
-      buildGraphQuery({
+      buildGraphQuery('miserables', {
         ...DEFAULT_GRAPH_CONTROLS,
         selectedNodeId: 'Valjean',
       }),
@@ -106,10 +107,14 @@ describe('graph analytics helpers', () => {
     });
 
     expect(toForceGraphData(graphResult, 'Valjean').nodes[0]).toMatchObject({
-      color: '#2f607d',
+      color: getGraphGroupColor(1),
       id: 'Valjean',
       selected: true,
     });
+  });
+
+  it('derives dynamic group options from the active graph result', () => {
+    expect(getGraphGroupOptions(sampleGraphResult)).toEqual([1, 2, 3]);
   });
 
   it('derives selected-node neighbors from the active graph result', () => {

@@ -4,16 +4,15 @@ import {
   buildGraphQuery,
   DEFAULT_GRAPH_CONTROLS,
   findSelectedGraphNode,
+  getGraphGroupColor,
+  getGraphGroupOptions,
   getNodeNeighbors,
   getNodeSearchMatches,
   getTopGraphNodes,
-  GRAPH_DATASET_ID,
-  GRAPH_GROUP_OPTIONS,
-  GRAPH_GROUP_PALETTE,
-  type GraphScopeMode,
   normalizeGraphResult,
   summarizeGraphResult,
   toForceGraphData,
+  type GraphScopeMode,
 } from '@/lib/analytics/graph-analytics';
 import {
   formatMetric,
@@ -22,11 +21,22 @@ import {
   SectionHeader,
   StatusPill,
 } from '@/components/workspace/cars-shell-primitives';
-import { WorkspaceRouteNav } from '@/components/workspace/workspace-route-nav';
+import { GraphTechniquePlaceholder } from '@/components/workspace/graph-technique-placeholder';
 import { UiStudioDrawer } from '@/components/workspace/ui-studio-drawer';
+import { WorkspaceRouteNav } from '@/components/workspace/workspace-route-nav';
 import { useCoordinationStore } from '@/lib/coordination-store';
 import { planExecution } from '@/lib/data/execution-planner';
 import { useDatasetCatalog, useLocalPreviewQuery, useRemotePreviewQuery } from '@/lib/data/query-hooks';
+import {
+  graphDatasetOptions,
+  graphTechniqueOptions,
+  isGraphWorkbenchDatasetId,
+  isGraphTechnique,
+  parseGraphDatasetParam,
+  parseGraphTechniqueParam,
+  type GraphTechnique,
+} from '@/lib/graph-workbench';
+import { useGraphWorkbenchStore } from '@/lib/graph-workbench-store';
 import { resolveChartTheme, resolveUiStudioVars } from '@/lib/ui-studio';
 import { useUiStudioStore } from '@/lib/ui-studio-store';
 import {
@@ -45,36 +55,74 @@ import {
   ToggleGroupItem,
 } from '@va/ui';
 import { D3ForceGraph } from '@va/vis-core';
-import { Database, GitBranch, Network, Search, SlidersHorizontal } from 'lucide-react';
-import { type CSSProperties, useDeferredValue, useEffect, useMemo, useState } from 'react';
+import { Database, GitBranch, Network, Search, SlidersHorizontal, Workflow } from 'lucide-react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { type CSSProperties, startTransition, useDeferredValue, useEffect, useMemo, useState } from 'react';
 
 const VIEW_ID = 'graph-canvas';
 const EXECUTION_MODES = ['local', 'remote'] as const;
 const DEPTH_OPTIONS = ['1', '2'] as const;
 const GRAPH_SCOPE_OPTIONS = ['full-graph', 'focused-neighborhood'] as const;
+const ORDERING_OPTIONS = [
+  { label: 'Original', value: 'original' },
+  { label: 'Alpha', value: 'alphabetical' },
+  { label: 'Degree', value: 'degree' },
+  { label: 'Group', value: 'group' },
+] as const;
 const SHOW_UI_STUDIO = process.env.NODE_ENV !== 'production';
-const GRAPH_LEGEND = GRAPH_GROUP_OPTIONS.map((groupId) => ({
-  color: GRAPH_GROUP_PALETTE[groupId],
-  label: `Group ${groupId}`,
-}));
 
 function formatWeight(value: number) {
   return `${value.toFixed(1)} weight`;
 }
 
+function getTechniqueNarrative(technique: GraphTechnique, datasetTitle: string) {
+  switch (technique) {
+    case 'matrix':
+      return `The ${datasetTitle} workbench is scaffolded for adjacency matrix brushing and ordering in the next v2.3.x patches.`;
+    case 'tree':
+      return `The ${datasetTitle} workbench is scaffolded for explicit and implicit tree techniques in the next v2.3.x patches.`;
+    case 'multivariate':
+      return `The ${datasetTitle} workbench is scaffolded for multivariate network encodings in the next v2.3.x patches.`;
+    default:
+      return `Explore ${datasetTitle} in the graph workbench, then carry the same state into matrix, tree, and multivariate techniques as they land.`;
+  }
+}
+
 export function GraphSingleViewShell() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const datasetCatalog = useDatasetCatalog();
   const uiPrefs = useUiStudioStore((state) => state.prefs);
   const uiCssVars = useMemo(() => resolveUiStudioVars(uiPrefs), [uiPrefs]);
   const chartTheme = useMemo(() => resolveChartTheme(uiPrefs), [uiPrefs]);
+
+  const workbenchTechnique = useGraphWorkbenchStore((state) => state.technique);
+  const workbenchDataset = useGraphWorkbenchStore((state) => state.dataset);
+  const ordering = useGraphWorkbenchStore((state) => state.ordering);
+  const setWorkbenchTechnique = useGraphWorkbenchStore((state) => state.setTechnique);
+  const setWorkbenchDataset = useGraphWorkbenchStore((state) => state.setDataset);
+  const setOrdering = useGraphWorkbenchStore((state) => state.setOrdering);
+  const setWorkbenchScopeMode = useGraphWorkbenchStore((state) => state.setScopeMode);
+  const setWorkbenchSelectedNodeIds = useGraphWorkbenchStore((state) => state.setSelectedNodeIds);
+  const setWorkbenchFocusNodeId = useGraphWorkbenchStore((state) => state.setFocusNodeId);
+
+  const uiTechnique = parseGraphTechniqueParam(searchParams.get('technique'));
+  const uiDataset = parseGraphDatasetParam(searchParams.get('dataset'));
+  const uiDatasetParam = searchParams.get('dataset');
+  const uiTechniqueParam = searchParams.get('technique');
+
+  const activeTechnique = workbenchTechnique;
+  const activeDatasetId = workbenchDataset;
+
   const graphDataset = useMemo(
-    () => datasetCatalog.data?.find((dataset) => dataset.id === GRAPH_DATASET_ID),
-    [datasetCatalog.data],
+    () => datasetCatalog.data?.find((dataset) => dataset.id === activeDatasetId),
+    [activeDatasetId, datasetCatalog.data],
   );
 
-  const activeDatasetId = useCoordinationStore((state) => state.activeDatasetId);
   const preferredExecutionMode = useCoordinationStore((state) => state.preferredExecutionMode);
   const selectedNodeId = useCoordinationStore((state) => state.selections[VIEW_ID]?.ids[0]);
+  const coordinationDatasetId = useCoordinationStore((state) => state.activeDatasetId);
   const setActiveDatasetId = useCoordinationStore((state) => state.setActiveDatasetId);
   const setActiveViewId = useCoordinationStore((state) => state.setActiveViewId);
   const setFilters = useCoordinationStore((state) => state.setFilters);
@@ -89,9 +137,60 @@ export function GraphSingleViewShell() {
   const [searchTerm, setSearchTerm] = useState<string>(DEFAULT_GRAPH_CONTROLS.searchTerm ?? '');
   const deferredSearchTerm = useDeferredValue(searchTerm);
 
+  function updateWorkbenchUrl(next: Partial<{ dataset: typeof activeDatasetId; technique: GraphTechnique }>) {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('dataset', next.dataset ?? activeDatasetId);
+    params.set('technique', next.technique ?? activeTechnique);
+    const nextQueryString = params.toString();
+    const nextUrl = nextQueryString ? `${pathname}?${nextQueryString}` : pathname;
+
+    startTransition(() => {
+      router.replace(nextUrl, { scroll: false });
+    });
+  }
+
+  useEffect(() => {
+    if (workbenchTechnique !== uiTechnique) {
+      setWorkbenchTechnique(uiTechnique);
+    }
+  }, [setWorkbenchTechnique, uiTechnique, workbenchTechnique]);
+
+  useEffect(() => {
+    if (workbenchDataset !== uiDataset) {
+      setWorkbenchDataset(uiDataset);
+    }
+  }, [setWorkbenchDataset, uiDataset, workbenchDataset]);
+
+  useEffect(() => {
+    if (uiTechniqueParam && uiDatasetParam) {
+      return;
+    }
+
+    const params = new URLSearchParams(searchParams.toString());
+    if (!isGraphTechnique(uiTechniqueParam)) {
+      params.set('technique', uiTechnique);
+    }
+    if (!isGraphWorkbenchDatasetId(uiDatasetParam)) {
+      params.set('dataset', uiDataset);
+    }
+
+    startTransition(() => {
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    });
+  }, [pathname, router, searchParams, uiDataset, uiDatasetParam, uiTechnique, uiTechniqueParam]);
+
+  useEffect(() => {
+    setWorkbenchScopeMode(scopeMode);
+  }, [scopeMode, setWorkbenchScopeMode]);
+
+  useEffect(() => {
+    setWorkbenchSelectedNodeIds(selectedNodeId ? [selectedNodeId] : []);
+    setWorkbenchFocusNodeId(selectedNodeId);
+  }, [selectedNodeId, setWorkbenchFocusNodeId, setWorkbenchSelectedNodeIds]);
+
   const query = useMemo(
     () =>
-      buildGraphQuery({
+      buildGraphQuery(activeDatasetId, {
         executionMode: preferredExecutionMode,
         minEdgeWeight,
         neighborDepth,
@@ -99,7 +198,15 @@ export function GraphSingleViewShell() {
         selectedGroups,
         selectedNodeId,
       }),
-    [minEdgeWeight, neighborDepth, preferredExecutionMode, scopeMode, selectedGroups, selectedNodeId],
+    [
+      activeDatasetId,
+      minEdgeWeight,
+      neighborDepth,
+      preferredExecutionMode,
+      scopeMode,
+      selectedGroups,
+      selectedNodeId,
+    ],
   );
 
   const executionPlan = useMemo(
@@ -126,12 +233,21 @@ export function GraphSingleViewShell() {
     () => getNodeSearchMatches(graphResult, deferredSearchTerm),
     [deferredSearchTerm, graphResult],
   );
+  const availableGroups = useMemo(() => getGraphGroupOptions(graphResult), [graphResult]);
+  const graphLegend = useMemo(
+    () =>
+      availableGroups.map((groupId) => ({
+        color: getGraphGroupColor(groupId),
+        label: activeDatasetId === 'flare' ? `Depth ${groupId}` : `Group ${groupId}`,
+      })),
+    [activeDatasetId, availableGroups],
+  );
 
   useEffect(() => {
-    if (graphDataset && activeDatasetId !== GRAPH_DATASET_ID) {
-      setActiveDatasetId(GRAPH_DATASET_ID);
+    if (graphDataset && coordinationDatasetId !== activeDatasetId) {
+      setActiveDatasetId(activeDatasetId);
     }
-  }, [activeDatasetId, graphDataset, setActiveDatasetId]);
+  }, [activeDatasetId, coordinationDatasetId, graphDataset, setActiveDatasetId]);
 
   useEffect(() => {
     setActiveViewId(VIEW_ID);
@@ -158,38 +274,51 @@ export function GraphSingleViewShell() {
   const initialLoading = datasetCatalog.isLoading || (activePreview.isLoading && !activePreview.data);
   const isRefreshing = activePreview.isFetching && Boolean(activePreview.data);
   const activeError = activePreview.error;
+  const datasetLabel = graphDataset?.title ?? 'Graph dataset';
+  const techniqueNarrative = getTechniqueNarrative(activeTechnique, datasetLabel);
+  const groupLabel = activeDatasetId === 'flare' ? 'Depth filter' : 'Community filter';
+  const groupTagLabel = activeDatasetId === 'flare' ? 'Depth' : 'Group';
+  const searchPlaceholder =
+    activeDatasetId === 'flare' ? 'Search hierarchy nodes' : 'Search nodes by name';
 
   const consoleStatus = useMemo(() => {
     if (activeError) {
       return {
         detail: activeError.message,
-        label: 'Graph unavailable',
+        label: 'Workbench unavailable',
         tone: 'error' as const,
       };
     }
 
     if (initialLoading) {
       return {
-        detail: 'Loading the dataset registry and initial graph topology.',
-        label: 'Loading graph workspace',
+        detail: 'Loading the graph registry, workbench state, and active dataset topology.',
+        label: 'Loading graph workbench',
         tone: 'neutral' as const,
       };
     }
 
     if (isRefreshing) {
       return {
-        detail: 'Controls update the subgraph quietly while the current layout stays visible.',
-        label: 'Refreshing subgraph',
+        detail: 'Controls update the graph quietly while the current technique state remains visible.',
+        label: 'Refreshing graph state',
         tone: 'warning' as const,
       };
     }
 
     return {
-      detail: executionPlan?.reasons[0] ?? 'Graph canvas ready for exploration.',
+      detail: executionPlan?.reasons[0] ?? techniqueNarrative,
       label: resolvedExecutionMode === 'local' ? 'Graphology runtime active' : 'API runtime active',
       tone: 'accent' as const,
     };
-  }, [activeError, executionPlan, initialLoading, isRefreshing, resolvedExecutionMode]);
+  }, [activeError, executionPlan, initialLoading, isRefreshing, resolvedExecutionMode, techniqueNarrative]);
+
+  const scopeHelpText =
+    scopeMode === 'full-graph'
+      ? `Showing the full ${datasetLabel} topology. Selecting a node highlights it without filtering the current graph.`
+      : selectedNode
+        ? 'The canvas is scoped to the selected node and expanded by the active neighborhood depth.'
+        : 'Neighborhood mode is enabled. Select a node in the graph or search results to narrow the visible graph.';
 
   const selectNode = (nodeId: string) =>
     setSelection(VIEW_ID, {
@@ -204,13 +333,6 @@ export function GraphSingleViewShell() {
       ids: [],
       sourceViewId: VIEW_ID,
     });
-
-  const scopeHelpText =
-    scopeMode === 'full-graph'
-      ? 'Showing the full Les Miserables graph. Selecting a node highlights it without filtering the network.'
-      : selectedNode
-        ? 'The canvas is scoped to the selected node and expanded by the active neighborhood depth.'
-        : 'Neighborhood mode is enabled. Select a node in the graph or search results to narrow the view.';
 
   return (
     <main
@@ -233,23 +355,87 @@ export function GraphSingleViewShell() {
           <header className="ui-studio-header col-span-full flex flex-wrap items-start justify-between gap-4 border-b">
             <div>
               <p className="ui-studio-label font-semibold uppercase tracking-[0.28em]">
-                va-framework / graph data
+                va-framework / graph workbench
               </p>
               <h1 className="ui-studio-shell-title mt-2 font-[family-name:var(--font-display)] leading-none">
-                Les Miserables Graph Console
+                {datasetLabel}
               </h1>
-              <p className="ui-studio-body mt-2 max-w-2xl">
-                Explore neighborhoods, filter communities, and inspect weighted relationships in the v2.3.0 graph workspace.
-              </p>
+              <p className="ui-studio-body mt-2 max-w-3xl">{techniqueNarrative}</p>
             </div>
 
             <div className="flex flex-wrap items-center justify-end gap-2 text-xs">
               <WorkspaceRouteNav buttonPreset={uiPrefs.buttonPreset} />
-              <Badge>{GRAPH_DATASET_ID}</Badge>
+              <Badge>{activeTechnique}</Badge>
+              <Badge>{activeDatasetId}</Badge>
               <Badge>{resolvedExecutionMode}</Badge>
               <Badge>{`${graphSummary.nodeCount} nodes / ${graphSummary.edgeCount} edges`}</Badge>
               <StatusPill label={consoleStatus.label} tone={consoleStatus.tone} />
               {SHOW_UI_STUDIO ? <UiStudioDrawer buttonPreset={uiPrefs.buttonPreset} /> : null}
+            </div>
+
+            <div className="grid w-full gap-3 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-start">
+              <div className="grid gap-3">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="ui-studio-label font-semibold uppercase tracking-[0.22em]">Technique</p>
+                  <Workflow className="size-4 text-[var(--ui-text-muted)]" />
+                </div>
+                <ToggleGroup
+                  className="grid gap-2 md:grid-cols-4"
+                  onValueChange={(value) => {
+                    if (isGraphTechnique(value)) {
+                      setWorkbenchTechnique(value);
+                      updateWorkbenchUrl({ technique: value });
+                    }
+                  }}
+                  type="single"
+                  value={activeTechnique}
+                >
+                  {graphTechniqueOptions.map((option) => (
+                    <ToggleGroupItem
+                      key={option.value}
+                      className="grid h-auto w-full justify-start gap-1 px-3 py-3 text-left normal-case tracking-normal"
+                      data-button-style={uiPrefs.buttonPreset}
+                      value={option.value}
+                    >
+                      <span className="text-sm font-semibold">{option.label}</span>
+                      <span className="text-xs font-normal opacity-80">{option.description}</span>
+                    </ToggleGroupItem>
+                  ))}
+                </ToggleGroup>
+              </div>
+
+              <div className="grid min-w-[280px] gap-3">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="ui-studio-label font-semibold uppercase tracking-[0.22em]">Dataset</p>
+                  <Database className="size-4 text-[var(--ui-text-muted)]" />
+                </div>
+                <ToggleGroup
+                  className="grid gap-2"
+                  onValueChange={(value) => {
+                    if (isGraphWorkbenchDatasetId(value)) {
+                      setSelectedGroups([]);
+                      setSearchTerm('');
+                      clearSelection();
+                      setWorkbenchDataset(value);
+                      updateWorkbenchUrl({ dataset: value });
+                    }
+                  }}
+                  type="single"
+                  value={activeDatasetId}
+                >
+                  {graphDatasetOptions.map((option) => (
+                    <ToggleGroupItem
+                      key={option.value}
+                      className="grid h-auto w-full justify-start gap-1 px-3 py-3 text-left normal-case tracking-normal"
+                      data-button-style={uiPrefs.buttonPreset}
+                      value={option.value}
+                    >
+                      <span className="text-sm font-semibold">{option.label}</span>
+                      <span className="text-xs font-normal opacity-80">{option.description}</span>
+                    </ToggleGroupItem>
+                  ))}
+                </ToggleGroup>
+              </div>
             </div>
           </header>
 
@@ -257,7 +443,7 @@ export function GraphSingleViewShell() {
             <div className="grid gap-5 xl:h-full xl:min-h-0 xl:grid-rows-[auto_auto_1fr]">
               <div className="grid gap-4">
                 <SectionHeader
-                  detail="Filter the active graph, tune the neighborhood radius, and search for a focus node."
+                  detail="Tune execution mode, graph scope, ordering, and group filters for the active dataset."
                   icon={SlidersHorizontal}
                   title="Control rail"
                 />
@@ -273,9 +459,7 @@ export function GraphSingleViewShell() {
               <div className="grid gap-5 xl:min-h-0 xl:content-start xl:overflow-auto xl:pr-1">
                 <div className="grid gap-3">
                   <div className="flex items-center justify-between gap-3">
-                    <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">
-                      Execution mode
-                    </p>
+                    <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">Execution mode</p>
                     <Database className="size-4 text-[var(--ui-text-muted)]" />
                   </div>
                   <ToggleGroup
@@ -304,18 +488,47 @@ export function GraphSingleViewShell() {
 
                 <div className="grid gap-3">
                   <div className="flex items-center justify-between gap-3">
-                    <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">
-                      Community filter
-                    </p>
+                    <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">Graph ordering</p>
+                    <Workflow className="size-4 text-[var(--ui-text-muted)]" />
+                  </div>
+                  <ToggleGroup
+                    className="grid w-full grid-cols-2 gap-2"
+                    onValueChange={(value) => {
+                      if (value === 'original' || value === 'alphabetical' || value === 'degree' || value === 'group') {
+                        setOrdering(value);
+                      }
+                    }}
+                    type="single"
+                    value={ordering}
+                  >
+                    {ORDERING_OPTIONS.map((option) => (
+                      <ToggleGroupItem
+                        key={option.value}
+                        className="w-full text-xs font-semibold uppercase tracking-[0.18em]"
+                        data-button-style={uiPrefs.buttonPreset}
+                        value={option.value}
+                      >
+                        {option.label}
+                      </ToggleGroupItem>
+                    ))}
+                  </ToggleGroup>
+                  <p className="ui-studio-body">
+                    Ordering is scaffolded now so adjacency matrix and later tree techniques can reuse the same workbench state.
+                  </p>
+                </div>
+
+                <div className="grid gap-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">{groupLabel}</p>
                     <GitBranch className="size-4 text-[var(--ui-text-muted)]" />
                   </div>
                   <ToggleGroup
                     className="flex flex-wrap gap-2"
                     onValueChange={(value) => setSelectedGroups(value.map((groupId) => Number(groupId)))}
                     type="multiple"
-                    value={selectedGroups.map(String)}
+                    value={selectedGroups.filter((group) => availableGroups.includes(group)).map(String)}
                   >
-                    {GRAPH_GROUP_OPTIONS.map((groupId) => (
+                    {availableGroups.map((groupId) => (
                       <ToggleGroupItem
                         key={groupId}
                         className="px-3 text-xs font-semibold uppercase tracking-[0.16em]"
@@ -324,9 +537,9 @@ export function GraphSingleViewShell() {
                       >
                         <span
                           className="mr-2 size-2 rounded-full"
-                          style={{ backgroundColor: GRAPH_GROUP_PALETTE[groupId] }}
+                          style={{ backgroundColor: getGraphGroupColor(groupId) }}
                         />
-                        Group {groupId}
+                        {groupTagLabel} {groupId}
                       </ToggleGroupItem>
                     ))}
                   </ToggleGroup>
@@ -344,9 +557,7 @@ export function GraphSingleViewShell() {
 
                 <div className="grid gap-3">
                   <div className="flex items-center justify-between gap-3">
-                    <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">
-                      Neighborhood depth
-                    </p>
+                    <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">Neighborhood depth</p>
                     <Network className="size-4 text-[var(--ui-text-muted)]" />
                   </div>
                   <ToggleGroup
@@ -374,9 +585,7 @@ export function GraphSingleViewShell() {
 
                 <div className="grid gap-3">
                   <div className="flex items-center justify-between gap-3">
-                    <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">
-                      Graph scope
-                    </p>
+                    <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">Graph scope</p>
                     <Network className="size-4 text-[var(--ui-text-muted)]" />
                   </div>
                   <ToggleGroup
@@ -417,14 +626,12 @@ export function GraphSingleViewShell() {
 
                 <div className="grid gap-3">
                   <div className="flex items-center justify-between gap-3">
-                    <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">
-                      Node search
-                    </p>
+                    <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">Node search</p>
                     <Search className="size-4 text-[var(--ui-text-muted)]" />
                   </div>
                   <Input
                     onChange={(event) => setSearchTerm(event.target.value)}
-                    placeholder="Search nodes by name"
+                    placeholder={searchPlaceholder}
                     value={searchTerm}
                   />
                   <ScrollArea className="max-h-44 rounded-[var(--ui-radius-panel)] border ui-studio-surface">
@@ -441,7 +648,7 @@ export function GraphSingleViewShell() {
                           >
                             <div className="flex items-center justify-between gap-3">
                               <span className="font-medium text-[var(--ui-text-primary)]">{node.label}</span>
-                              <Badge variant="secondary">G{node.group}</Badge>
+                              <Badge variant="secondary">{groupTagLabel.charAt(0)}{node.group}</Badge>
                             </div>
                             <p className="mt-1 text-xs text-[var(--ui-text-muted)]">
                               Degree {node.degree} · Weight {node.weightedDegree.toFixed(1)}
@@ -460,30 +667,38 @@ export function GraphSingleViewShell() {
 
           <section className="ui-studio-stage grid border-t xl:min-h-0 xl:border-t-0 xl:border-r">
             <div className="ui-studio-stage-panel min-h-0">
-              <D3ForceGraph
-                edges={graphData.edges}
-                emptyLabel={
-                  activeError
-                    ? activeError.message
-                    : initialLoading
-                      ? 'Loading graph dataset...'
-                      : 'No nodes match the current graph controls.'
-                }
-                height={640}
-                legend={GRAPH_LEGEND}
-                nodes={graphData.nodes}
-                onSelect={selectNode}
-                selectedId={selectedNode?.id}
-                statusLabel={consoleStatus.label}
-                statusTone={consoleStatus.tone}
-                subtitle={
-                  scopeMode === 'full-graph'
-                    ? 'The full Les Miserables network with community colors, weighted links, and live node inspection.'
-                    : 'A focused neighborhood view around the selected node with weighted links and live filtering.'
-                }
-                theme={chartTheme}
-                title="Character relationship network"
-              />
+              {activeTechnique === 'force' ? (
+                <D3ForceGraph
+                  edges={graphData.edges}
+                  emptyLabel={
+                    activeError
+                      ? activeError.message
+                      : initialLoading
+                        ? 'Loading graph dataset...'
+                        : 'No nodes match the current graph controls.'
+                  }
+                  height={640}
+                  legend={graphLegend}
+                  nodes={graphData.nodes}
+                  onSelect={selectNode}
+                  selectedId={selectedNode?.id}
+                  statusLabel={consoleStatus.label}
+                  statusTone={consoleStatus.tone}
+                  subtitle={
+                    scopeMode === 'full-graph'
+                      ? `The full ${datasetLabel} topology with shared workbench state and live node inspection.`
+                      : 'A focused neighborhood view around the selected node with weighted links and live filtering.'
+                  }
+                  theme={chartTheme}
+                  title={`${datasetLabel} network canvas`}
+                />
+              ) : (
+                <GraphTechniquePlaceholder
+                  dataset={graphDataset}
+                  technique={activeTechnique}
+                  theme={chartTheme}
+                />
+              )}
             </div>
           </section>
 
@@ -499,16 +714,16 @@ export function GraphSingleViewShell() {
                 {selectedNode ? (
                   <>
                     <div className="ui-studio-surface border p-4 shadow-sm shadow-slate-950/5">
-                      <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">
-                        Focused node
-                      </p>
+                      <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">Focused node</p>
                       <p className="mt-3 font-[family-name:var(--font-display)] text-[1.8rem] leading-tight text-[var(--ui-text-primary)]">
                         {selectedNode.label}
                       </p>
                       <div className="mt-3 flex flex-wrap gap-2">
-                        <Badge variant="secondary">Group {selectedNode.group}</Badge>
+                        <Badge variant="secondary">{groupTagLabel} {selectedNode.group}</Badge>
                         <Badge>{selectedNode.degree} degree</Badge>
                         <Badge>{selectedNode.weightedDegree.toFixed(1)} weighted</Badge>
+                        {selectedNode.depth !== undefined ? <Badge>Depth {selectedNode.depth}</Badge> : null}
+                        {selectedNode.parentId ? <Badge>Parent {selectedNode.parentId}</Badge> : null}
                       </div>
                     </div>
 
@@ -520,16 +735,14 @@ export function GraphSingleViewShell() {
                   </>
                 ) : (
                   <div className="ui-studio-surface border border-dashed p-5 text-sm leading-6 text-[var(--ui-text-secondary)]">
-                    Select a node in the graph or from the search list to inspect it here.
+                    Select a node in the active technique or from the search list to inspect it here.
                   </div>
                 )}
 
                 <Separator className="ui-studio-divider" />
 
                 <div className="ui-studio-surface grid gap-3 border p-4 shadow-sm shadow-slate-950/5">
-                  <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">
-                    Neighbor list
-                  </p>
+                  <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">Neighbor list</p>
                   <ScrollArea className="max-h-52">
                     <Table>
                       <TableHeader>
@@ -552,7 +765,7 @@ export function GraphSingleViewShell() {
                                 <div className="flex items-center gap-2">
                                   <span
                                     className="size-2 rounded-full"
-                                    style={{ backgroundColor: GRAPH_GROUP_PALETTE[neighbor.group] }}
+                                    style={{ backgroundColor: getGraphGroupColor(neighbor.group) }}
                                   />
                                   {neighbor.label}
                                 </div>
@@ -573,9 +786,7 @@ export function GraphSingleViewShell() {
                 </div>
 
                 <div className="ui-studio-surface grid gap-3 border p-4 shadow-sm shadow-slate-950/5">
-                  <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">
-                    Top connected nodes
-                  </p>
+                  <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">Top connected nodes</p>
                   <ScrollArea className="max-h-52">
                     <Table>
                       <TableHeader>
@@ -585,36 +796,46 @@ export function GraphSingleViewShell() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {topNodes.map((node) => (
-                          <TableRow
-                            key={node.id}
-                            className="ui-studio-record-row cursor-pointer"
-                            data-active={node.id === selectedNodeId}
-                            onClick={() => selectNode(node.id)}
-                            onMouseDown={(event) => event.preventDefault()}
-                          >
-                            <TableCell className="ui-studio-table-cell">
-                              <div className="flex items-center gap-2">
-                                <span
-                                  className="size-2 rounded-full"
-                                  style={{ backgroundColor: GRAPH_GROUP_PALETTE[node.group] }}
-                                />
-                                {node.id}
-                              </div>
-                            </TableCell>
-                            <TableCell className="ui-studio-table-cell">{node.degree}</TableCell>
-                          </TableRow>
-                        ))}
+                        {topNodes.map((node) => {
+                          const matchingNode = graphResult?.nodes.find((graphNode) => graphNode.id === node.id);
+
+                          return (
+                            <TableRow
+                              key={node.id}
+                              className="ui-studio-record-row cursor-pointer"
+                              data-active={node.id === selectedNodeId}
+                              onClick={() => selectNode(node.id)}
+                              onMouseDown={(event) => event.preventDefault()}
+                            >
+                              <TableCell className="ui-studio-table-cell">
+                                <div className="flex items-center gap-2">
+                                  <span
+                                    className="size-2 rounded-full"
+                                    style={{ backgroundColor: getGraphGroupColor(node.group) }}
+                                  />
+                                  {matchingNode?.label ?? node.id}
+                                </div>
+                              </TableCell>
+                              <TableCell className="ui-studio-table-cell">{node.degree}</TableCell>
+                            </TableRow>
+                          );
+                        })}
                       </TableBody>
                     </Table>
                   </ScrollArea>
                 </div>
 
                 <div className="ui-studio-surface grid gap-3 border p-4 shadow-sm shadow-slate-950/5">
-                  <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">
-                    Graph summary
-                  </p>
+                  <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">Graph summary</p>
                   <div className="grid gap-3 text-sm text-[var(--ui-text-secondary)]">
+                    <div className="flex items-start justify-between gap-4">
+                      <span className="text-[var(--ui-text-muted)]">Technique</span>
+                      <span className="text-right font-medium text-[var(--ui-text-primary)]">{activeTechnique}</span>
+                    </div>
+                    <div className="flex items-start justify-between gap-4">
+                      <span className="text-[var(--ui-text-muted)]">Dataset</span>
+                      <span className="text-right font-medium text-[var(--ui-text-primary)]">{datasetLabel}</span>
+                    </div>
                     <div className="flex items-start justify-between gap-4">
                       <span className="text-[var(--ui-text-muted)]">Focused node</span>
                       <span className="text-right font-medium text-[var(--ui-text-primary)]">

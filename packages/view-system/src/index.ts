@@ -110,7 +110,7 @@ export const starterViews: ViewDefinition[] = [
   {
     id: 'graph-canvas',
     label: 'Graph canvas',
-    summary: 'Graph-native surface for the v2.3.0 graph exploration workspace.',
+    summary: 'Graph-native surface for the v2.3.x graph workbench line.',
     coordinateSpace: 'screen-2d',
     supportedKinds: ['graph'],
     signals: ['selection', 'hover', 'filter', 'query'],
