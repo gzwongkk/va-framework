@@ -5,15 +5,15 @@ The stable Vue release is preserved on the `release/v1.0.0` branch.
 
 ## Current milestone
 
-`v2.3.4` is the matrix-ordering and graph-analysis polish patch.
+`v2.3.5` is the tree data-foundation patch.
 
-The home route at `/` remains the graph workbench. This patch sharpens the matrix technique with more analysis-specific behavior:
+The home route at `/` remains the graph workbench. This patch strengthens the tree line before the later tree-visual polish milestone:
 
-- direct matrix cell selection for pairwise graph inspection
-- stronger matrix summaries, including selected-block density and strongest links
-- clearer ordering context inside the matrix stage
-- preserved selection handoff between force and matrix techniques
-- additional matrix analytics tests to lock down the ordered brush behavior
+- hierarchy-path tracing from the selected flare node back to the root
+- leaf previews for the largest hierarchy leaves in the current tree slice
+- explicit display of hierarchy metadata such as root id, parent field, and depth field
+- stronger analytics helpers for hierarchy path lookup and leaf summarization
+- API test coverage for the flare hierarchy metadata exposed by `/api/datasets`
 
 The `v2.3` line now consists of:
 
@@ -22,6 +22,7 @@ The `v2.3` line now consists of:
 - `v2.3.2`: graph workbench foundation, URL-backed technique switching, and hierarchy dataset support
 - `v2.3.3`: adjacency matrix brushing plus first integrated tree and multivariate technique renderers
 - `v2.3.4`: matrix ordering and graph-analysis polish
+- `v2.3.5`: tree data foundation, hierarchy pathing, and flare metadata checks
 
 The core stack now includes:
 
