@@ -397,22 +397,22 @@ const densityPresets: Record<UiDensityPreset, DensityPresetConfig> = {
 
 const radiusPresets: Record<UiRadiusPreset, RadiusPresetConfig> = {
   soft: {
-    control: '1.3rem',
-    panel: '1.85rem',
+    control: '1.05rem',
+    panel: '1.38rem',
     pill: '999px',
-    shell: '2.9rem',
+    shell: '2.1rem',
   },
   standard: {
-    control: '1.15rem',
-    panel: '1.6rem',
+    control: '0.88rem',
+    panel: '1.12rem',
     pill: '999px',
-    shell: '2.45rem',
+    shell: '1.72rem',
   },
   tight: {
-    control: '0.9rem',
-    panel: '1.3rem',
+    control: '0.72rem',
+    panel: '0.94rem',
     pill: '999px',
-    shell: '1.95rem',
+    shell: '1.42rem',
   },
 };
 

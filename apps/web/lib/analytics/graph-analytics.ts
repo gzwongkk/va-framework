@@ -12,10 +12,13 @@ export type GraphViewControls = {
   executionMode: ExecutionMode;
   minEdgeWeight: number;
   neighborDepth: 1 | 2;
-  searchTerm: string;
+  scopeMode: GraphScopeMode;
+  searchTerm?: string;
   selectedGroups: number[];
   selectedNodeId?: string;
 };
+
+export type GraphScopeMode = 'focused-neighborhood' | 'full-graph';
 
 export type GraphWorkspaceSummary = {
   averageDegree: number;
@@ -32,6 +35,7 @@ export const DEFAULT_GRAPH_CONTROLS: GraphViewControls = {
   executionMode: 'local',
   minEdgeWeight: 0,
   neighborDepth: 1,
+  scopeMode: 'full-graph',
   searchTerm: '',
   selectedGroups: [],
 };
@@ -48,6 +52,9 @@ function clampNodeRadius(degree: number) {
 }
 
 export function buildGraphQuery(controls: GraphViewControls): QuerySpec {
+  const focusNodeId =
+    controls.scopeMode === 'focused-neighborhood' ? controls.selectedNodeId : undefined;
+
   return {
     datasetId: GRAPH_DATASET_ID,
     entity: 'nodes',
@@ -67,8 +74,8 @@ export function buildGraphQuery(controls: GraphViewControls): QuerySpec {
     groupBy: [],
     aggregates: [],
     graph: {
-      focusNodeId: controls.selectedNodeId,
-      includeIsolates: controls.selectedNodeId ? false : true,
+      focusNodeId,
+      includeIsolates: !focusNodeId,
       minEdgeWeight: controls.minEdgeWeight,
       neighborDepth: controls.neighborDepth,
     },

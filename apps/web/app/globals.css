@@ -22,9 +22,9 @@
 
 :root {
   color-scheme: light;
-  --ui-radius-shell: 2.45rem;
-  --ui-radius-panel: 1.6rem;
-  --ui-radius-control: 1.15rem;
+  --ui-radius-shell: 1.72rem;
+  --ui-radius-panel: 1.12rem;
+  --ui-radius-control: 0.88rem;
   --ui-radius-pill: 999px;
   --ui-border: rgba(146, 164, 180, 0.46);
   --ui-border-subtle: rgba(165, 180, 194, 0.34);
@@ -361,8 +361,17 @@ input[type='range']::-moz-range-thumb {
   height: 100dvh;
   max-height: 100dvh;
   overflow: hidden;
-  padding: var(--ui-drawer-padding);
   color: var(--ui-text-primary);
-  border-top-left-radius: calc(var(--ui-radius-shell) - 0.35rem);
-  border-bottom-left-radius: calc(var(--ui-radius-shell) - 0.35rem);
+  border-top-left-radius: var(--ui-radius-shell);
+  border-bottom-left-radius: var(--ui-radius-shell);
+}
+
+.ui-studio-drawer-shell {
+  background: var(--ui-panel-background);
+}
+
+.ui-route-switcher {
+  border-color: var(--ui-border);
+  background: color-mix(in srgb, var(--ui-panel-background) 88%, white 12%);
+  box-shadow: 0 12px 28px -24px rgba(15, 23, 42, 0.28);
 }

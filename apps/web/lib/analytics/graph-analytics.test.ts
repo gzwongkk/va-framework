@@ -50,6 +50,7 @@ describe('graph analytics helpers', () => {
         executionMode: 'remote',
         minEdgeWeight: 3,
         neighborDepth: 2,
+        scopeMode: 'focused-neighborhood',
         selectedGroups: [1, 4],
         selectedNodeId: 'Valjean',
       }),
@@ -74,6 +75,20 @@ describe('graph analytics helpers', () => {
       groupBy: [],
       select: [],
       sorts: [],
+    });
+  });
+
+  it('keeps the full graph visible by default even when a node is selected', () => {
+    expect(
+      buildGraphQuery({
+        ...DEFAULT_GRAPH_CONTROLS,
+        selectedNodeId: 'Valjean',
+      }),
+    ).toMatchObject({
+      graph: {
+        focusNodeId: undefined,
+        includeIsolates: true,
+      },
     });
   });
 

@@ -1,5 +1,6 @@
 import {
   forceCenter,
+  forceCollide,
   forceLink,
   forceManyBody,
   forceSimulation,
@@ -202,18 +203,20 @@ export function D3ForceGraph({
 
     const linkForce = forceLink<ForceGraphSimulationNode, ForceGraphSimulationEdge>(simulationEdges)
       .id((node) => node.id)
-      .distance((edge) => 80 + edge.value * 8)
-      .strength(0.22);
+      .distance((edge) => 48 + edge.value * 5)
+      .strength(0.28);
 
     const simulation =
       simulationRef.current ??
       forceSimulation<ForceGraphSimulationNode>()
-        .force('charge', forceManyBody().strength(-280))
+        .force('charge', forceManyBody().strength(-165))
+        .force('collide', forceCollide<ForceGraphSimulationNode>().radius((node) => node.radius + 4).strength(0.7))
         .force('center', forceCenter(width / 2, height / 2));
 
     simulationRef.current = simulation;
     simulation.nodes(simulationNodes);
     simulation.force('link', linkForce);
+    simulation.force('collide', forceCollide<ForceGraphSimulationNode>().radius((node) => node.radius + 4).strength(0.7));
     simulation.force('center', forceCenter(width / 2, height / 2));
     simulation.alpha(0.85).restart();
     simulation.on('tick', () => {

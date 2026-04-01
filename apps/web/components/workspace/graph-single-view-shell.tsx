@@ -1,7 +1,5 @@
 'use client';
 
-import Link from 'next/link';
-
 import {
   buildGraphQuery,
   DEFAULT_GRAPH_CONTROLS,
@@ -12,6 +10,7 @@ import {
   GRAPH_DATASET_ID,
   GRAPH_GROUP_OPTIONS,
   GRAPH_GROUP_PALETTE,
+  type GraphScopeMode,
   normalizeGraphResult,
   summarizeGraphResult,
   toForceGraphData,
@@ -23,6 +22,7 @@ import {
   SectionHeader,
   StatusPill,
 } from '@/components/workspace/cars-shell-primitives';
+import { WorkspaceRouteNav } from '@/components/workspace/workspace-route-nav';
 import { UiStudioDrawer } from '@/components/workspace/ui-studio-drawer';
 import { useCoordinationStore } from '@/lib/coordination-store';
 import { planExecution } from '@/lib/data/execution-planner';
@@ -45,12 +45,13 @@ import {
   ToggleGroupItem,
 } from '@va/ui';
 import { D3ForceGraph } from '@va/vis-core';
-import { Database, GitBranch, Network, Search, Settings2, SlidersHorizontal } from 'lucide-react';
+import { Database, GitBranch, Network, Search, SlidersHorizontal } from 'lucide-react';
 import { type CSSProperties, useDeferredValue, useEffect, useMemo, useState } from 'react';
 
 const VIEW_ID = 'graph-canvas';
 const EXECUTION_MODES = ['local', 'remote'] as const;
 const DEPTH_OPTIONS = ['1', '2'] as const;
+const GRAPH_SCOPE_OPTIONS = ['full-graph', 'focused-neighborhood'] as const;
 const SHOW_UI_STUDIO = process.env.NODE_ENV !== 'production';
 const GRAPH_LEGEND = GRAPH_GROUP_OPTIONS.map((groupId) => ({
   color: GRAPH_GROUP_PALETTE[groupId],
@@ -84,8 +85,8 @@ export function GraphSingleViewShell() {
   const [selectedGroups, setSelectedGroups] = useState<number[]>(DEFAULT_GRAPH_CONTROLS.selectedGroups);
   const [minEdgeWeight, setMinEdgeWeight] = useState(DEFAULT_GRAPH_CONTROLS.minEdgeWeight);
   const [neighborDepth, setNeighborDepth] = useState<1 | 2>(DEFAULT_GRAPH_CONTROLS.neighborDepth);
-  const [searchTerm, setSearchTerm] = useState(DEFAULT_GRAPH_CONTROLS.searchTerm);
-  const [isStudioOpen, setIsStudioOpen] = useState(false);
+  const [scopeMode, setScopeMode] = useState<GraphScopeMode>(DEFAULT_GRAPH_CONTROLS.scopeMode);
+  const [searchTerm, setSearchTerm] = useState<string>(DEFAULT_GRAPH_CONTROLS.searchTerm ?? '');
   const deferredSearchTerm = useDeferredValue(searchTerm);
 
   const query = useMemo(
@@ -94,11 +95,11 @@ export function GraphSingleViewShell() {
         executionMode: preferredExecutionMode,
         minEdgeWeight,
         neighborDepth,
-        searchTerm,
+        scopeMode,
         selectedGroups,
         selectedNodeId,
       }),
-    [minEdgeWeight, neighborDepth, preferredExecutionMode, searchTerm, selectedGroups, selectedNodeId],
+    [minEdgeWeight, neighborDepth, preferredExecutionMode, scopeMode, selectedGroups, selectedNodeId],
   );
 
   const executionPlan = useMemo(
@@ -197,6 +198,20 @@ export function GraphSingleViewShell() {
       sourceViewId: VIEW_ID,
     });
 
+  const clearSelection = () =>
+    setSelection(VIEW_ID, {
+      entity: 'nodes',
+      ids: [],
+      sourceViewId: VIEW_ID,
+    });
+
+  const scopeHelpText =
+    scopeMode === 'full-graph'
+      ? 'Showing the full Les Miserables graph. Selecting a node highlights it without filtering the network.'
+      : selectedNode
+        ? 'The canvas is scoped to the selected node and expanded by the active neighborhood depth.'
+        : 'Neighborhood mode is enabled. Select a node in the graph or search results to narrow the view.';
+
   return (
     <main
       className="min-h-screen xl:flex xl:items-center xl:justify-center xl:overflow-hidden"
@@ -229,26 +244,12 @@ export function GraphSingleViewShell() {
             </div>
 
             <div className="flex flex-wrap items-center justify-end gap-2 text-xs">
+              <WorkspaceRouteNav buttonPreset={uiPrefs.buttonPreset} />
               <Badge>{GRAPH_DATASET_ID}</Badge>
               <Badge>{resolvedExecutionMode}</Badge>
               <Badge>{`${graphSummary.nodeCount} nodes / ${graphSummary.edgeCount} edges`}</Badge>
               <StatusPill label={consoleStatus.label} tone={consoleStatus.tone} />
-              <Button asChild className="px-3" type="button" variant="outline">
-                <Link href="/cars">Cars Reference</Link>
-              </Button>
-              {SHOW_UI_STUDIO ? (
-                <Button
-                  className="ui-studio-toggle gap-2 px-3"
-                  data-active={false}
-                  data-button-style={uiPrefs.buttonPreset}
-                  onClick={() => setIsStudioOpen(true)}
-                  type="button"
-                  variant="outline"
-                >
-                  <Settings2 className="size-4" />
-                  Devtools
-                </Button>
-              ) : null}
+              {SHOW_UI_STUDIO ? <UiStudioDrawer buttonPreset={uiPrefs.buttonPreset} /> : null}
             </div>
           </header>
 
@@ -374,6 +375,49 @@ export function GraphSingleViewShell() {
                 <div className="grid gap-3">
                   <div className="flex items-center justify-between gap-3">
                     <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">
+                      Graph scope
+                    </p>
+                    <Network className="size-4 text-[var(--ui-text-muted)]" />
+                  </div>
+                  <ToggleGroup
+                    className="grid w-full grid-cols-2 gap-2"
+                    onValueChange={(value) => {
+                      if (value === 'full-graph' || value === 'focused-neighborhood') {
+                        setScopeMode(value);
+                      }
+                    }}
+                    type="single"
+                    value={scopeMode}
+                  >
+                    {GRAPH_SCOPE_OPTIONS.map((mode) => (
+                      <ToggleGroupItem
+                        key={mode}
+                        className="w-full text-xs font-semibold uppercase tracking-[0.18em]"
+                        data-button-style={uiPrefs.buttonPreset}
+                        value={mode}
+                      >
+                        {mode === 'full-graph' ? 'Full graph' : 'Neighborhood'}
+                      </ToggleGroupItem>
+                    ))}
+                  </ToggleGroup>
+                  <p className="ui-studio-body">{scopeHelpText}</p>
+                  {selectedNode ? (
+                    <Button
+                      className="ui-studio-toggle justify-center px-3"
+                      data-active={false}
+                      data-button-style={uiPrefs.buttonPreset}
+                      onClick={clearSelection}
+                      type="button"
+                      variant="secondary"
+                    >
+                      Clear node selection
+                    </Button>
+                  ) : null}
+                </div>
+
+                <div className="grid gap-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">
                       Node search
                     </p>
                     <Search className="size-4 text-[var(--ui-text-muted)]" />
@@ -432,7 +476,11 @@ export function GraphSingleViewShell() {
                 selectedId={selectedNode?.id}
                 statusLabel={consoleStatus.label}
                 statusTone={consoleStatus.tone}
-                subtitle="Communities, neighbor expansion, and weighted links for the active subgraph."
+                subtitle={
+                  scopeMode === 'full-graph'
+                    ? 'The full Les Miserables network with community colors, weighted links, and live node inspection.'
+                    : 'A focused neighborhood view around the selected node with weighted links and live filtering.'
+                }
                 theme={chartTheme}
                 title="Character relationship network"
               />
@@ -599,13 +647,6 @@ export function GraphSingleViewShell() {
             </div>
           </aside>
         </div>
-        {SHOW_UI_STUDIO ? (
-          <UiStudioDrawer
-            buttonPreset={uiPrefs.buttonPreset}
-            onOpenChange={setIsStudioOpen}
-            open={isStudioOpen}
-          />
-        ) : null}
       </div>
     </main>
   );

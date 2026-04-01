@@ -99,7 +99,7 @@ export function SectionHeader({ detail, icon: Icon, title }: SectionHeaderProps)
         <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">{title}</p>
         <p className="ui-studio-body mt-2">{detail}</p>
       </div>
-      <div className="ui-studio-icon-chip rounded-xl border p-2.5 shadow-sm shadow-slate-950/5">
+      <div className="ui-studio-icon-chip rounded-[var(--ui-radius-control)] border p-2.5 shadow-sm shadow-slate-950/5">
         <Icon className="size-4" />
       </div>
     </div>

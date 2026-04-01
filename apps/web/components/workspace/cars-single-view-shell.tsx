@@ -20,15 +20,16 @@ import {
   SectionHeader,
   StatusPill,
 } from '@/components/workspace/cars-shell-primitives';
+import { WorkspaceRouteNav } from '@/components/workspace/workspace-route-nav';
 import { UiStudioDrawer } from '@/components/workspace/ui-studio-drawer';
 import { useCoordinationStore } from '@/lib/coordination-store';
 import { planExecution } from '@/lib/data/execution-planner';
 import { useDatasetCatalog, useLocalPreviewQuery, useRemotePreviewQuery } from '@/lib/data/query-hooks';
 import { resolveChartTheme, resolveUiStudioVars } from '@/lib/ui-studio';
 import { useUiStudioStore } from '@/lib/ui-studio-store';
-import { Badge, Button, Separator, ToggleGroup, ToggleGroupItem } from '@va/ui';
+import { Badge, Separator, ToggleGroup, ToggleGroupItem } from '@va/ui';
 import { D3ScatterPlot } from '@va/vis-core';
-import { ChartNoAxesCombined, Cpu, Database, Filter, Settings2, SlidersHorizontal } from 'lucide-react';
+import { ChartNoAxesCombined, Cpu, Database, Filter, SlidersHorizontal } from 'lucide-react';
 import { type CSSProperties, useEffect, useMemo, useState } from 'react';
 
 const VIEW_ID = 'single-view-plot';
@@ -63,7 +64,6 @@ export function CarsSingleViewShell() {
   const [minHorsepower, setMinHorsepower] = useState(DEFAULT_CARS_CONTROLS.minHorsepower);
   const [weightCeiling, setWeightCeiling] = useState(DEFAULT_CARS_CONTROLS.weightCeiling);
   const [limit, setLimit] = useState(DEFAULT_CARS_CONTROLS.limit);
-  const [isStudioOpen, setIsStudioOpen] = useState(false);
 
   const query = useMemo(
     () =>
@@ -192,25 +192,14 @@ export function CarsSingleViewShell() {
             </div>
 
             <div className="flex flex-wrap items-center justify-end gap-2 text-xs">
+              <WorkspaceRouteNav buttonPreset={uiPrefs.buttonPreset} />
               <Badge>{CARS_DATASET_ID}</Badge>
               <Badge>{resolvedExecutionMode}</Badge>
               <Badge>
                 {hasData ? `${summary.count} rows` : 'no rows'}
               </Badge>
               <StatusPill label={consoleStatus.label} tone={consoleStatus.tone} />
-              {SHOW_UI_STUDIO ? (
-                <Button
-                  className="ui-studio-toggle gap-2 px-3"
-                  data-active={false}
-                  data-button-style={uiPrefs.buttonPreset}
-                  onClick={() => setIsStudioOpen(true)}
-                  type="button"
-                  variant="outline"
-                >
-                  <Settings2 className="size-4" />
-                  Devtools
-                </Button>
-              ) : null}
+              {SHOW_UI_STUDIO ? <UiStudioDrawer buttonPreset={uiPrefs.buttonPreset} /> : null}
             </div>
           </header>
 
@@ -359,7 +348,7 @@ export function CarsSingleViewShell() {
                     The table mirrors the current filters and keeps selection pinned to the focused record.
                   </p>
                 </div>
-                <div className="ui-studio-icon-chip rounded-xl border p-2.5 shadow-sm shadow-slate-950/5">
+                <div className="ui-studio-icon-chip rounded-[var(--ui-radius-control)] border p-2.5 shadow-sm shadow-slate-950/5">
                   <ChartNoAxesCombined className="size-4" />
                 </div>
               </div>
@@ -443,13 +432,6 @@ export function CarsSingleViewShell() {
             </div>
           </aside>
         </div>
-        {SHOW_UI_STUDIO ? (
-          <UiStudioDrawer
-            buttonPreset={uiPrefs.buttonPreset}
-            onOpenChange={setIsStudioOpen}
-            open={isStudioOpen}
-          />
-        ) : null}
       </div>
     </main>
   );
