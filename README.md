@@ -5,17 +5,15 @@ The stable Vue release is preserved on the `release/v1.0.0` branch.
 
 ## Current milestone
 
-`v2.3.3` is the adjacency-matrix graph workbench patch.
+`v2.3.4` is the matrix-ordering and graph-analysis polish patch.
 
-The home route at `/` is now a graph workbench with real technique renderers rather than one fully implemented force canvas and placeholder panels. This patch adds:
+The home route at `/` remains the graph workbench. This patch sharpens the matrix technique with more analysis-specific behavior:
 
-- a real adjacency matrix renderer with brushing and ordering
-- a graph workbench shell that now renders `force`, `matrix`, `tree`, and `multivariate` techniques inside one page
-- tree techniques for `flare`, including explicit node-link and implicit partition-based layouts
-- MVNV-inspired multivariate encodings with encoded-force, attribute-position, and faceted modes
-- richer graph workbench analytics helpers for matrix summaries, hierarchy normalization, and multivariate metrics
-- keyboard shortcuts for technique switching, search focus, and selection clearing
-- a preserved cars reference workflow at `/cars`
+- direct matrix cell selection for pairwise graph inspection
+- stronger matrix summaries, including selected-block density and strongest links
+- clearer ordering context inside the matrix stage
+- preserved selection handoff between force and matrix techniques
+- additional matrix analytics tests to lock down the ordered brush behavior
 
 The `v2.3` line now consists of:
 
@@ -23,6 +21,7 @@ The `v2.3` line now consists of:
 - `v2.3.1`: graph shell polish, full-graph default scope, visible route switching, and drawer cleanup
 - `v2.3.2`: graph workbench foundation, URL-backed technique switching, and hierarchy dataset support
 - `v2.3.3`: adjacency matrix brushing plus first integrated tree and multivariate technique renderers
+- `v2.3.4`: matrix ordering and graph-analysis polish
 
 The core stack now includes:
 
