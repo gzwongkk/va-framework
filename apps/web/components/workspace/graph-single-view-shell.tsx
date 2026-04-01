@@ -51,6 +51,7 @@ import { GraphWorkbenchMultivariatePanel } from '@/components/workspace/graph-wo
 import { GraphWorkbenchTreePanel } from '@/components/workspace/graph-workbench-tree-panel';
 import { UiStudioDrawer } from '@/components/workspace/ui-studio-drawer';
 import { VisualizationControlStrip } from '@/components/workspace/visualization-control-strip';
+import { VisualizationProvenancePanel } from '@/components/workspace/visualization-provenance-panel';
 import { WorkspaceActionBar } from '@/components/workspace/workspace-action-bar';
 import {
   buildAdjacencyMatrixModel,
@@ -487,6 +488,21 @@ export function GraphSingleViewShell({
   );
   const selectedNodeSet = useMemo(() => new Set(selectedNodeIds), [selectedNodeIds]);
   const techniqueHelp = useMemo(() => getTechniqueHelp(activeTechnique), [activeTechnique]);
+  const provenanceExampleId = useMemo(() => {
+    if (activeTechnique === 'matrix') {
+      return 'graph-matrix';
+    }
+
+    if (activeTechnique === 'multivariate') {
+      return 'graph-multivariate';
+    }
+
+    if (activeTechnique === 'tree' && activeDatasetId === 'flare') {
+      return 'hierarchy-suite';
+    }
+
+    return 'graph-force';
+  }, [activeDatasetId, activeTechnique]);
   const treeTechniqueRequiresFlare = needsFlareTreeDataset(activeDatasetId, activeTechnique);
   const activeVisualization = useMemo(
     () => getVisualizationExample(visualizationId),
@@ -1675,6 +1691,11 @@ export function GraphSingleViewShell({
                     <p className="text-xs uppercase tracking-[0.18em] text-[var(--ui-text-muted)]">Use the shared controls and Open Example command to switch techniques and jump across the workbench line. Keyboard shortcuts remain available as secondary access.</p>
                   </div>
                 </div>
+
+                <VisualizationProvenancePanel
+                  activeDatasetId={activeDatasetId}
+                  exampleId={provenanceExampleId}
+                />
               </div>
             </div>
           </aside>

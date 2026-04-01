@@ -21,6 +21,7 @@ import {
   StatusPill,
 } from '@/components/workspace/cars-shell-primitives';
 import { UiStudioDrawer } from '@/components/workspace/ui-studio-drawer';
+import { VisualizationProvenancePanel } from '@/components/workspace/visualization-provenance-panel';
 import { WorkspaceActionBar } from '@/components/workspace/workspace-action-bar';
 import { useCoordinationStore } from '@/lib/coordination-store';
 import { planExecution } from '@/lib/data/execution-planner';
@@ -444,6 +445,8 @@ export function CarsSingleViewShell({ visualizationId = 'cars-scatter' }: CarsSi
                     </div>
                   </div>
                 </div>
+
+                <VisualizationProvenancePanel activeDatasetId={CARS_DATASET_ID} exampleId={visualizationId} />
               </div>
             </div>
           </aside>

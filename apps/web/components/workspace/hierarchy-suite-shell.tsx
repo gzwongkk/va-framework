@@ -12,6 +12,7 @@ import {
   StatusPill,
 } from '@/components/workspace/cars-shell-primitives';
 import { UiStudioDrawer } from '@/components/workspace/ui-studio-drawer';
+import { VisualizationProvenancePanel } from '@/components/workspace/visualization-provenance-panel';
 import { WorkspaceActionBar } from '@/components/workspace/workspace-action-bar';
 import {
   buildHierarchyTree,
@@ -410,6 +411,8 @@ export function HierarchySuiteShell({
                     </div>
                   </ScrollArea>
                 </div>
+
+                <VisualizationProvenancePanel activeDatasetId={HIERARCHY_DATASET_ID} exampleId={visualizationId} />
               </div>
             </div>
           </aside>

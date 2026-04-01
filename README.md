@@ -5,14 +5,14 @@ The stable Vue release is preserved on the `release/v1.0.0` branch.
 
 ## Current milestone
 
-`v2.3.17` is the focus-plus-context time-series release.
+`v2.3.18` is the gallery hardening and contribution-architecture release.
 
-The home route at `/` remains the graph workbench. This release adds `stocks` as a first-class time-series example in the gallery line:
+The home route at `/` remains the graph workbench. This final `v2.3` release closes the gallery line with provenance, contributor guidance, and smoke coverage around the example registry:
 
-- `/examples/stocks-focus-context` now delivers a dedicated focus-plus-context shell on the vendored `stocks` dataset
-- the time-series example supports symbol filters, local/remote execution parity, and brushed focus-window updates inside the shared workbench frame
-- the stocks example writes the current focus window into the shared viewport state so later coordinated views can reuse it
-- `stocks` is now a real example route in the gallery rather than a registered placeholder
+- every gallery-backed example shell now renders a shared provenance panel that shows both example-source and dataset-source attribution
+- the gallery line now includes contributor-facing guidance for adding datasets, visualization adapters, and shared controls in `docs/gallery-contributors.md`
+- route and registry smoke tests now cover the main gallery surfaces and ensure every catalog example resolves to a registered dataset
+- the `stocks` focus-context example from `v2.3.17` remains part of the final gallery line alongside graph, hierarchy, SPLOM, and Sankey examples
 
 The `v2.3` line now consists of:
 
@@ -34,6 +34,7 @@ The `v2.3` line now consists of:
 - `v2.3.15`: native Sankey flow example on energy
 - `v2.3.16`: hierarchy technique suite on flare
 - `v2.3.17`: focus-plus-context time series on stocks
+- `v2.3.18`: gallery hardening, provenance panels, contributor docs, and route/catalog smoke coverage
 
 The core stack now includes:
 
@@ -66,6 +67,7 @@ The release ladder remains:
 - `v2.3.15`: flow example
 - `v2.3.16`: tree and hierarchy suite
 - `v2.3.17`: time-series example and graph polish
+- `v2.3.18`: hardening and contribution architecture
 - `v2.4.0`: spatio-temporal data
 - `v2.5.0`: multi-view coordination
 - `v2.6.0`: spatial-ready foundations
@@ -114,6 +116,10 @@ Routes:
 
 The graph workbench defaults to `miserables` + `force`, and also supports `flare` as the hierarchy dataset for the tree line.
 The canonical Les Miserables dataset used here is the Vega sample graph with 77 nodes and 254 links.
+
+Contributor guide:
+
+- `docs/gallery-contributors.md`: add a dataset, add a visualization adapter, and wire shared controls into the workbench shell
 
 ## Graph workbench endpoints
 
