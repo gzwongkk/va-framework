@@ -5,14 +5,14 @@ The stable Vue release is preserved on the `release/v1.0.0` branch.
 
 ## Current milestone
 
-`v2.3.7` is the multivariate-network foundation patch.
+`v2.3.8` is the multivariate-network techniques patch.
 
-The home route at `/` remains the graph workbench. This patch strengthens the multivariate network technique before the final technique-polish releases:
+The home route at `/` remains the graph workbench. This patch turns the multivariate mode into a more legible analytical technique:
 
-- field profiles for the active multivariate encodings in the detail rail
-- clearer missing-value handling for color, size, and faceting instead of silently dropping nodes
-- safer multivariate defaults so partial attribute coverage still renders analytical structure
-- profile-aware groundwork for the next MVNV-inspired technique polish
+- layout-aware encoding summaries for encoded-force, attribute-position, and faceted modes
+- explicit color legends and facet summaries inside the multivariate stage
+- stronger field-profile and facet-distribution readback in the detail rail
+- memoized multivariate transforms so technique switching stays responsive while the active graph state evolves
 
 The `v2.3` line now consists of:
 
@@ -24,6 +24,7 @@ The `v2.3` line now consists of:
 - `v2.3.5`: tree data foundation, hierarchy pathing, and flare metadata checks
 - `v2.3.6`: explicit and implicit tree-technique polish with selected-path highlighting
 - `v2.3.7`: multivariate field profiles, missing-value handling, and encoding groundwork
+- `v2.3.8`: multivariate layout polish, legends, and facet-aware analytical summaries
 
 The core stack now includes:
 
@@ -46,6 +47,7 @@ The release ladder remains:
 - `v2.3.5`: tree data foundation
 - `v2.3.6`: tree techniques
 - `v2.3.7`: multivariate network foundation
+- `v2.3.8`: multivariate network techniques
 - `v2.3.7`: multivariate network foundation
 - `v2.3.8`: multivariate network techniques
 - `v2.3.9`: graph workbench hardening
