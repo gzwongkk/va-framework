@@ -1,7 +1,7 @@
 {
   "name": "@va/web",
   "private": true,
-  "version": "2.3.6",
+  "version": "2.3.7",
   "type": "module",
   "scripts": {
     "build": "next build --webpack",
