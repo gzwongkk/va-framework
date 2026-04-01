@@ -5,14 +5,14 @@ The stable Vue release is preserved on the `release/v1.0.0` branch.
 
 ## Current milestone
 
-`v2.3.13` is the dataset-pack import release.
+`v2.3.14` is the brushable scatterplot matrix release.
 
-The home route at `/` remains the graph workbench. This release expands the gallery’s data pack:
+The home route at `/` remains the graph workbench. This release adds the first imported tabular example:
 
-- `penguins`, `energy`, and `stocks` are now vendored locally into both frontend and API data folders
-- `/api/datasets` now exposes gallery metadata, preview summaries, provenance, and featured example ids for the expanded pack
-- the gallery now shows first-class dataset cards with provenance and preview summaries alongside the example catalog
-- placeholder routes for SPLOM, Sankey, and focus-context examples are now registered so the example line can grow patch-by-patch without changing the routing model
+- `/examples/penguins-splom` now delivers a native React + D3 brushable scatterplot matrix on the vendored `penguins` dataset
+- the SPLOM runs through the shared gallery shell, route model, local/remote query path, and persisted coordination state
+- brushing any scatter cell creates a selection-aware cohort that updates the detail rail without leaving the single-canvas workbench
+- field presets, runtime switching, and species filtering are now exercised by a real registry-backed example instead of a placeholder route
 
 The `v2.3` line now consists of:
 
@@ -30,6 +30,7 @@ The `v2.3` line now consists of:
 - `v2.3.11`: example gallery foundation, visualization catalog, and generic example routes
 - `v2.3.12`: shared control system, command-based example switching, and gallery category tabs
 - `v2.3.13`: dataset-pack import, gallery dataset cards, and placeholder example registration
+- `v2.3.14`: brushable scatterplot matrix on penguins
 
 The core stack now includes:
 
@@ -58,6 +59,7 @@ The release ladder remains:
 - `v2.3.11`: example gallery foundation
 - `v2.3.12`: shared control system
 - `v2.3.13`: dataset pack import
+- `v2.3.14`: brushable scatterplot matrix
 - `v2.4.0`: spatio-temporal data
 - `v2.5.0`: multi-view coordination
 - `v2.6.0`: spatial-ready foundations

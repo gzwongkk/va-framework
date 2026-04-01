@@ -14,6 +14,7 @@ export type ChartFrame = {
 export * from './d3-force-graph';
 export * from './d3-scatter-plot';
 export * from './adjacency-matrix-brush';
+export * from './brushable-scatterplot-matrix';
 export * from './graph-tree-techniques';
 export * from './multivariate-network-view';
 export * from './scatter-plot';

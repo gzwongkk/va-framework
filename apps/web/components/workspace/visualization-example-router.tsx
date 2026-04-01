@@ -4,6 +4,7 @@ import { AlertCircle, ArrowRight } from 'lucide-react';
 
 import { CarsSingleViewShell } from '@/components/workspace/cars-single-view-shell';
 import { GraphSingleViewShell } from '@/components/workspace/graph-single-view-shell';
+import { PenguinsSplomShell } from '@/components/workspace/penguins-splom-shell';
 import { VisualizationPendingShell } from '@/components/workspace/visualization-pending-shell';
 import { Button } from '@va/ui';
 import Link from 'next/link';
@@ -40,13 +41,7 @@ export function VisualizationExampleRouter({ exampleId }: VisualizationExampleRo
   }
 
   if (exampleId === 'penguins-splom') {
-    return (
-      <VisualizationPendingShell
-        description="The normalized penguins dataset is registered and ready. The native brushable scatterplot matrix lands in the next gallery patch."
-        releaseLabel="Coming in v2.3.14"
-        title="Brushable scatterplot matrix"
-      />
-    );
+    return <PenguinsSplomShell visualizationId={exampleId} />;
   }
 
   if (exampleId === 'energy-sankey') {
