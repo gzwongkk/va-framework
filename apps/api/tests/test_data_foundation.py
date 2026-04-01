@@ -38,10 +38,47 @@ def test_query_endpoint_filters_and_projects_rows() -> None:
 
     assert response.status_code == 200
     payload = response.json()
+    assert payload['resultKind'] == 'table'
     assert payload['executionMode'] == 'remote'
     assert payload['rowCount'] == 3
     assert payload['columns'] == ['name', 'horsepower', 'origin']
     assert payload['rows'][0]['horsepower'] == 165
+
+
+def test_query_endpoint_returns_graph_results_for_miserables() -> None:
+    client = TestClient(app)
+
+    response = client.post(
+        '/api/query',
+        json={
+            'datasetId': 'miserables',
+            'executionMode': 'remote',
+            'filters': [
+                {
+                    'field': 'group',
+                    'operator': 'in',
+                    'value': [1, 2, 3],
+                }
+            ],
+            'graph': {
+                'focusNodeId': 'Valjean',
+                'neighborDepth': 2,
+                'minEdgeWeight': 4,
+                'includeIsolates': False,
+            },
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload['resultKind'] == 'graph'
+    assert payload['executionMode'] == 'remote'
+    assert payload['summary']['focusedNodeId'] == 'Valjean'
+    assert payload['nodeCount'] == 5
+    assert payload['edgeCount'] == 4
+    assert payload['summary']['groupCount'] == 3
+    assert payload['summary']['topNodes'][0]['id'] == 'Valjean'
+    assert payload['summary']['topNodes'][0]['weightedDegree'] == 17
 
 
 def test_job_endpoint_executes_background_query() -> None:
@@ -71,5 +108,6 @@ def test_job_endpoint_executes_background_query() -> None:
     assert status_response.status_code == 200
     payload = status_response.json()
     assert payload['status'] == 'completed'
+    assert payload['result']['resultKind'] == 'table'
     assert payload['result']['rowCount'] == 3
     assert payload['result']['rows'][0]['avg_horsepower'] >= payload['result']['rows'][1]['avg_horsepower']

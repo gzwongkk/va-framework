@@ -6,7 +6,7 @@ from collections import defaultdict
 from time import perf_counter
 from typing import Any
 
-from .models import AggregateSpec, FilterClause, QueryResult, QuerySpec
+from .models import AggregateSpec, FilterClause, GraphQueryResult, QueryResult, QuerySpec, TabularQueryResult
 from .registry import get_dataset, load_dataset_entity
 
 
@@ -14,6 +14,12 @@ def _as_list(value: Any) -> list[Any]:
     if isinstance(value, list):
         return value
     return [value]
+
+
+def _to_number(value: Any) -> float:
+    if isinstance(value, (int, float)):
+        return float(value)
+    return float(value or 0)
 
 
 def _matches_filter(row: dict[str, Any], clause: FilterClause) -> bool:
@@ -25,13 +31,13 @@ def _matches_filter(row: dict[str, Any], clause: FilterClause) -> bool:
     if clause.operator == 'neq':
         return value != target
     if clause.operator == 'gt':
-        return value is not None and target is not None and value > target
+        return value is not None and target is not None and _to_number(value) > _to_number(target)
     if clause.operator == 'gte':
-        return value is not None and target is not None and value >= target
+        return value is not None and target is not None and _to_number(value) >= _to_number(target)
     if clause.operator == 'lt':
-        return value is not None and target is not None and value < target
+        return value is not None and target is not None and _to_number(value) < _to_number(target)
     if clause.operator == 'lte':
-        return value is not None and target is not None and value <= target
+        return value is not None and target is not None and _to_number(value) <= _to_number(target)
     if clause.operator == 'in':
         return value in _as_list(target)
     if clause.operator == 'between':
@@ -41,7 +47,7 @@ def _matches_filter(row: dict[str, Any], clause: FilterClause) -> bool:
             value is not None
             and lower is not None
             and upper is not None
-            and lower <= value <= upper
+            and _to_number(lower) <= _to_number(value) <= _to_number(upper)
         )
     if clause.operator == 'contains':
         return target is not None and str(target).lower() in str(value).lower()
@@ -124,7 +130,7 @@ def build_query_fingerprint(query: QuerySpec) -> str:
     return json.dumps(payload, sort_keys=True)
 
 
-def execute_query(query: QuerySpec) -> QueryResult:
+def _execute_tabular_query(query: QuerySpec) -> TabularQueryResult:
     started = perf_counter()
     dataset = get_dataset(query.datasetId)
     rows = load_dataset_entity(query.datasetId, query.entity)
@@ -148,7 +154,8 @@ def execute_query(query: QuerySpec) -> QueryResult:
         columns = [field.name for field in dataset.datasetSchema.fields]
 
     duration_ms = round((perf_counter() - started) * 1000, 3)
-    return QueryResult(
+    return TabularQueryResult(
+        resultKind='table',
         datasetId=query.datasetId,
         columns=columns,
         rows=rows,
@@ -158,3 +165,174 @@ def execute_query(query: QuerySpec) -> QueryResult:
         durationMs=duration_ms,
         source='api',
     )
+
+
+def _build_filtered_graph_edges(
+    edges: list[dict[str, Any]],
+    allowed_node_ids: set[str],
+    minimum_edge_weight: float,
+) -> list[dict[str, Any]]:
+    filtered_edges: list[dict[str, Any]] = []
+    for edge in edges:
+        source = str(edge.get('source'))
+        target = str(edge.get('target'))
+        value = _to_number(edge.get('value'))
+        if source not in allowed_node_ids or target not in allowed_node_ids or value < minimum_edge_weight:
+            continue
+
+        filtered_edges.append(
+            {
+                'id': '::'.join(sorted([source, target])),
+                'source': source,
+                'target': target,
+                'value': value,
+            }
+        )
+
+    return filtered_edges
+
+
+def _build_neighborhood(
+    focus_node_id: str,
+    neighbor_depth: int,
+    filtered_edges: list[dict[str, Any]],
+) -> set[str]:
+    adjacency: dict[str, set[str]] = defaultdict(set)
+    for edge in filtered_edges:
+        adjacency[edge['source']].add(edge['target'])
+        adjacency[edge['target']].add(edge['source'])
+
+    visited = {focus_node_id}
+    frontier = {focus_node_id}
+
+    for _ in range(neighbor_depth):
+        next_frontier: set[str] = set()
+        for node_id in frontier:
+            for neighbor_id in adjacency.get(node_id, set()):
+                if neighbor_id not in visited:
+                    visited.add(neighbor_id)
+                    next_frontier.add(neighbor_id)
+        frontier = next_frontier
+
+    return visited
+
+
+def _build_graph_metrics(
+    node_ids: set[str],
+    edges: list[dict[str, Any]],
+) -> tuple[dict[str, int], dict[str, float]]:
+    degree_by_node = {node_id: 0 for node_id in node_ids}
+    weighted_degree_by_node = {node_id: 0.0 for node_id in node_ids}
+
+    for edge in edges:
+        source = edge['source']
+        target = edge['target']
+        value = _to_number(edge['value'])
+        degree_by_node[source] = degree_by_node.get(source, 0) + 1
+        degree_by_node[target] = degree_by_node.get(target, 0) + 1
+        weighted_degree_by_node[source] = weighted_degree_by_node.get(source, 0.0) + value
+        weighted_degree_by_node[target] = weighted_degree_by_node.get(target, 0.0) + value
+
+    return degree_by_node, weighted_degree_by_node
+
+
+def _execute_graph_query(query: QuerySpec) -> GraphQueryResult:
+    started = perf_counter()
+    nodes = load_dataset_entity(query.datasetId, 'nodes')
+    links = load_dataset_entity(query.datasetId, 'links')
+    allowed_nodes = {
+        str(node['id']): node
+        for node in nodes
+        if all(_matches_filter(node, clause) for clause in query.filters)
+    }
+
+    minimum_edge_weight = query.graph.minEdgeWeight if query.graph else 0
+    filtered_edges = _build_filtered_graph_edges(links, set(allowed_nodes.keys()), minimum_edge_weight)
+    requested_focus_node_id = query.graph.focusNodeId if query.graph else None
+    focus_node_id = requested_focus_node_id if requested_focus_node_id in allowed_nodes else None
+    include_isolates = query.graph.includeIsolates if query.graph else focus_node_id is None
+
+    if focus_node_id is not None:
+        selected_node_ids = _build_neighborhood(
+            focus_node_id,
+            query.graph.neighborDepth if query.graph else 1,
+            filtered_edges,
+        )
+    else:
+        selected_node_ids = set(allowed_nodes.keys())
+
+    if not include_isolates and focus_node_id is None:
+        selected_node_ids = {
+            edge_node_id
+            for edge in filtered_edges
+            for edge_node_id in (edge['source'], edge['target'])
+        }
+
+    if not selected_node_ids and allowed_nodes:
+        selected_node_ids = {focus_node_id} if focus_node_id is not None else set(allowed_nodes.keys())
+
+    edges = sorted(
+        [
+            edge
+            for edge in filtered_edges
+            if edge['source'] in selected_node_ids and edge['target'] in selected_node_ids
+        ],
+        key=lambda edge: (-edge['value'], edge['id']),
+    )
+    degree_by_node, weighted_degree_by_node = _build_graph_metrics(selected_node_ids, edges)
+
+    graph_nodes = sorted(
+        [
+            {
+                'id': node_id,
+                'label': str(allowed_nodes[node_id].get('id')),
+                'group': int(_to_number(allowed_nodes[node_id].get('group'))),
+                'degree': degree_by_node.get(node_id, 0),
+                'weightedDegree': round(weighted_degree_by_node.get(node_id, 0.0), 3),
+            }
+            for node_id in selected_node_ids
+        ],
+        key=lambda node: (-node['degree'], -node['weightedDegree'], node['id']),
+    )
+
+    average_degree = (
+        round(sum(node['degree'] for node in graph_nodes) / len(graph_nodes), 3)
+        if graph_nodes
+        else 0.0
+    )
+    group_count = len({node['group'] for node in graph_nodes})
+
+    duration_ms = round((perf_counter() - started) * 1000, 3)
+    return GraphQueryResult(
+        resultKind='graph',
+        datasetId=query.datasetId,
+        nodes=graph_nodes,
+        edges=edges,
+        nodeCount=len(graph_nodes),
+        edgeCount=len(edges),
+        summary={
+            'groupCount': group_count,
+            'averageDegree': average_degree,
+            'focusedNodeId': focus_node_id,
+            'topNodes': [
+                {
+                    'id': node['id'],
+                    'group': node['group'],
+                    'degree': node['degree'],
+                    'weightedDegree': node['weightedDegree'],
+                }
+                for node in graph_nodes[:5]
+            ],
+        },
+        executionMode='remote',
+        queryKey=build_query_fingerprint(query),
+        durationMs=duration_ms,
+        source='api',
+    )
+
+
+def execute_query(query: QuerySpec) -> QueryResult:
+    dataset = get_dataset(query.datasetId)
+    if dataset.kind == 'graph':
+        return _execute_graph_query(query)
+    return _execute_tabular_query(query)

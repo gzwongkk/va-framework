@@ -12,6 +12,7 @@ FilterOperator = Literal['eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'in', 'between',
 SortDirection = Literal['asc', 'desc']
 AggregateOperation = Literal['count', 'sum', 'avg', 'min', 'max']
 JobStatus = Literal['queued', 'running', 'completed', 'failed']
+QuerySource = Literal['api', 'duckdb-worker', 'browser-runtime', 'graphology-local']
 
 
 class FieldSpec(BaseModel):
@@ -24,6 +25,16 @@ class FieldSpec(BaseModel):
     unit: str | None = None
 
 
+class DatasetEntitySchema(BaseModel):
+    fields: list[FieldSpec] = Field(default_factory=list)
+    primaryKey: list[str] = Field(default_factory=list)
+    rowCount: int | None = None
+    labelField: str | None = None
+    sourceField: str | None = None
+    targetField: str | None = None
+    weightField: str | None = None
+
+
 class DatasetSchema(BaseModel):
     entity: str = 'rows'
     fields: list[FieldSpec] = Field(default_factory=list)
@@ -31,6 +42,7 @@ class DatasetSchema(BaseModel):
     rowCount: int | None = None
     timeField: str | None = None
     labelField: str | None = None
+    entities: dict[str, DatasetEntitySchema] | None = None
 
 
 class Provenance(BaseModel):
@@ -87,6 +99,13 @@ class AggregateSpec(BaseModel):
     as_: str = Field(alias='as')
 
 
+class GraphQueryOptions(BaseModel):
+    focusNodeId: str | None = None
+    neighborDepth: Literal[1, 2] = 1
+    minEdgeWeight: float = 0
+    includeIsolates: bool = True
+
+
 class QuerySpec(BaseModel):
     datasetId: str
     entity: str | None = None
@@ -97,9 +116,11 @@ class QuerySpec(BaseModel):
     aggregates: list[AggregateSpec] = Field(default_factory=list)
     limit: int | None = None
     executionMode: ExecutionMode | None = None
+    graph: GraphQueryOptions | None = None
 
 
-class QueryResult(BaseModel):
+class TabularQueryResult(BaseModel):
+    resultKind: Literal['table'] = 'table'
     datasetId: str
     columns: list[str]
     rows: list[dict[str, Any]]
@@ -107,7 +128,53 @@ class QueryResult(BaseModel):
     executionMode: ExecutionMode
     queryKey: str
     durationMs: float
-    source: Literal['api', 'duckdb-worker']
+    source: QuerySource
+
+
+class GraphNode(BaseModel):
+    id: str
+    label: str
+    group: int
+    degree: int
+    weightedDegree: float
+
+
+class GraphEdge(BaseModel):
+    id: str
+    source: str
+    target: str
+    value: float
+
+
+class GraphSummaryTopNode(BaseModel):
+    id: str
+    group: int
+    degree: int
+    weightedDegree: float
+
+
+class GraphSummary(BaseModel):
+    groupCount: int
+    averageDegree: float
+    focusedNodeId: str | None = None
+    topNodes: list[GraphSummaryTopNode] = Field(default_factory=list)
+
+
+class GraphQueryResult(BaseModel):
+    resultKind: Literal['graph'] = 'graph'
+    datasetId: str
+    nodes: list[GraphNode]
+    edges: list[GraphEdge]
+    nodeCount: int
+    edgeCount: int
+    summary: GraphSummary
+    executionMode: ExecutionMode
+    queryKey: str
+    durationMs: float
+    source: QuerySource
+
+
+QueryResult = TabularQueryResult | GraphQueryResult
 
 
 class JobRequest(BaseModel):
@@ -124,3 +191,7 @@ class JobRecord(BaseModel):
     query: QuerySpec
     result: QueryResult | None = None
     error: str | None = None
+
+
+DatasetSchema.model_rebuild()
+QuerySpec.model_rebuild()
