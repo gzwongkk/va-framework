@@ -5,28 +5,25 @@ The stable Vue release is preserved on the `release/v1.0.0` branch.
 
 ## Current milestone
 
-`v2.3.1` is the graph-data polish patch. The default home route stays on the Les Miserables graph workspace, but the shell now keeps the full network visible by default, exposes route switching clearly between `/` and `/cars`, and uses a real right-side Radix drawer for the development-only UI studio.
+`v2.3.2` is the graph workbench foundation patch.
 
-This patch adds:
+The home route at `/` is now a graph workbench rather than a single hardcoded force-graph page. This patch adds:
 
-- full-graph default scope for the Les Miserables workspace, with neighborhood filtering available as an explicit mode instead of an implicit side effect of node selection
-- a visible route switcher in the workspace header so the graph and cars views can be traversed in both directions
-- a real Radix `Sheet` trigger-driven devtools drawer from the right edge of the screen
-- tighter default radius tokens so the shell corners are less blunt across panels, controls, and header chrome
-- a more compact D3 force layout so the full graph reads better inside the single-view canvas
+- a technique-switched graph header with `force`, `matrix`, `tree`, and `multivariate` modes
+- deep-linkable workbench URL state through `?technique=` and `?dataset=`
+- a shared graph workbench state layer for technique, dataset, ordering, focus, and future multivariate encodings
+- normalized graph node attributes so later techniques can reuse one graph result shape
+- the `flare` hierarchy dataset alongside `miserables`
+- local and remote graph parity for both datasets, including synthetic parent-child links for `flare`
+- a preserved force-directed canvas as the fully implemented technique in this patch
+- scaffold panels for the upcoming adjacency-matrix, tree, and multivariate v2.3.x patches
+- a preserved cars reference workflow at `/cars`
 
-The `v2.3` release line adds:
+The `v2.3` line now consists of:
 
-- graph-native query contracts in `packages/contracts`, including discriminated `table` and `graph` result types
-- dataset entity metadata so graph datasets can describe `nodes` and `links` alongside tabular schemas
-- a graph-aware execution planner with `miserables` defaulting to local execution and remote parity still available
-- a cached local `graphology` runtime for graph exploration in the browser
-- remote graph query execution in FastAPI without introducing graph-specific endpoints
-- a custom D3 force-directed graph primitive in `packages/vis-core`
-- a new graph workspace at `/` with node search, community filters, weight-threshold filtering, and one-hop / two-hop neighborhood expansion
-- a preserved cars single-view workflow at `/cars`
-- continued use of the `shadcn/ui + Radix` shell, UI studio drawer, and desktop-targeted light-console workspace
-- quiet background refresh for graph control changes, without blanking the current view
+- `v2.3.0`: graph-native query contracts, local graphology runtime, remote graph queries, and the first graph workspace
+- `v2.3.1`: graph shell polish, full-graph default scope, visible route switching, and drawer cleanup
+- `v2.3.2`: graph workbench foundation, URL-backed technique switching, and hierarchy dataset support
 
 The core stack now includes:
 
@@ -43,6 +40,14 @@ The release ladder remains:
 - `v2.2.0`: single-view analytics
 - `v2.3.0`: graph data
 - `v2.3.1`: graph shell polish
+- `v2.3.2`: graph workbench foundation
+- `v2.3.3`: adjacency matrix brush MVP
+- `v2.3.4`: matrix ordering and graph-analysis polish
+- `v2.3.5`: tree data foundation
+- `v2.3.6`: tree techniques
+- `v2.3.7`: multivariate network foundation
+- `v2.3.8`: multivariate network techniques
+- `v2.3.9`: graph workbench hardening
 - `v2.4.0`: spatio-temporal data
 - `v2.5.0`: multi-view coordination
 - `v2.6.0`: spatial-ready foundations
@@ -84,10 +89,12 @@ The backend health endpoint is available at <http://127.0.0.1:8000/api/health>.
 
 Routes:
 
-- `/`: Les Miserables graph workspace
+- `/`: graph workbench
 - `/cars`: cars single-view reference workflow
 
-## v2.3.1 endpoints
+The graph workbench defaults to `miserables` + `force`, and also supports `flare` as the hierarchy dataset for the upcoming tree line.
+
+## v2.3.2 endpoints
 
 - `GET /api/health`
 - `GET /api/datasets`
