@@ -5,6 +5,8 @@ import {
   buildAdjacencyMatrixModel,
   buildHierarchyTree,
   deriveMultivariateNodes,
+  getHierarchyLeafPreview,
+  getHierarchyPath,
   getMatrixSelectionEdges,
   getMultivariateFieldOptions,
   getTechniqueHelp,
@@ -117,6 +119,8 @@ describe('graph workbench analytics', () => {
   it('normalizes hierarchy trees and summarizes tree structure', () => {
     const hierarchyRoot = buildHierarchyTree(hierarchyResult);
     const summary = summarizeHierarchyTree(hierarchyRoot);
+    const path = getHierarchyPath(hierarchyRoot, '4');
+    const leaves = getHierarchyLeafPreview(hierarchyRoot, 2);
 
     expect(hierarchyRoot?.label).toBe('root');
     expect(hierarchyRoot?.children.map((child) => child.label)).toEqual(['alpha', 'beta']);
@@ -126,6 +130,11 @@ describe('graph workbench analytics', () => {
       nodeCount: 4,
       rootLabel: 'root',
     });
+    expect(path.map((node) => node.label)).toEqual(['root', 'beta', 'gamma']);
+    expect(leaves).toEqual([
+      { depth: 1, id: '2', label: 'alpha', value: 6 },
+      { depth: 2, id: '4', label: 'gamma', value: 4 },
+    ]);
   });
 
   it('derives multivariate node metrics and exposes field options', () => {

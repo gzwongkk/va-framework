@@ -15,6 +15,16 @@ def test_dataset_registry_endpoint_returns_seed_datasets() -> None:
     ids = {item['id'] for item in payload}
     assert ids == {'cars', 'miserables', 'flare', 'earthquakes'}
 
+    flare = next(item for item in payload if item['id'] == 'flare')
+    assert flare['schema']['hierarchy'] == {
+        'childrenField': None,
+        'rootId': '1',
+        'parentField': 'parent',
+        'depthField': 'depth',
+        'labelField': 'name',
+    }
+    assert set(flare['schema']['entities'].keys()) == {'nodes', 'links'}
+
 
 def test_query_endpoint_filters_and_projects_rows() -> None:
     client = TestClient(app)

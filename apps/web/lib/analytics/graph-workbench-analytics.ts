@@ -62,6 +62,13 @@ export type HierarchySummary = {
   rootLabel: string;
 };
 
+export type HierarchyLeafPreview = {
+  depth: number;
+  id: string;
+  label: string;
+  value: number;
+};
+
 export type MultivariateMetrics = {
   betweenness: number;
   bridgeScore: number;
@@ -348,6 +355,66 @@ export function summarizeHierarchyTree(root: HierarchyNode | undefined): Hierarc
     nodeCount,
     rootLabel: root.label,
   };
+}
+
+export function getHierarchyPath(
+  root: HierarchyNode | undefined,
+  targetId?: string,
+): HierarchyNode[] {
+  if (!root || !targetId) {
+    return [];
+  }
+
+  const path: HierarchyNode[] = [];
+
+  function visit(node: HierarchyNode): boolean {
+    path.push(node);
+    if (node.id === targetId) {
+      return true;
+    }
+
+    for (const child of node.children) {
+      if (visit(child)) {
+        return true;
+      }
+    }
+
+    path.pop();
+    return false;
+  }
+
+  return visit(root) ? path : [];
+}
+
+export function getHierarchyLeafPreview(
+  root: HierarchyNode | undefined,
+  limit = 6,
+): HierarchyLeafPreview[] {
+  if (!root) {
+    return [];
+  }
+
+  const leaves: HierarchyLeafPreview[] = [];
+  const stack = [root];
+
+  while (stack.length > 0) {
+    const node = stack.pop()!;
+    if (node.children.length === 0) {
+      leaves.push({
+        depth: node.depth,
+        id: node.id,
+        label: node.label,
+        value: node.value,
+      });
+      continue;
+    }
+
+    stack.push(...node.children);
+  }
+
+  return leaves
+    .sort((left, right) => right.value - left.value || left.label.localeCompare(right.label))
+    .slice(0, limit);
 }
 
 function buildAdjacency(result: GraphQueryResult) {

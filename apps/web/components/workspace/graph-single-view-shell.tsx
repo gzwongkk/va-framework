@@ -55,6 +55,8 @@ import {
   buildAdjacencyMatrixModel,
   buildHierarchyTree,
   deriveMultivariateNodes,
+  getHierarchyLeafPreview,
+  getHierarchyPath,
   getMatrixSelectionEdges,
   getMultivariateFieldOptions,
   getMultivariateValue,
@@ -437,6 +439,8 @@ export function GraphSingleViewShell() {
   );
   const hierarchyRoot = useMemo(() => buildHierarchyTree(graphResult), [graphResult]);
   const hierarchySummary = useMemo(() => summarizeHierarchyTree(hierarchyRoot), [hierarchyRoot]);
+  const hierarchyPath = useMemo(() => getHierarchyPath(hierarchyRoot, selectedNodeId), [hierarchyRoot, selectedNodeId]);
+  const hierarchyLeaves = useMemo(() => getHierarchyLeafPreview(hierarchyRoot), [hierarchyRoot]);
   const multivariateNodes = useMemo(
     () => deriveMultivariateNodes(graphResult, selectedNodeId),
     [graphResult, selectedNodeId],
@@ -1377,7 +1381,48 @@ export function GraphSingleViewShell() {
                         <div className="flex items-start justify-between gap-4"><span className="text-[var(--ui-text-muted)]">Leaves</span><span className="font-medium text-[var(--ui-text-primary)]">{hierarchySummary.leafCount}</span></div>
                         <div className="flex items-start justify-between gap-4"><span className="text-[var(--ui-text-muted)]">Max depth</span><span className="font-medium text-[var(--ui-text-primary)]">{hierarchySummary.maxDepth}</span></div>
                         <div className="flex items-start justify-between gap-4"><span className="text-[var(--ui-text-muted)]">Layout</span><span className="font-medium text-[var(--ui-text-primary)]">{treeMode === 'node-link' ? `${formatFieldLabel(treeMode)} / ${formatFieldLabel(treeAlignment)}` : formatFieldLabel(treeMode)}</span></div>
+                        <div className="flex items-start justify-between gap-4"><span className="text-[var(--ui-text-muted)]">Root id</span><span className="font-medium text-[var(--ui-text-primary)]">{graphDataset?.schema.hierarchy?.rootId ?? 'Derived'}</span></div>
+                        <div className="flex items-start justify-between gap-4"><span className="text-[var(--ui-text-muted)]">Parent field</span><span className="font-medium text-[var(--ui-text-primary)]">{graphDataset?.schema.hierarchy?.parentField ?? 'parentId'}</span></div>
+                        <div className="flex items-start justify-between gap-4"><span className="text-[var(--ui-text-muted)]">Depth field</span><span className="font-medium text-[var(--ui-text-primary)]">{graphDataset?.schema.hierarchy?.depthField ?? 'depth'}</span></div>
                       </div>
+                    </div>
+                    <div className="ui-studio-surface grid gap-3 border p-4 shadow-sm shadow-slate-950/5">
+                      <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">Hierarchy path</p>
+                      {hierarchyPath.length > 0 ? (
+                        <div className="flex flex-wrap gap-2">
+                          {hierarchyPath.map((node) => (
+                            <Badge key={node.id} variant={node.id === selectedNodeId ? 'secondary' : 'outline'}>
+                              {node.label}
+                            </Badge>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="ui-studio-body">Select a tree node to inspect its ancestry path from the hierarchy root.</p>
+                      )}
+                    </div>
+                    <div className="ui-studio-surface grid gap-3 border p-4 shadow-sm shadow-slate-950/5">
+                      <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">Largest leaves</p>
+                      {hierarchyLeaves.length > 0 ? (
+                        <div className="grid gap-2">
+                          {hierarchyLeaves.map((leaf) => (
+                            <button
+                              key={leaf.id}
+                              className="ui-studio-record-row rounded-[var(--ui-radius-control)] border p-3 text-left"
+                              onClick={() => selectNode(leaf.id)}
+                              onMouseDown={(event) => event.preventDefault()}
+                              type="button"
+                            >
+                              <div className="flex items-center justify-between gap-3">
+                                <span className="font-medium text-[var(--ui-text-primary)]">{leaf.label}</span>
+                                <Badge variant="secondary">Value {leaf.value.toFixed(0)}</Badge>
+                              </div>
+                              <p className="mt-1 text-xs text-[var(--ui-text-muted)]">Depth {leaf.depth}</p>
+                            </button>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="ui-studio-body">No leaf preview is available for the current hierarchy slice.</p>
+                      )}
                     </div>
                   </>
                 ) : null}
