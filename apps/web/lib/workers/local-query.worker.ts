@@ -178,6 +178,7 @@ class LocalQueryWorker implements LocalQueryWorkerApi {
       const rows = table.toArray().map((row) => JSON.parse(JSON.stringify(row)) as PlainRow);
 
       return {
+        resultKind: 'table',
         columns,
         datasetId: query.datasetId,
         durationMs: Date.now() - startedAt,

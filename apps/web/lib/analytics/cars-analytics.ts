@@ -1,4 +1,4 @@
-import type { ExecutionMode, QueryResult, QuerySpec } from '@va/contracts';
+import { isTabularQueryResult, type ExecutionMode, type QueryResult, type QuerySpec } from '@va/contracts';
 import type { ScatterPlotDatum } from '@va/vis-core';
 
 export type CarsViewControls = {
@@ -105,7 +105,7 @@ export function buildCarsQuery(controls: CarsViewControls): QuerySpec {
 }
 
 export function normalizeCarsRows(result: QueryResult | undefined): CarRecord[] {
-  if (!result) {
+  if (!isTabularQueryResult(result)) {
     return [];
   }
 

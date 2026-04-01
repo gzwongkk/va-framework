@@ -58,6 +58,7 @@ describe('cars analytics helpers', () => {
       durationMs: 8,
       executionMode: 'local',
       queryKey: 'sample',
+      resultKind: 'table',
       rowCount: 2,
       rows: [
         {
@@ -105,6 +106,7 @@ describe('cars analytics helpers', () => {
       durationMs: 5,
       executionMode: 'local',
       queryKey: 'sample',
+      resultKind: 'table',
       rowCount: 1,
       rows: [
         {

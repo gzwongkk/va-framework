@@ -208,6 +208,7 @@ export async function executeBrowserQuery(
     projectedRows[0] ? Object.keys(projectedRows[0]) : query.select.length > 0 ? query.select : descriptor.schema.fields.map((field) => field.name);
 
   return {
+    resultKind: 'table',
     columns,
     datasetId: query.datasetId,
     durationMs: Number((performance.now() - startedAt).toFixed(3)),

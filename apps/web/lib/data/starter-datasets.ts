@@ -65,6 +65,29 @@ export const starterDatasets: DatasetDescriptor[] = datasetDescriptorSchema.arra
         { name: 'id', title: 'Node id', dataType: 'string', role: 'identifier' },
         { name: 'group', title: 'Community', dataType: 'number', role: 'category' },
       ],
+      entities: {
+        nodes: {
+          primaryKey: ['id'],
+          labelField: 'id',
+          rowCount: 8,
+          fields: [
+            { name: 'id', title: 'Node id', dataType: 'string', role: 'identifier' },
+            { name: 'group', title: 'Community', dataType: 'number', role: 'category' },
+          ],
+        },
+        links: {
+          primaryKey: ['source', 'target'],
+          rowCount: 7,
+          sourceField: 'source',
+          targetField: 'target',
+          weightField: 'value',
+          fields: [
+            { name: 'source', title: 'Source', dataType: 'string', role: 'identifier' },
+            { name: 'target', title: 'Target', dataType: 'string', role: 'identifier' },
+            { name: 'value', title: 'Weight', dataType: 'number', role: 'measure' },
+          ],
+        },
+      },
     },
     loader: {
       format: 'json',
@@ -73,12 +96,13 @@ export const starterDatasets: DatasetDescriptor[] = datasetDescriptorSchema.arra
       tableName: 'miserables_nodes',
     },
     execution: {
-      defaultMode: 'remote',
+      defaultMode: 'local',
       supportedModes: ['local', 'remote'],
       rowCount: 8,
       preferredPreviewLimit: 8,
       notes: [
-        'Graph rendering lands in the next minor milestone.',
+        'Graph exploration defaults to the local graphology runtime in v2.3.0.',
+        'Remote execution remains available for parity and heavier graph transforms.',
       ],
     },
   },

@@ -23,9 +23,18 @@ export function planExecution(dataset: DatasetDescriptor, query: QuerySpec): Exe
   }
 
   if (dataset.kind === 'graph') {
-    reasons.push('Graph-local execution stays remote until the dedicated v2.3 graph runtime lands.');
+    if (requestedMode === 'local' && supportsLocal) {
+      reasons.push('Graph exploration runs in the cached graphology runtime for responsive neighborhood updates.');
+      return {
+        mode: 'local',
+        fallbackMode: supportsRemote ? 'remote' : undefined,
+        reasons,
+      };
+    }
+
+    reasons.push('The current graph query is resolved through the API to mirror the local graph runtime.');
     return {
-      mode: 'remote',
+      mode: supportsRemote ? 'remote' : dataset.execution.defaultMode,
       fallbackMode: supportsLocal ? 'local' : undefined,
       reasons,
     };

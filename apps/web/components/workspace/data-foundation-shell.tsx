@@ -7,6 +7,7 @@ import type {
   QueryResult,
   QuerySpec,
 } from '@va/contracts';
+import { isGraphQueryResult, isTabularQueryResult } from '@va/contracts';
 import { useCreateJobMutation, useDatasetCatalog, useJobStatus, useLocalPreviewQuery, useRemotePreviewQuery } from '@/lib/data/query-hooks';
 import { useCoordinationStore } from '@/lib/coordination-store';
 import { planExecution } from '@/lib/data/execution-planner';
@@ -121,8 +122,27 @@ function ResultTable({
   result: QueryResult | undefined;
   title: string;
 }) {
+  const previewResult = isTabularQueryResult(result)
+    ? {
+        columns: result.columns,
+        rows: result.rows,
+        summaryLabel: `${result.rowCount} rows in ${result.durationMs.toFixed(1)} ms`,
+      }
+    : isGraphQueryResult(result)
+      ? {
+          columns: ['id', 'group', 'degree', 'weightedDegree'],
+          rows: result.summary.topNodes.map((node) => ({
+            degree: node.degree,
+            group: node.group,
+            id: node.id,
+            weightedDegree: node.weightedDegree,
+          })),
+          summaryLabel: `${result.nodeCount} nodes / ${result.edgeCount} edges in ${result.durationMs.toFixed(1)} ms`,
+        }
+      : undefined;
+
   const columns =
-    result?.columns.map((column) => ({
+    previewResult?.columns.map((column) => ({
       accessorKey: column,
       header: toTitleCase(column),
     })) ?? [];
@@ -131,7 +151,7 @@ function ResultTable({
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     columns,
-    data: result?.rows ?? [],
+    data: previewResult?.rows ?? [],
     getCoreRowModel: getCoreRowModel(),
   });
 
@@ -146,9 +166,7 @@ function ResultTable({
             <div>
               <CardTitle className="font-[family-name:var(--font-display)] text-xl">{title}</CardTitle>
               <CardDescription className="text-slate-600">
-                {result
-                  ? `${result.rowCount} rows in ${result.durationMs.toFixed(1)} ms`
-                  : emptyLabel}
+                {previewResult ? previewResult.summaryLabel : emptyLabel}
               </CardDescription>
             </div>
           </div>
@@ -156,7 +174,7 @@ function ResultTable({
         </div>
       </CardHeader>
       <CardContent>
-        {result ? (
+        {previewResult ? (
           <div className="overflow-hidden rounded-2xl border border-slate-200">
             <div className="max-h-80 overflow-auto">
               <table className="min-w-full border-collapse text-sm">
@@ -433,8 +451,10 @@ export function DataFoundationShell() {
                 <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                   <p className="font-medium text-slate-900">Latest job result</p>
                   <p className="mt-2">
-                    {jobStatus.data.result.rowCount} rows from a grouped remote transform in{' '}
-                    {jobStatus.data.result.durationMs.toFixed(1)} ms.
+                    {isTabularQueryResult(jobStatus.data.result)
+                      ? `${jobStatus.data.result.rowCount} rows from a grouped remote transform`
+                      : `${jobStatus.data.result.nodeCount} nodes and ${jobStatus.data.result.edgeCount} edges from a remote graph transform`}{' '}
+                    in {jobStatus.data.result.durationMs.toFixed(1)} ms.
                   </p>
                 </div>
               ) : (
