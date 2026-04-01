@@ -2,6 +2,16 @@ import { z } from 'zod';
 
 export const datasetKindSchema = z.enum(['tabular', 'graph', 'spatio-temporal']);
 export type DatasetKind = z.infer<typeof datasetKindSchema>;
+export const datasetGalleryCategorySchema = z.enum([
+  'graph',
+  'hierarchy',
+  'multivariate',
+  'tabular',
+  'flow',
+  'time-series',
+  'seed',
+]);
+export type DatasetGalleryCategory = z.infer<typeof datasetGalleryCategorySchema>;
 
 export const executionModeSchema = z.enum(['local', 'remote']);
 export type ExecutionMode = z.infer<typeof executionModeSchema>;
@@ -100,7 +110,10 @@ export const datasetDescriptorSchema = z.object({
   title: z.string(),
   description: z.string(),
   kind: datasetKindSchema,
+  category: datasetGalleryCategorySchema.optional(),
   tags: z.array(z.string()).default([]),
+  featuredExampleIds: z.array(z.string()).default([]),
+  previewSummary: z.string().optional(),
   provenance: provenanceSchema,
   schema: datasetSchemaSchema,
   loader: datasetLoaderSchema,

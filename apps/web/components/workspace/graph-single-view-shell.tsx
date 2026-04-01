@@ -95,6 +95,7 @@ import {
   treeAlignmentOptions,
   treeTechniqueModeOptions,
   type GraphTechnique,
+  type GraphWorkbenchDatasetId,
   type MultivariateLayoutMode,
   type TreeAlignment,
   type TreeTechniqueMode,
@@ -239,7 +240,17 @@ function getSafeEncodingConfig(
   };
 }
 
-export function GraphSingleViewShell() {
+type GraphSingleViewShellProps = {
+  initialDatasetId?: GraphWorkbenchDatasetId;
+  initialTechnique?: GraphTechnique;
+  visualizationId?: string;
+};
+
+export function GraphSingleViewShell({
+  initialDatasetId = 'miserables',
+  initialTechnique = 'force',
+  visualizationId = 'graph-force',
+}: GraphSingleViewShellProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -266,8 +277,8 @@ export function GraphSingleViewShell() {
   const setTreeAlignment = useGraphWorkbenchStore((state) => state.setTreeAlignment);
   const setEncodings = useGraphWorkbenchStore((state) => state.setEncodings);
 
-  const uiTechnique = parseGraphTechniqueParam(searchParams.get('technique'));
-  const uiDataset = parseGraphDatasetParam(searchParams.get('dataset'));
+  const uiTechnique = parseGraphTechniqueParam(searchParams.get('technique') ?? initialTechnique);
+  const uiDataset = parseGraphDatasetParam(searchParams.get('dataset') ?? initialDatasetId);
   const uiDatasetParam = searchParams.get('dataset');
   const uiTechniqueParam = searchParams.get('technique');
 
@@ -284,6 +295,7 @@ export function GraphSingleViewShell() {
   const coordinationDatasetId = useCoordinationStore((state) => state.activeDatasetId);
   const setActiveDatasetId = useCoordinationStore((state) => state.setActiveDatasetId);
   const setActiveViewId = useCoordinationStore((state) => state.setActiveViewId);
+  const setActiveVisualizationId = useCoordinationStore((state) => state.setActiveVisualizationId);
   const setFilters = useCoordinationStore((state) => state.setFilters);
   const setLastQuery = useCoordinationStore((state) => state.setLastQuery);
   const setPreferredExecutionMode = useCoordinationStore((state) => state.setPreferredExecutionMode);
@@ -493,6 +505,10 @@ export function GraphSingleViewShell() {
   useEffect(() => {
     setActiveViewId(VIEW_ID);
   }, [setActiveViewId]);
+
+  useEffect(() => {
+    setActiveVisualizationId(visualizationId);
+  }, [setActiveVisualizationId, visualizationId]);
 
   useEffect(() => {
     setFilters(query.filters);

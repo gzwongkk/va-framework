@@ -1,6 +1,6 @@
 {
   "name": "@va/ui",
-  "version": "2.3.10",
+  "version": "2.3.11",
   "private": true,
   "type": "module",
   "main": "./src/index.ts",
@@ -19,11 +19,14 @@
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-scroll-area": "^1.2.10",
+    "@radix-ui/react-select": "^2.2.6",
     "@radix-ui/react-separator": "^1.1.8",
     "@radix-ui/react-slot": "1.2.4",
+    "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/react-toggle-group": "^1.1.11",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
+    "cmdk": "^1.1.1",
     "lucide-react": "1.7.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",

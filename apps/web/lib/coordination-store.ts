@@ -9,23 +9,30 @@ type CoordinationStore = CoordinationState & {
   preferredExecutionMode: ExecutionMode;
   setActiveDatasetId: (datasetId: string) => void;
   setActiveViewId: (viewId: string) => void;
+  setActiveVisualizationId: (visualizationId: string) => void;
   setPreferredExecutionMode: (mode: ExecutionMode) => void;
   setFilters: (filters: FilterClause[]) => void;
   setLastJobId: (jobId?: string) => void;
   setLastQuery: (query: QuerySpec) => void;
   setSelection: (viewId: string, selection: SelectionState) => void;
+  setVisualizationControlValues: (
+    visualizationId: string,
+    values: Record<string, string | number | boolean | null | string[]>,
+  ) => void;
   setViewport: (viewId: string, viewport: ViewportState) => void;
 };
 
 const initialState: CoordinationState = {
   activeDatasetId: undefined,
   activeViewId: 'graph-canvas',
+  activeVisualizationId: 'graph-force',
   filters: [],
   hover: undefined,
   layout: baselineWorkspaceLayout,
   lastJobId: undefined,
   lastQuery: undefined,
   selections: {},
+  visualizationControlValues: {},
   viewports: {},
 };
 
@@ -99,6 +106,8 @@ export const useCoordinationStore = create<CoordinationStore>()(
           };
         }),
       setActiveViewId: (viewId) => set((state) => (state.activeViewId === viewId ? state : { activeViewId: viewId })),
+      setActiveVisualizationId: (visualizationId) =>
+        set((state) => (state.activeVisualizationId === visualizationId ? state : { activeVisualizationId: visualizationId })),
       setPreferredExecutionMode: (mode) =>
         set((state) => (state.preferredExecutionMode === mode ? state : { preferredExecutionMode: mode })),
       setFilters: (filters) => set((state) => (hasSameSerializedValue(state.filters, filters) ? state : { filters })),
@@ -114,6 +123,19 @@ export const useCoordinationStore = create<CoordinationStore>()(
             selections: {
               ...state.selections,
               [viewId]: selection,
+            },
+          };
+        }),
+      setVisualizationControlValues: (visualizationId, values) =>
+        set((state) => {
+          if (hasSameSerializedValue(state.visualizationControlValues[visualizationId], values)) {
+            return state;
+          }
+
+          return {
+            visualizationControlValues: {
+              ...state.visualizationControlValues,
+              [visualizationId]: values,
             },
           };
         }),
@@ -136,10 +158,12 @@ export const useCoordinationStore = create<CoordinationStore>()(
       partialize: (state) => ({
         activeDatasetId: state.activeDatasetId,
         activeViewId: state.activeViewId,
+        activeVisualizationId: state.activeVisualizationId,
         filters: state.filters,
         lastJobId: state.lastJobId,
         lastQuery: state.lastQuery,
         preferredExecutionMode: state.preferredExecutionMode,
+        visualizationControlValues: state.visualizationControlValues,
       }),
       storage: createJSONStorage(() => localStorage),
     },

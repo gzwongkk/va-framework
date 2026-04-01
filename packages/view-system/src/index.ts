@@ -1,6 +1,15 @@
 export type CoordinateSpace = 'screen-2d' | 'world-3d' | 'spatial-anchor';
 export type CoordinationSignal = 'selection' | 'hover' | 'brush' | 'zoom' | 'filter' | 'query';
 export type DatasetKind = 'tabular' | 'graph' | 'spatio-temporal';
+export type VisualizationCategory =
+  | 'graph'
+  | 'hierarchy'
+  | 'multivariate'
+  | 'tabular'
+  | 'flow'
+  | 'time-series';
+export type VisualizationControlType = 'toggle-group' | 'select' | 'button-group';
+export type VisualizationControlValue = string | number | boolean | null | string[];
 
 export type CoordinationFilter = {
   field: string;
@@ -78,13 +87,59 @@ export type ViewportState = {
 export type CoordinationState = {
   activeDatasetId?: string;
   activeViewId?: string;
+  activeVisualizationId?: string;
   filters: CoordinationFilter[];
   layout: ViewLayout;
   lastQuery?: CoordinationQuery;
   lastJobId?: string;
   selections: Record<string, SelectionState>;
   hover?: HoverState;
+  visualizationControlValues: Record<string, Record<string, VisualizationControlValue>>;
   viewports: Record<string, ViewportState>;
+};
+
+export type VisualizationControlOption = {
+  description?: string;
+  label: string;
+  value: string;
+};
+
+export type VisualizationControlSpec = {
+  id: string;
+  label: string;
+  type: VisualizationControlType;
+  description?: string;
+  options?: VisualizationControlOption[];
+  valueKey?: string;
+};
+
+export type VisualizationPreset = {
+  id: string;
+  label: string;
+  description?: string;
+  values: Record<string, VisualizationControlValue>;
+};
+
+export type VisualizationRendererProps = {
+  datasetId: string;
+  exampleId: string;
+  controlValues: Record<string, VisualizationControlValue>;
+  preferredExecutionMode?: 'local' | 'remote';
+};
+
+export type VisualizationExampleDefinition = {
+  id: string;
+  title: string;
+  summary: string;
+  category: VisualizationCategory;
+  datasetIds: string[];
+  defaultDatasetId: string;
+  rendererId: string;
+  routePath: string;
+  provenanceLabel: string;
+  provenanceUrl: string;
+  controlSpecs: VisualizationControlSpec[];
+  presets?: VisualizationPreset[];
 };
 
 export const baselineWorkspaceLayout: ViewLayout = {

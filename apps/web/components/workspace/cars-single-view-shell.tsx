@@ -40,7 +40,11 @@ const ORIGIN_LEGEND = CARS_ORIGIN_OPTIONS.map((origin) => ({
   label: origin,
 }));
 
-export function CarsSingleViewShell() {
+type CarsSingleViewShellProps = {
+  visualizationId?: string;
+};
+
+export function CarsSingleViewShell({ visualizationId = 'cars-scatter' }: CarsSingleViewShellProps) {
   const datasetCatalog = useDatasetCatalog();
   const uiPrefs = useUiStudioStore((state) => state.prefs);
   const uiCssVars = useMemo(() => resolveUiStudioVars(uiPrefs), [uiPrefs]);
@@ -55,6 +59,7 @@ export function CarsSingleViewShell() {
   const selectedId = useCoordinationStore((state) => state.selections[VIEW_ID]?.ids[0]);
   const setActiveDatasetId = useCoordinationStore((state) => state.setActiveDatasetId);
   const setActiveViewId = useCoordinationStore((state) => state.setActiveViewId);
+  const setActiveVisualizationId = useCoordinationStore((state) => state.setActiveVisualizationId);
   const setFilters = useCoordinationStore((state) => state.setFilters);
   const setLastQuery = useCoordinationStore((state) => state.setLastQuery);
   const setPreferredExecutionMode = useCoordinationStore((state) => state.setPreferredExecutionMode);
@@ -106,6 +111,10 @@ export function CarsSingleViewShell() {
   useEffect(() => {
     setActiveViewId(VIEW_ID);
   }, [setActiveViewId]);
+
+  useEffect(() => {
+    setActiveVisualizationId(visualizationId);
+  }, [setActiveVisualizationId, visualizationId]);
 
   useEffect(() => {
     setFilters(query.filters);

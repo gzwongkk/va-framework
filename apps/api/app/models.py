@@ -5,6 +5,7 @@ from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field
 
 DatasetKind = Literal['tabular', 'graph', 'spatio-temporal']
+DatasetGalleryCategory = Literal['graph', 'hierarchy', 'multivariate', 'tabular', 'flow', 'time-series', 'seed']
 ExecutionMode = Literal['local', 'remote']
 FieldDataType = Literal['string', 'number', 'boolean', 'date', 'json', 'latitude', 'longitude']
 FieldRole = Literal['dimension', 'measure', 'identifier', 'timestamp', 'location', 'category']
@@ -83,7 +84,10 @@ class DatasetDescriptor(BaseModel):
     title: str
     description: str
     kind: DatasetKind
+    category: DatasetGalleryCategory | None = None
     tags: list[str] = Field(default_factory=list)
+    featuredExampleIds: list[str] = Field(default_factory=list)
+    previewSummary: str | None = None
     provenance: Provenance
     datasetSchema: DatasetSchema = Field(alias='schema')
     loader: DatasetLoader

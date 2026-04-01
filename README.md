@@ -5,14 +5,14 @@ The stable Vue release is preserved on the `release/v1.0.0` branch.
 
 ## Current milestone
 
-`v2.3.10` is the current graph-workbench patch.
+`v2.3.11` is the example-gallery foundation release.
 
-The home route at `/` remains the graph workbench. This patch tightens the canonical Les Miserables path:
+The home route at `/` remains the graph workbench. This release adds the gallery foundation:
 
-- the local and remote graph runtimes now use the canonical Vega `miserables.json` dataset at 77 nodes and 254 links
-- the graph normalization layer accepts the raw Vega node/link format instead of relying on the earlier tiny local sample
-- the multivariate color-field toggle no longer emits duplicate React keys
-- remote execution now resolves its API base from the active host and the dev API listens on `0.0.0.0` for LAN-safe local development
+- a new `/gallery` route now browses registry-backed examples
+- `/examples/[exampleId]` is now the generic example route for registered workbench entries
+- the shared coordination model now tracks the active visualization id and example-scoped control values
+- the first app-level visualization catalog now registers graph home, matrix, multivariate, hierarchy, and cars entries
 
 The `v2.3` line now consists of:
 
@@ -27,6 +27,7 @@ The `v2.3` line now consists of:
 - `v2.3.8`: multivariate layout polish, legends, and facet-aware analytical summaries
 - `v2.3.9`: graph workbench hardening, guidance, accessibility labels, and regression coverage
 - `v2.3.10`: canonical Les Miserables dataset import, duplicate-key fix, and remote runtime cleanup
+- `v2.3.11`: example gallery foundation, visualization catalog, and generic example routes
 
 The core stack now includes:
 
@@ -52,6 +53,7 @@ The release ladder remains:
 - `v2.3.8`: multivariate network techniques
 - `v2.3.9`: graph workbench hardening
 - `v2.3.10`: canonical Les Miserables dataset and remote runtime fixes
+- `v2.3.11`: example gallery foundation
 - `v2.4.0`: spatio-temporal data
 - `v2.5.0`: multi-view coordination
 - `v2.6.0`: spatial-ready foundations
@@ -94,6 +96,8 @@ The backend health endpoint is available at <http://127.0.0.1:8000/api/health>.
 Routes:
 
 - `/`: graph workbench
+- `/gallery`: visualization gallery
+- `/examples/[exampleId]`: registry-backed example route
 - `/cars`: cars single-view reference workflow
 
 The graph workbench defaults to `miserables` + `force`, and also supports `flare` as the hierarchy dataset for the tree line.

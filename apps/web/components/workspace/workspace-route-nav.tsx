@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { Button } from '@va/ui';
-import { ChartNoAxesCombined, Network } from 'lucide-react';
+import { ChartNoAxesCombined, LayoutGrid, Network } from 'lucide-react';
 
 type WorkspaceRouteNavProps = {
   buttonPreset: string;
@@ -14,8 +14,14 @@ const ROUTES = [
   {
     href: '/',
     icon: Network,
-    label: 'Graph',
+    label: 'Graph Home',
     match: (pathname: string) => pathname === '/',
+  },
+  {
+    href: '/gallery',
+    icon: LayoutGrid,
+    label: 'Gallery',
+    match: (pathname: string) => pathname.startsWith('/gallery') || pathname.startsWith('/examples'),
   },
   {
     href: '/cars',
