@@ -7,8 +7,9 @@ import '@fontsource-variable/roboto/index.css';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'va-framework v2.2.9',
-  description: 'Final v2.2 single-view workspace with a shadcn/ui + Radix component baseline.',
+  title: 'va-framework v2.3.0',
+  description:
+    'Graph-first single-view analytics workspace with a Les Miserables graph explorer and cars reference workflow.',
 };
 
 export default function RootLayout({

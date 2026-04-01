@@ -5,28 +5,28 @@ The stable Vue release is preserved on the `release/v1.0.0` branch.
 
 ## Current milestone
 
-`v2.2.9` is the final `v2.2` update. It keeps the cars workflow intact and sets the UI layer on a real `shadcn/ui + Radix` foundation:
+`v2.3.0` is the graph-data release. The default home route is now a graph-first single-view analytics workspace built around the Les Miserables network, while the cars workflow remains available at `/cars` as the tabular reference path.
 
-- a responsive `1600×1000` desktop target, with additional `1440×900` and workstation shell presets
-- a `shadcn/ui`-style shared source package in `packages/ui`, backed by Radix primitives instead of custom overlay/toggle implementations
-- a Radix `Sheet`-based right drawer for the development-only `Devtools` panel
-- Radix `ToggleGroup` controls for execution mode, origin filters, and UI studio presets
-- Radix `ScrollArea` and `Separator` primitives in the shared UI layer, plus a shadcn-style `Table` baseline for records
-- a root `tsconfig.json` so the shadcn CLI can recognize the monorepo instead of failing at the repo root
-- a bundled local Roboto variable font so the UI no longer depends on a remote font source
-- a lighter React dev path by splitting the large shell into smaller modules and optimizing `d3` / `lucide-react` imports in Next
-- a more iOS-like default corner language, with softer shell, panel, and control radii across the workspace
-- a webpack-based default `pnpm dev:web` path for slow or NAS-backed filesystems, with `pnpm dev:web:turbo` kept as an opt-in fast path
-- a dedicated persisted UI preference store separate from the data coordination model
-- tokenized shell, control, button, badge, and chart styling driven by CSS custom properties
-- a reworked D3 scatterplot surface that now inherits theme presets alongside the surrounding shell
-- persisted local UI preferences so the active studio preset survives a refresh
-- shared dataset, query, and job contracts in `packages/contracts`
-- a coordination model in `packages/view-system`
-- FastAPI dataset registry, query execution, and background job endpoints
-- TanStack Query for incoming async data and job polling
-- Zustand for persisted coordination state
-- a browser-runtime local query fallback for small datasets, with DuckDB-Wasm still available for heavier local work
+This release adds:
+
+- graph-native query contracts in `packages/contracts`, including discriminated `table` and `graph` result types
+- dataset entity metadata so graph datasets can describe `nodes` and `links` alongside tabular schemas
+- a graph-aware execution planner with `miserables` defaulting to local execution and remote parity still available
+- a cached local `graphology` runtime for graph exploration in the browser
+- remote graph query execution in FastAPI without introducing graph-specific endpoints
+- a custom D3 force-directed graph primitive in `packages/vis-core`
+- a new graph workspace at `/` with node search, community filters, weight-threshold filtering, and one-hop / two-hop neighborhood expansion
+- a preserved cars single-view workflow at `/cars`
+- continued use of the `shadcn/ui + Radix` shell, UI studio drawer, and desktop-targeted light-console workspace
+- quiet background refresh for graph control changes, without blanking the current view
+
+The core stack now includes:
+
+- `TanStack Query` for async server-state work
+- `Zustand` for persisted coordination state
+- `DuckDB-Wasm + Apache Arrow` for tabular local analytics
+- `graphology` for local graph data modeling and metrics
+- custom D3 visualization primitives in `packages/vis-core`
 
 The release ladder remains:
 
@@ -73,7 +73,12 @@ pnpm dev:web:turbo
 The frontend runs at <http://localhost:3000>.
 The backend health endpoint is available at <http://127.0.0.1:8000/api/health>.
 
-## v2.2.9 endpoints
+Routes:
+
+- `/`: Les Miserables graph workspace
+- `/cars`: cars single-view reference workflow
+
+## v2.3.0 endpoints
 
 - `GET /api/health`
 - `GET /api/datasets`

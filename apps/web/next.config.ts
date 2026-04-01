@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  cleanDistDir: false,
   experimental: {
     optimizePackageImports: ['d3', 'lucide-react'],
   },
