@@ -27,10 +27,13 @@ export type ForceGraphNodeDatum = {
 };
 
 export type ForceGraphEdgeDatum = {
+  color?: string;
   id: string;
   source: string;
+  strokeOpacity?: number;
   target: string;
   value: number;
+  width?: number;
 };
 
 type ForceGraphSimulationNode = ForceGraphNodeDatum & SimulationNodeDatum;
@@ -368,10 +371,10 @@ export function D3ForceGraph({
             {renderedEdges.map((edge) => (
               <line
                 key={edge.id}
-                stroke={theme.gridColor}
+                stroke={edge.color ?? theme.gridColor}
                 strokeLinecap="round"
-                strokeOpacity={0.74}
-                strokeWidth={1 + edge.value * 0.45}
+                strokeOpacity={edge.strokeOpacity ?? 0.74}
+                strokeWidth={edge.width ?? 1 + edge.value * 0.45}
                 x1={edge.sourceNode.x ?? width / 2}
                 x2={edge.targetNode.x ?? width / 2}
                 y1={edge.sourceNode.y ?? height / 2}
