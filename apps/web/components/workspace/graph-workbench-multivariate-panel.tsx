@@ -115,15 +115,20 @@ export function GraphWorkbenchMultivariatePanel({
           ? numericColorScale(rawColorValue)
           : typeof rawColorValue === 'string'
             ? categoryColorMap.get(rawColorValue) ?? DEFAULT_FALLBACK_COLOR
-            : getGraphGroupColor(node.group),
-      facet: typeof facetValue === 'string' || typeof facetValue === 'number' ? String(facetValue) : undefined,
+            : '#9aa9b5',
+      facet:
+        typeof facetValue === 'string' || typeof facetValue === 'number'
+          ? String(facetValue)
+          : config.facetField
+            ? 'Missing'
+            : undefined,
       group: node.group,
       id: node.id,
       label: node.label,
       radius:
         typeof rawSizeValue === 'number'
           ? Number(nodeSizeScale(rawSizeValue).toFixed(2))
-          : 8.5,
+          : 7.5,
       xValue: typeof xValue === 'number' ? Number(xScale(xValue).toFixed(3)) : 0.5,
       yValue: typeof yValue === 'number' ? Number(yScale(yValue).toFixed(3)) : 0.5,
     };

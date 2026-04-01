@@ -5,6 +5,7 @@ import {
   buildAdjacencyMatrixModel,
   buildHierarchyTree,
   deriveMultivariateNodes,
+  getMultivariateFieldProfiles,
   getHierarchyLeafPreview,
   getHierarchyPath,
   getMatrixSelectionEdges,
@@ -141,12 +142,19 @@ describe('graph workbench analytics', () => {
     const nodes = deriveMultivariateNodes(sampleGraphResult, 'Valjean');
     const nodeById = new Map(nodes.map((node) => [node.id, node]));
     const options = getMultivariateFieldOptions(nodes);
+    const profiles = getMultivariateFieldProfiles(nodes);
 
     expect(nodeById.get('Valjean')?.multivariate.egoDepth).toBe(0);
     expect(nodeById.get('Cosette')?.multivariate.degree).toBe(2);
     expect(options.numeric).toContain('betweenness');
     expect(options.numeric).toContain('weightedDegree');
     expect(options.categorical).toContain('community');
+    expect(profiles.find((profile) => profile.field === 'weightedDegree')).toEqual(
+      expect.objectContaining({ kind: 'numeric', max: 13, min: 5 }),
+    );
+    expect(profiles.find((profile) => profile.field === 'id')).toEqual(
+      expect.objectContaining({ categoryCount: 4, kind: 'categorical' }),
+    );
   });
 
   it('returns technique-specific reference guidance', () => {

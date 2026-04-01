@@ -94,6 +94,15 @@ export type MultivariateFieldOptions = {
   numeric: string[];
 };
 
+export type MultivariateFieldProfile = {
+  categoryCount?: number;
+  field: string;
+  kind: 'categorical' | 'numeric';
+  max?: number;
+  min?: number;
+  missingCount: number;
+};
+
 const MAX_MATRIX_NODES = 72;
 
 function createEdgeKey(left: string, right: string) {
@@ -622,6 +631,52 @@ export function getMultivariateValue(
   field: string,
 ): number | string | null {
   return node.multivariate[field] ?? null;
+}
+
+export function getMultivariateFieldProfiles(
+  nodes: EnrichedGraphNode[],
+): MultivariateFieldProfile[] {
+  const profiles = new Map<string, MultivariateFieldProfile>();
+
+  for (const node of nodes) {
+    for (const [field, value] of Object.entries(node.multivariate)) {
+      const currentProfile =
+        profiles.get(field) ??
+        ({
+          field,
+          kind: typeof value === 'number' ? 'numeric' : 'categorical',
+          missingCount: 0,
+        } satisfies MultivariateFieldProfile);
+
+      if (value === null || value === undefined) {
+        currentProfile.missingCount += 1;
+      } else if (typeof value === 'number') {
+        currentProfile.kind = 'numeric';
+        currentProfile.min = currentProfile.min === undefined ? value : Math.min(currentProfile.min, value);
+        currentProfile.max = currentProfile.max === undefined ? value : Math.max(currentProfile.max, value);
+      } else {
+        currentProfile.kind = 'categorical';
+        currentProfile.categoryCount = (currentProfile.categoryCount ?? 0) + 1;
+      }
+
+      profiles.set(field, currentProfile);
+    }
+  }
+
+  return [...profiles.values()]
+    .map((profile) =>
+      profile.kind === 'categorical'
+        ? {
+            ...profile,
+            categoryCount: new Set(
+              nodes
+                .map((node) => node.multivariate[profile.field])
+                .filter((value): value is string => typeof value === 'string'),
+            ).size,
+          }
+        : profile,
+    )
+    .sort((left, right) => left.field.localeCompare(right.field));
 }
 
 export function getTechniqueHelp(technique: GraphTechnique): TechniqueHelp {

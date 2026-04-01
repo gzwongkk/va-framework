@@ -58,6 +58,7 @@ import {
   getHierarchyLeafPreview,
   getHierarchyPath,
   getMatrixSelectionEdges,
+  getMultivariateFieldProfiles,
   getMultivariateFieldOptions,
   getMultivariateValue,
   getTechniqueHelp,
@@ -451,6 +452,10 @@ export function GraphSingleViewShell() {
   );
   const multivariateFieldOptions = useMemo(
     () => getMultivariateFieldOptions(multivariateNodes),
+    [multivariateNodes],
+  );
+  const multivariateFieldProfiles = useMemo(
+    () => getMultivariateFieldProfiles(multivariateNodes),
     [multivariateNodes],
   );
   const selectedMultivariateNode = useMemo(
@@ -1467,6 +1472,28 @@ export function GraphSingleViewShell() {
                         </div>
                       </div>
                     ) : null}
+
+                    <div className="ui-studio-surface grid gap-3 border p-4 shadow-sm shadow-slate-950/5">
+                      <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">Field profiles</p>
+                      <div className="grid gap-3 text-sm text-[var(--ui-text-secondary)]">
+                        {[safeEncodingConfig.sizeField, safeEncodingConfig.colorField, safeEncodingConfig.xField, safeEncodingConfig.yField, safeEncodingConfig.facetField]
+                          .filter((field): field is string => Boolean(field))
+                          .filter((field, index, fields) => fields.indexOf(field) === index)
+                          .map((field) => {
+                            const profile = multivariateFieldProfiles.find((candidate) => candidate.field === field);
+                            return (
+                              <div key={field} className="flex items-start justify-between gap-4">
+                                <span className="text-[var(--ui-text-muted)]">{formatFieldLabel(field)}</span>
+                                <span className="text-right font-medium text-[var(--ui-text-primary)]">
+                                  {profile?.kind === 'numeric'
+                                    ? `${profile.min?.toFixed(3)} to ${profile.max?.toFixed(3)}`
+                                    : `${profile?.categoryCount ?? 0} categories`}
+                                </span>
+                              </div>
+                            );
+                          })}
+                      </div>
+                    </div>
                   </>
                 ) : null}
 
