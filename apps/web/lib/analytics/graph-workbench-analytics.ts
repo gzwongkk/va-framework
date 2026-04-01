@@ -87,6 +87,7 @@ export type TechniqueHelp = {
   reference: string;
   summary: string;
   uses: string[];
+  watchFor: string[];
 };
 
 export type MultivariateFieldOptions = {
@@ -731,6 +732,11 @@ export function getTechniqueHelp(technique: GraphTechnique): TechniqueHelp {
           'Brush dense blocks to select multiple actors at once.',
           'Apply deterministic orderings to reveal latent structure.',
         ],
+        watchFor: [
+          'Matrix views weaken path-following and local neighborhood tracing.',
+          'Ordering changes alter visual patterns, so compare with a stable ordering first.',
+          'Dense blocks explain connection structure, not spatial proximity.',
+        ],
       };
     case 'tree':
       return {
@@ -740,6 +746,11 @@ export function getTechniqueHelp(technique: GraphTechnique): TechniqueHelp {
           'Switch between explicit node-link and implicit partition-based views.',
           'Use axis-parallel layouts for readable labels and radial layouts for compact overviews.',
           'Stay on flare for hierarchy work in the v2.3 line.',
+        ],
+        watchFor: [
+          'Tree layouts only make analytical sense on true hierarchy datasets.',
+          'Radial layouts compress space but reduce label density and direct comparison.',
+          'Implicit partition views emphasize containment over path tracing.',
         ],
       };
     case 'multivariate':
@@ -751,6 +762,11 @@ export function getTechniqueHelp(technique: GraphTechnique): TechniqueHelp {
           'Switch to attribute positioning to compare nodes along analytical axes.',
           'Facet the network to compare communities without entering a general multi-view mode.',
         ],
+        watchFor: [
+          'Too many simultaneous encodings reduce readability, even on toy datasets.',
+          'Attribute positioning complements topology but does not preserve force distance.',
+          'Faceting trades global adjacency context for cleaner within-group comparison.',
+        ],
       };
     default:
       return {
@@ -760,6 +776,11 @@ export function getTechniqueHelp(technique: GraphTechnique): TechniqueHelp {
           'Inspect weighted links and local neighborhoods.',
           'Use force layout as the baseline before switching to another technique.',
           'Keep selection and scope state stable across technique changes.',
+        ],
+        watchFor: [
+          'Link crossings and overlap increase as graphs become denser.',
+          'Force placement is expressive but not deterministic enough for block comparison.',
+          'Switch to matrix or multivariate views when structure depends on ordering or attributes.',
         ],
       };
   }

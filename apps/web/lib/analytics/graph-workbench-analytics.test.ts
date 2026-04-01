@@ -167,5 +167,8 @@ describe('graph workbench analytics', () => {
     expect(getTechniqueHelp('matrix').reference).toBe('Adjacency Matrix Brush');
     expect(getTechniqueHelp('tree').reference).toBe('treevis taxonomy');
     expect(getTechniqueHelp('multivariate').reference).toBe('MVNV');
+    expect(getTechniqueHelp('multivariate').watchFor).toContain(
+      'Too many simultaneous encodings reduce readability, even on toy datasets.',
+    );
   });
 });

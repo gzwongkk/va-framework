@@ -12,6 +12,7 @@ describe('graph workbench helpers', () => {
     expect(parseGraphDatasetParam('miserables')).toBe('miserables');
     expect(parseGraphDatasetParam('flare')).toBe('flare');
     expect(parseGraphDatasetParam('unknown')).toBe(DEFAULT_GRAPH_DATASET);
+    expect(parseGraphDatasetParam(undefined)).toBe(DEFAULT_GRAPH_DATASET);
   });
 
   it('parses supported technique params and falls back for unknown values', () => {
@@ -20,5 +21,6 @@ describe('graph workbench helpers', () => {
     expect(parseGraphTechniqueParam('tree')).toBe('tree');
     expect(parseGraphTechniqueParam('multivariate')).toBe('multivariate');
     expect(parseGraphTechniqueParam('unknown')).toBe(DEFAULT_GRAPH_TECHNIQUE);
+    expect(parseGraphTechniqueParam(null)).toBe(DEFAULT_GRAPH_TECHNIQUE);
   });
 });

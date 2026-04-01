@@ -757,6 +757,7 @@ export function GraphSingleViewShell() {
                   <Workflow className="size-4 text-[var(--ui-text-muted)]" />
                 </div>
                 <ToggleGroup
+                  aria-label="Graph technique"
                   className="grid gap-2 md:grid-cols-4"
                   onValueChange={(value) => {
                     if (isGraphTechnique(value)) {
@@ -786,6 +787,7 @@ export function GraphSingleViewShell() {
                   <Database className="size-4 text-[var(--ui-text-muted)]" />
                 </div>
                 <ToggleGroup
+                  aria-label="Graph dataset"
                   className="grid gap-2"
                   onValueChange={(value) => {
                     if (isGraphWorkbenchDatasetId(value)) {
@@ -835,6 +837,7 @@ export function GraphSingleViewShell() {
                     <Database className="size-4 text-[var(--ui-text-muted)]" />
                   </div>
                   <ToggleGroup
+                    aria-label="Execution mode"
                     className="grid w-full grid-cols-2 gap-2"
                     onValueChange={(value) => {
                       if (value === 'local' || value === 'remote') {
@@ -864,6 +867,7 @@ export function GraphSingleViewShell() {
                     <Workflow className="size-4 text-[var(--ui-text-muted)]" />
                   </div>
                   <ToggleGroup
+                    aria-label="Graph ordering"
                     className="grid w-full grid-cols-2 gap-2"
                     onValueChange={(value) => {
                       if (value === 'original' || value === 'alphabetical' || value === 'degree' || value === 'group') {
@@ -893,6 +897,7 @@ export function GraphSingleViewShell() {
                     <GitBranch className="size-4 text-[var(--ui-text-muted)]" />
                   </div>
                   <ToggleGroup
+                    aria-label={groupLabel}
                     className="flex flex-wrap gap-2"
                     onValueChange={(value) => setSelectedGroups(value.map((groupId) => Number(groupId)))}
                     type="multiple"
@@ -928,6 +933,7 @@ export function GraphSingleViewShell() {
                     <Network className="size-4 text-[var(--ui-text-muted)]" />
                   </div>
                   <ToggleGroup
+                    aria-label="Neighborhood depth"
                     className="grid w-full grid-cols-2 gap-2"
                     onValueChange={(value) => {
                       if (value === '1' || value === '2') {
@@ -956,6 +962,7 @@ export function GraphSingleViewShell() {
                     <Network className="size-4 text-[var(--ui-text-muted)]" />
                   </div>
                   <ToggleGroup
+                    aria-label="Graph scope"
                     className="grid w-full grid-cols-2 gap-2"
                     onValueChange={(value) => {
                       if (value === 'full-graph' || value === 'focused-neighborhood') {
@@ -998,6 +1005,7 @@ export function GraphSingleViewShell() {
                       <TreePine className="size-4 text-[var(--ui-text-muted)]" />
                     </div>
                     <ToggleGroup
+                      aria-label="Tree technique"
                       className="grid gap-2"
                       onValueChange={(value) => {
                         if (value === 'node-link' || value === 'icicle' || value === 'sunburst') {
@@ -1021,6 +1029,7 @@ export function GraphSingleViewShell() {
                     </ToggleGroup>
                     {treeMode === 'node-link' ? (
                       <ToggleGroup
+                        aria-label="Tree alignment"
                         className="grid w-full grid-cols-2 gap-2"
                         onValueChange={(value) => {
                           if (value === 'axis-parallel' || value === 'radial') {
@@ -1052,8 +1061,9 @@ export function GraphSingleViewShell() {
                         <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">Layout mode</p>
                         <Sparkles className="size-4 text-[var(--ui-text-muted)]" />
                       </div>
-                      <ToggleGroup
-                        className="grid gap-2"
+                    <ToggleGroup
+                      aria-label="Multivariate layout"
+                      className="grid gap-2"
                         onValueChange={(value) => {
                           if (value === 'encoded-force' || value === 'attribute-position' || value === 'faceted') {
                             setEncodings({ layoutMode: value as MultivariateLayoutMode });
@@ -1082,6 +1092,7 @@ export function GraphSingleViewShell() {
                         <Sparkles className="size-4 text-[var(--ui-text-muted)]" />
                       </div>
                       <ToggleGroup
+                        aria-label="Node size field"
                         className="flex flex-wrap gap-2"
                         onValueChange={(value) => {
                           if (multivariateFieldOptions.numeric.includes(value)) {
@@ -1110,6 +1121,7 @@ export function GraphSingleViewShell() {
                         <Sparkles className="size-4 text-[var(--ui-text-muted)]" />
                       </div>
                       <ToggleGroup
+                        aria-label="Node color field"
                         className="flex flex-wrap gap-2"
                         onValueChange={(value) => {
                           if ([...multivariateFieldOptions.categorical, ...multivariateFieldOptions.numeric].includes(value)) {
@@ -1138,6 +1150,7 @@ export function GraphSingleViewShell() {
                         <Network className="size-4 text-[var(--ui-text-muted)]" />
                       </div>
                       <ToggleGroup
+                        aria-label="Edge width encoding"
                         className="grid w-full grid-cols-2 gap-2"
                         onValueChange={(value) => {
                           if (value === 'value' || value === 'community') {
@@ -1160,6 +1173,7 @@ export function GraphSingleViewShell() {
                         ))}
                       </ToggleGroup>
                       <ToggleGroup
+                        aria-label="Edge color encoding"
                         className="grid w-full grid-cols-2 gap-2"
                         onValueChange={(value) => {
                           if (value === 'value' || value === 'community') {
@@ -1190,6 +1204,7 @@ export function GraphSingleViewShell() {
                           <Workflow className="size-4 text-[var(--ui-text-muted)]" />
                         </div>
                         <ToggleGroup
+                          aria-label="X position field"
                           className="flex flex-wrap gap-2"
                           onValueChange={(value) => {
                             if (multivariateFieldOptions.numeric.includes(value)) {
@@ -1211,6 +1226,7 @@ export function GraphSingleViewShell() {
                           ))}
                         </ToggleGroup>
                         <ToggleGroup
+                          aria-label="Y position field"
                           className="flex flex-wrap gap-2"
                           onValueChange={(value) => {
                             if (multivariateFieldOptions.numeric.includes(value)) {
@@ -1233,6 +1249,7 @@ export function GraphSingleViewShell() {
                         </ToggleGroup>
                         {safeEncodingConfig.layoutMode === 'faceted' && safeEncodingConfig.facetField ? (
                           <ToggleGroup
+                            aria-label="Facet field"
                             className="flex flex-wrap gap-2"
                             onValueChange={(value) => {
                               if (multivariateFieldOptions.categorical.includes(value)) {
@@ -1265,6 +1282,7 @@ export function GraphSingleViewShell() {
                     <Search className="size-4 text-[var(--ui-text-muted)]" />
                   </div>
                   <Input
+                    aria-label="Search graph nodes"
                     onChange={(event) => setSearchTerm(event.target.value)}
                     placeholder={searchPlaceholder}
                     ref={searchInputRef}
@@ -1529,7 +1547,7 @@ export function GraphSingleViewShell() {
                 <div className="ui-studio-surface grid gap-3 border p-4 shadow-sm shadow-slate-950/5">
                   <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">Neighbor list</p>
                   <ScrollArea className="max-h-52">
-                    <Table>
+                    <Table aria-label="Focused neighbor list">
                       <TableHeader>
                         <TableRow className="ui-studio-record-head">
                           <TableHead className="ui-studio-table-cell">Node</TableHead>
@@ -1568,7 +1586,7 @@ export function GraphSingleViewShell() {
                 <div className="ui-studio-surface grid gap-3 border p-4 shadow-sm shadow-slate-950/5">
                   <p className="ui-studio-label font-semibold uppercase tracking-[0.24em]">Top connected nodes</p>
                   <ScrollArea className="max-h-52">
-                    <Table>
+                    <Table aria-label="Top connected nodes">
                       <TableHeader>
                         <TableRow className="ui-studio-record-head">
                           <TableHead className="ui-studio-table-cell">Node</TableHead>
@@ -1621,11 +1639,22 @@ export function GraphSingleViewShell() {
                   <div className="grid gap-3 text-sm text-[var(--ui-text-secondary)]">
                     <div className="flex items-start justify-between gap-4"><span className="text-[var(--ui-text-muted)]">Reference</span><span className="text-right font-medium text-[var(--ui-text-primary)]">{techniqueHelp.reference}</span></div>
                     <p className="ui-studio-body">{techniqueHelp.summary}</p>
-                    <ul className="grid gap-2 pl-4 text-[var(--ui-text-secondary)]">
-                      {techniqueHelp.uses.map((line) => (
-                        <li key={line} className="list-disc">{line}</li>
-                      ))}
-                    </ul>
+                    <div className="grid gap-2">
+                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--ui-text-muted)]">Best for</p>
+                      <ul className="grid gap-2 pl-4 text-[var(--ui-text-secondary)]">
+                        {techniqueHelp.uses.map((line) => (
+                          <li key={line} className="list-disc">{line}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="grid gap-2">
+                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--ui-text-muted)]">Watch for</p>
+                      <ul className="grid gap-2 pl-4 text-[var(--ui-text-secondary)]">
+                        {techniqueHelp.watchFor.map((line) => (
+                          <li key={line} className="list-disc">{line}</li>
+                        ))}
+                      </ul>
+                    </div>
                     <p className="text-xs uppercase tracking-[0.18em] text-[var(--ui-text-muted)]">Shortcuts: 1 force, 2 matrix, 3 tree, 4 multivariate, / search, Esc clear selection.</p>
                   </div>
                 </div>
