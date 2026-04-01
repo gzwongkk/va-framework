@@ -1,0 +1,3362 @@
+[
+  {
+    "id": "msft-1",
+    "symbol": "MSFT",
+    "date": "2000-01-01",
+    "price": 39.81
+  },
+  {
+    "id": "msft-2",
+    "symbol": "MSFT",
+    "date": "2000-02-01",
+    "price": 36.35
+  },
+  {
+    "id": "msft-3",
+    "symbol": "MSFT",
+    "date": "2000-03-01",
+    "price": 43.22
+  },
+  {
+    "id": "msft-4",
+    "symbol": "MSFT",
+    "date": "2000-04-01",
+    "price": 28.37
+  },
+  {
+    "id": "msft-5",
+    "symbol": "MSFT",
+    "date": "2000-05-01",
+    "price": 25.45
+  },
+  {
+    "id": "msft-6",
+    "symbol": "MSFT",
+    "date": "2000-06-01",
+    "price": 32.54
+  },
+  {
+    "id": "msft-7",
+    "symbol": "MSFT",
+    "date": "2000-07-01",
+    "price": 28.4
+  },
+  {
+    "id": "msft-8",
+    "symbol": "MSFT",
+    "date": "2000-08-01",
+    "price": 28.4
+  },
+  {
+    "id": "msft-9",
+    "symbol": "MSFT",
+    "date": "2000-09-01",
+    "price": 24.53
+  },
+  {
+    "id": "msft-10",
+    "symbol": "MSFT",
+    "date": "2000-10-01",
+    "price": 28.02
+  },
+  {
+    "id": "msft-11",
+    "symbol": "MSFT",
+    "date": "2000-11-01",
+    "price": 23.34
+  },
+  {
+    "id": "msft-12",
+    "symbol": "MSFT",
+    "date": "2000-12-01",
+    "price": 17.65
+  },
+  {
+    "id": "msft-13",
+    "symbol": "MSFT",
+    "date": "2001-01-01",
+    "price": 24.84
+  },
+  {
+    "id": "msft-14",
+    "symbol": "MSFT",
+    "date": "2001-02-01",
+    "price": 24.0
+  },
+  {
+    "id": "msft-15",
+    "symbol": "MSFT",
+    "date": "2001-03-01",
+    "price": 22.25
+  },
+  {
+    "id": "msft-16",
+    "symbol": "MSFT",
+    "date": "2001-04-01",
+    "price": 27.56
+  },
+  {
+    "id": "msft-17",
+    "symbol": "MSFT",
+    "date": "2001-05-01",
+    "price": 28.14
+  },
+  {
+    "id": "msft-18",
+    "symbol": "MSFT",
+    "date": "2001-06-01",
+    "price": 29.7
+  },
+  {
+    "id": "msft-19",
+    "symbol": "MSFT",
+    "date": "2001-07-01",
+    "price": 26.93
+  },
+  {
+    "id": "msft-20",
+    "symbol": "MSFT",
+    "date": "2001-08-01",
+    "price": 23.21
+  },
+  {
+    "id": "msft-21",
+    "symbol": "MSFT",
+    "date": "2001-09-01",
+    "price": 20.82
+  },
+  {
+    "id": "msft-22",
+    "symbol": "MSFT",
+    "date": "2001-10-01",
+    "price": 23.65
+  },
+  {
+    "id": "msft-23",
+    "symbol": "MSFT",
+    "date": "2001-11-01",
+    "price": 26.12
+  },
+  {
+    "id": "msft-24",
+    "symbol": "MSFT",
+    "date": "2001-12-01",
+    "price": 26.95
+  },
+  {
+    "id": "msft-25",
+    "symbol": "MSFT",
+    "date": "2002-01-01",
+    "price": 25.92
+  },
+  {
+    "id": "msft-26",
+    "symbol": "MSFT",
+    "date": "2002-02-01",
+    "price": 23.73
+  },
+  {
+    "id": "msft-27",
+    "symbol": "MSFT",
+    "date": "2002-03-01",
+    "price": 24.53
+  },
+  {
+    "id": "msft-28",
+    "symbol": "MSFT",
+    "date": "2002-04-01",
+    "price": 21.26
+  },
+  {
+    "id": "msft-29",
+    "symbol": "MSFT",
+    "date": "2002-05-01",
+    "price": 20.71
+  },
+  {
+    "id": "msft-30",
+    "symbol": "MSFT",
+    "date": "2002-06-01",
+    "price": 22.25
+  },
+  {
+    "id": "msft-31",
+    "symbol": "MSFT",
+    "date": "2002-07-01",
+    "price": 19.52
+  },
+  {
+    "id": "msft-32",
+    "symbol": "MSFT",
+    "date": "2002-08-01",
+    "price": 19.97
+  },
+  {
+    "id": "msft-33",
+    "symbol": "MSFT",
+    "date": "2002-09-01",
+    "price": 17.79
+  },
+  {
+    "id": "msft-34",
+    "symbol": "MSFT",
+    "date": "2002-10-01",
+    "price": 21.75
+  },
+  {
+    "id": "msft-35",
+    "symbol": "MSFT",
+    "date": "2002-11-01",
+    "price": 23.46
+  },
+  {
+    "id": "msft-36",
+    "symbol": "MSFT",
+    "date": "2002-12-01",
+    "price": 21.03
+  },
+  {
+    "id": "msft-37",
+    "symbol": "MSFT",
+    "date": "2003-01-01",
+    "price": 19.31
+  },
+  {
+    "id": "msft-38",
+    "symbol": "MSFT",
+    "date": "2003-02-01",
+    "price": 19.34
+  },
+  {
+    "id": "msft-39",
+    "symbol": "MSFT",
+    "date": "2003-03-01",
+    "price": 19.76
+  },
+  {
+    "id": "msft-40",
+    "symbol": "MSFT",
+    "date": "2003-04-01",
+    "price": 20.87
+  },
+  {
+    "id": "msft-41",
+    "symbol": "MSFT",
+    "date": "2003-05-01",
+    "price": 20.09
+  },
+  {
+    "id": "msft-42",
+    "symbol": "MSFT",
+    "date": "2003-06-01",
+    "price": 20.93
+  },
+  {
+    "id": "msft-43",
+    "symbol": "MSFT",
+    "date": "2003-07-01",
+    "price": 21.56
+  },
+  {
+    "id": "msft-44",
+    "symbol": "MSFT",
+    "date": "2003-08-01",
+    "price": 21.65
+  },
+  {
+    "id": "msft-45",
+    "symbol": "MSFT",
+    "date": "2003-09-01",
+    "price": 22.69
+  },
+  {
+    "id": "msft-46",
+    "symbol": "MSFT",
+    "date": "2003-10-01",
+    "price": 21.45
+  },
+  {
+    "id": "msft-47",
+    "symbol": "MSFT",
+    "date": "2003-11-01",
+    "price": 21.1
+  },
+  {
+    "id": "msft-48",
+    "symbol": "MSFT",
+    "date": "2003-12-01",
+    "price": 22.46
+  },
+  {
+    "id": "msft-49",
+    "symbol": "MSFT",
+    "date": "2004-01-01",
+    "price": 22.69
+  },
+  {
+    "id": "msft-50",
+    "symbol": "MSFT",
+    "date": "2004-02-01",
+    "price": 21.77
+  },
+  {
+    "id": "msft-51",
+    "symbol": "MSFT",
+    "date": "2004-03-01",
+    "price": 20.46
+  },
+  {
+    "id": "msft-52",
+    "symbol": "MSFT",
+    "date": "2004-04-01",
+    "price": 21.45
+  },
+  {
+    "id": "msft-53",
+    "symbol": "MSFT",
+    "date": "2004-05-01",
+    "price": 21.53
+  },
+  {
+    "id": "msft-54",
+    "symbol": "MSFT",
+    "date": "2004-06-01",
+    "price": 23.44
+  },
+  {
+    "id": "msft-55",
+    "symbol": "MSFT",
+    "date": "2004-07-01",
+    "price": 23.38
+  },
+  {
+    "id": "msft-56",
+    "symbol": "MSFT",
+    "date": "2004-08-01",
+    "price": 22.47
+  },
+  {
+    "id": "msft-57",
+    "symbol": "MSFT",
+    "date": "2004-09-01",
+    "price": 22.76
+  },
+  {
+    "id": "msft-58",
+    "symbol": "MSFT",
+    "date": "2004-10-01",
+    "price": 23.02
+  },
+  {
+    "id": "msft-59",
+    "symbol": "MSFT",
+    "date": "2004-11-01",
+    "price": 24.6
+  },
+  {
+    "id": "msft-60",
+    "symbol": "MSFT",
+    "date": "2004-12-01",
+    "price": 24.52
+  },
+  {
+    "id": "msft-61",
+    "symbol": "MSFT",
+    "date": "2005-01-01",
+    "price": 24.11
+  },
+  {
+    "id": "msft-62",
+    "symbol": "MSFT",
+    "date": "2005-02-01",
+    "price": 23.15
+  },
+  {
+    "id": "msft-63",
+    "symbol": "MSFT",
+    "date": "2005-03-01",
+    "price": 22.24
+  },
+  {
+    "id": "msft-64",
+    "symbol": "MSFT",
+    "date": "2005-04-01",
+    "price": 23.28
+  },
+  {
+    "id": "msft-65",
+    "symbol": "MSFT",
+    "date": "2005-05-01",
+    "price": 23.82
+  },
+  {
+    "id": "msft-66",
+    "symbol": "MSFT",
+    "date": "2005-06-01",
+    "price": 22.93
+  },
+  {
+    "id": "msft-67",
+    "symbol": "MSFT",
+    "date": "2005-07-01",
+    "price": 23.64
+  },
+  {
+    "id": "msft-68",
+    "symbol": "MSFT",
+    "date": "2005-08-01",
+    "price": 25.35
+  },
+  {
+    "id": "msft-69",
+    "symbol": "MSFT",
+    "date": "2005-09-01",
+    "price": 23.83
+  },
+  {
+    "id": "msft-70",
+    "symbol": "MSFT",
+    "date": "2005-10-01",
+    "price": 23.8
+  },
+  {
+    "id": "msft-71",
+    "symbol": "MSFT",
+    "date": "2005-11-01",
+    "price": 25.71
+  },
+  {
+    "id": "msft-72",
+    "symbol": "MSFT",
+    "date": "2005-12-01",
+    "price": 24.29
+  },
+  {
+    "id": "msft-73",
+    "symbol": "MSFT",
+    "date": "2006-01-01",
+    "price": 26.14
+  },
+  {
+    "id": "msft-74",
+    "symbol": "MSFT",
+    "date": "2006-02-01",
+    "price": 25.04
+  },
+  {
+    "id": "msft-75",
+    "symbol": "MSFT",
+    "date": "2006-03-01",
+    "price": 25.36
+  },
+  {
+    "id": "msft-76",
+    "symbol": "MSFT",
+    "date": "2006-04-01",
+    "price": 22.5
+  },
+  {
+    "id": "msft-77",
+    "symbol": "MSFT",
+    "date": "2006-05-01",
+    "price": 21.19
+  },
+  {
+    "id": "msft-78",
+    "symbol": "MSFT",
+    "date": "2006-06-01",
+    "price": 21.8
+  },
+  {
+    "id": "msft-79",
+    "symbol": "MSFT",
+    "date": "2006-07-01",
+    "price": 22.51
+  },
+  {
+    "id": "msft-80",
+    "symbol": "MSFT",
+    "date": "2006-08-01",
+    "price": 24.13
+  },
+  {
+    "id": "msft-81",
+    "symbol": "MSFT",
+    "date": "2006-09-01",
+    "price": 25.68
+  },
+  {
+    "id": "msft-82",
+    "symbol": "MSFT",
+    "date": "2006-10-01",
+    "price": 26.96
+  },
+  {
+    "id": "msft-83",
+    "symbol": "MSFT",
+    "date": "2006-11-01",
+    "price": 27.66
+  },
+  {
+    "id": "msft-84",
+    "symbol": "MSFT",
+    "date": "2006-12-01",
+    "price": 28.13
+  },
+  {
+    "id": "msft-85",
+    "symbol": "MSFT",
+    "date": "2007-01-01",
+    "price": 29.07
+  },
+  {
+    "id": "msft-86",
+    "symbol": "MSFT",
+    "date": "2007-02-01",
+    "price": 26.63
+  },
+  {
+    "id": "msft-87",
+    "symbol": "MSFT",
+    "date": "2007-03-01",
+    "price": 26.35
+  },
+  {
+    "id": "msft-88",
+    "symbol": "MSFT",
+    "date": "2007-04-01",
+    "price": 28.3
+  },
+  {
+    "id": "msft-89",
+    "symbol": "MSFT",
+    "date": "2007-05-01",
+    "price": 29.11
+  },
+  {
+    "id": "msft-90",
+    "symbol": "MSFT",
+    "date": "2007-06-01",
+    "price": 27.95
+  },
+  {
+    "id": "msft-91",
+    "symbol": "MSFT",
+    "date": "2007-07-01",
+    "price": 27.5
+  },
+  {
+    "id": "msft-92",
+    "symbol": "MSFT",
+    "date": "2007-08-01",
+    "price": 27.34
+  },
+  {
+    "id": "msft-93",
+    "symbol": "MSFT",
+    "date": "2007-09-01",
+    "price": 28.04
+  },
+  {
+    "id": "msft-94",
+    "symbol": "MSFT",
+    "date": "2007-10-01",
+    "price": 35.03
+  },
+  {
+    "id": "msft-95",
+    "symbol": "MSFT",
+    "date": "2007-11-01",
+    "price": 32.09
+  },
+  {
+    "id": "msft-96",
+    "symbol": "MSFT",
+    "date": "2007-12-01",
+    "price": 34.0
+  },
+  {
+    "id": "msft-97",
+    "symbol": "MSFT",
+    "date": "2008-01-01",
+    "price": 31.13
+  },
+  {
+    "id": "msft-98",
+    "symbol": "MSFT",
+    "date": "2008-02-01",
+    "price": 26.07
+  },
+  {
+    "id": "msft-99",
+    "symbol": "MSFT",
+    "date": "2008-03-01",
+    "price": 27.21
+  },
+  {
+    "id": "msft-100",
+    "symbol": "MSFT",
+    "date": "2008-04-01",
+    "price": 27.34
+  },
+  {
+    "id": "msft-101",
+    "symbol": "MSFT",
+    "date": "2008-05-01",
+    "price": 27.25
+  },
+  {
+    "id": "msft-102",
+    "symbol": "MSFT",
+    "date": "2008-06-01",
+    "price": 26.47
+  },
+  {
+    "id": "msft-103",
+    "symbol": "MSFT",
+    "date": "2008-07-01",
+    "price": 24.75
+  },
+  {
+    "id": "msft-104",
+    "symbol": "MSFT",
+    "date": "2008-08-01",
+    "price": 26.36
+  },
+  {
+    "id": "msft-105",
+    "symbol": "MSFT",
+    "date": "2008-09-01",
+    "price": 25.78
+  },
+  {
+    "id": "msft-106",
+    "symbol": "MSFT",
+    "date": "2008-10-01",
+    "price": 21.57
+  },
+  {
+    "id": "msft-107",
+    "symbol": "MSFT",
+    "date": "2008-11-01",
+    "price": 19.66
+  },
+  {
+    "id": "msft-108",
+    "symbol": "MSFT",
+    "date": "2008-12-01",
+    "price": 18.91
+  },
+  {
+    "id": "msft-109",
+    "symbol": "MSFT",
+    "date": "2009-01-01",
+    "price": 16.63
+  },
+  {
+    "id": "msft-110",
+    "symbol": "MSFT",
+    "date": "2009-02-01",
+    "price": 15.81
+  },
+  {
+    "id": "msft-111",
+    "symbol": "MSFT",
+    "date": "2009-03-01",
+    "price": 17.99
+  },
+  {
+    "id": "msft-112",
+    "symbol": "MSFT",
+    "date": "2009-04-01",
+    "price": 19.84
+  },
+  {
+    "id": "msft-113",
+    "symbol": "MSFT",
+    "date": "2009-05-01",
+    "price": 20.59
+  },
+  {
+    "id": "msft-114",
+    "symbol": "MSFT",
+    "date": "2009-06-01",
+    "price": 23.42
+  },
+  {
+    "id": "msft-115",
+    "symbol": "MSFT",
+    "date": "2009-07-01",
+    "price": 23.18
+  },
+  {
+    "id": "msft-116",
+    "symbol": "MSFT",
+    "date": "2009-08-01",
+    "price": 24.43
+  },
+  {
+    "id": "msft-117",
+    "symbol": "MSFT",
+    "date": "2009-09-01",
+    "price": 25.49
+  },
+  {
+    "id": "msft-118",
+    "symbol": "MSFT",
+    "date": "2009-10-01",
+    "price": 27.48
+  },
+  {
+    "id": "msft-119",
+    "symbol": "MSFT",
+    "date": "2009-11-01",
+    "price": 29.27
+  },
+  {
+    "id": "msft-120",
+    "symbol": "MSFT",
+    "date": "2009-12-01",
+    "price": 30.34
+  },
+  {
+    "id": "msft-121",
+    "symbol": "MSFT",
+    "date": "2010-01-01",
+    "price": 28.05
+  },
+  {
+    "id": "msft-122",
+    "symbol": "MSFT",
+    "date": "2010-02-01",
+    "price": 28.67
+  },
+  {
+    "id": "msft-123",
+    "symbol": "MSFT",
+    "date": "2010-03-01",
+    "price": 28.8
+  },
+  {
+    "id": "amzn-124",
+    "symbol": "AMZN",
+    "date": "2000-01-01",
+    "price": 64.56
+  },
+  {
+    "id": "amzn-125",
+    "symbol": "AMZN",
+    "date": "2000-02-01",
+    "price": 68.87
+  },
+  {
+    "id": "amzn-126",
+    "symbol": "AMZN",
+    "date": "2000-03-01",
+    "price": 67.0
+  },
+  {
+    "id": "amzn-127",
+    "symbol": "AMZN",
+    "date": "2000-04-01",
+    "price": 55.19
+  },
+  {
+    "id": "amzn-128",
+    "symbol": "AMZN",
+    "date": "2000-05-01",
+    "price": 48.31
+  },
+  {
+    "id": "amzn-129",
+    "symbol": "AMZN",
+    "date": "2000-06-01",
+    "price": 36.31
+  },
+  {
+    "id": "amzn-130",
+    "symbol": "AMZN",
+    "date": "2000-07-01",
+    "price": 30.12
+  },
+  {
+    "id": "amzn-131",
+    "symbol": "AMZN",
+    "date": "2000-08-01",
+    "price": 41.5
+  },
+  {
+    "id": "amzn-132",
+    "symbol": "AMZN",
+    "date": "2000-09-01",
+    "price": 38.44
+  },
+  {
+    "id": "amzn-133",
+    "symbol": "AMZN",
+    "date": "2000-10-01",
+    "price": 36.62
+  },
+  {
+    "id": "amzn-134",
+    "symbol": "AMZN",
+    "date": "2000-11-01",
+    "price": 24.69
+  },
+  {
+    "id": "amzn-135",
+    "symbol": "AMZN",
+    "date": "2000-12-01",
+    "price": 15.56
+  },
+  {
+    "id": "amzn-136",
+    "symbol": "AMZN",
+    "date": "2001-01-01",
+    "price": 17.31
+  },
+  {
+    "id": "amzn-137",
+    "symbol": "AMZN",
+    "date": "2001-02-01",
+    "price": 10.19
+  },
+  {
+    "id": "amzn-138",
+    "symbol": "AMZN",
+    "date": "2001-03-01",
+    "price": 10.23
+  },
+  {
+    "id": "amzn-139",
+    "symbol": "AMZN",
+    "date": "2001-04-01",
+    "price": 15.78
+  },
+  {
+    "id": "amzn-140",
+    "symbol": "AMZN",
+    "date": "2001-05-01",
+    "price": 16.69
+  },
+  {
+    "id": "amzn-141",
+    "symbol": "AMZN",
+    "date": "2001-06-01",
+    "price": 14.15
+  },
+  {
+    "id": "amzn-142",
+    "symbol": "AMZN",
+    "date": "2001-07-01",
+    "price": 12.49
+  },
+  {
+    "id": "amzn-143",
+    "symbol": "AMZN",
+    "date": "2001-08-01",
+    "price": 8.94
+  },
+  {
+    "id": "amzn-144",
+    "symbol": "AMZN",
+    "date": "2001-09-01",
+    "price": 5.97
+  },
+  {
+    "id": "amzn-145",
+    "symbol": "AMZN",
+    "date": "2001-10-01",
+    "price": 6.98
+  },
+  {
+    "id": "amzn-146",
+    "symbol": "AMZN",
+    "date": "2001-11-01",
+    "price": 11.32
+  },
+  {
+    "id": "amzn-147",
+    "symbol": "AMZN",
+    "date": "2001-12-01",
+    "price": 10.82
+  },
+  {
+    "id": "amzn-148",
+    "symbol": "AMZN",
+    "date": "2002-01-01",
+    "price": 14.19
+  },
+  {
+    "id": "amzn-149",
+    "symbol": "AMZN",
+    "date": "2002-02-01",
+    "price": 14.1
+  },
+  {
+    "id": "amzn-150",
+    "symbol": "AMZN",
+    "date": "2002-03-01",
+    "price": 14.3
+  },
+  {
+    "id": "amzn-151",
+    "symbol": "AMZN",
+    "date": "2002-04-01",
+    "price": 16.69
+  },
+  {
+    "id": "amzn-152",
+    "symbol": "AMZN",
+    "date": "2002-05-01",
+    "price": 18.23
+  },
+  {
+    "id": "amzn-153",
+    "symbol": "AMZN",
+    "date": "2002-06-01",
+    "price": 16.25
+  },
+  {
+    "id": "amzn-154",
+    "symbol": "AMZN",
+    "date": "2002-07-01",
+    "price": 14.45
+  },
+  {
+    "id": "amzn-155",
+    "symbol": "AMZN",
+    "date": "2002-08-01",
+    "price": 14.94
+  },
+  {
+    "id": "amzn-156",
+    "symbol": "AMZN",
+    "date": "2002-09-01",
+    "price": 15.93
+  },
+  {
+    "id": "amzn-157",
+    "symbol": "AMZN",
+    "date": "2002-10-01",
+    "price": 19.36
+  },
+  {
+    "id": "amzn-158",
+    "symbol": "AMZN",
+    "date": "2002-11-01",
+    "price": 23.35
+  },
+  {
+    "id": "amzn-159",
+    "symbol": "AMZN",
+    "date": "2002-12-01",
+    "price": 18.89
+  },
+  {
+    "id": "amzn-160",
+    "symbol": "AMZN",
+    "date": "2003-01-01",
+    "price": 21.85
+  },
+  {
+    "id": "amzn-161",
+    "symbol": "AMZN",
+    "date": "2003-02-01",
+    "price": 22.01
+  },
+  {
+    "id": "amzn-162",
+    "symbol": "AMZN",
+    "date": "2003-03-01",
+    "price": 26.03
+  },
+  {
+    "id": "amzn-163",
+    "symbol": "AMZN",
+    "date": "2003-04-01",
+    "price": 28.69
+  },
+  {
+    "id": "amzn-164",
+    "symbol": "AMZN",
+    "date": "2003-05-01",
+    "price": 35.89
+  },
+  {
+    "id": "amzn-165",
+    "symbol": "AMZN",
+    "date": "2003-06-01",
+    "price": 36.32
+  },
+  {
+    "id": "amzn-166",
+    "symbol": "AMZN",
+    "date": "2003-07-01",
+    "price": 41.64
+  },
+  {
+    "id": "amzn-167",
+    "symbol": "AMZN",
+    "date": "2003-08-01",
+    "price": 46.32
+  },
+  {
+    "id": "amzn-168",
+    "symbol": "AMZN",
+    "date": "2003-09-01",
+    "price": 48.43
+  },
+  {
+    "id": "amzn-169",
+    "symbol": "AMZN",
+    "date": "2003-10-01",
+    "price": 54.43
+  },
+  {
+    "id": "amzn-170",
+    "symbol": "AMZN",
+    "date": "2003-11-01",
+    "price": 53.97
+  },
+  {
+    "id": "amzn-171",
+    "symbol": "AMZN",
+    "date": "2003-12-01",
+    "price": 52.62
+  },
+  {
+    "id": "amzn-172",
+    "symbol": "AMZN",
+    "date": "2004-01-01",
+    "price": 50.4
+  },
+  {
+    "id": "amzn-173",
+    "symbol": "AMZN",
+    "date": "2004-02-01",
+    "price": 43.01
+  },
+  {
+    "id": "amzn-174",
+    "symbol": "AMZN",
+    "date": "2004-03-01",
+    "price": 43.28
+  },
+  {
+    "id": "amzn-175",
+    "symbol": "AMZN",
+    "date": "2004-04-01",
+    "price": 43.6
+  },
+  {
+    "id": "amzn-176",
+    "symbol": "AMZN",
+    "date": "2004-05-01",
+    "price": 48.5
+  },
+  {
+    "id": "amzn-177",
+    "symbol": "AMZN",
+    "date": "2004-06-01",
+    "price": 54.4
+  },
+  {
+    "id": "amzn-178",
+    "symbol": "AMZN",
+    "date": "2004-07-01",
+    "price": 38.92
+  },
+  {
+    "id": "amzn-179",
+    "symbol": "AMZN",
+    "date": "2004-08-01",
+    "price": 38.14
+  },
+  {
+    "id": "amzn-180",
+    "symbol": "AMZN",
+    "date": "2004-09-01",
+    "price": 40.86
+  },
+  {
+    "id": "amzn-181",
+    "symbol": "AMZN",
+    "date": "2004-10-01",
+    "price": 34.13
+  },
+  {
+    "id": "amzn-182",
+    "symbol": "AMZN",
+    "date": "2004-11-01",
+    "price": 39.68
+  },
+  {
+    "id": "amzn-183",
+    "symbol": "AMZN",
+    "date": "2004-12-01",
+    "price": 44.29
+  },
+  {
+    "id": "amzn-184",
+    "symbol": "AMZN",
+    "date": "2005-01-01",
+    "price": 43.22
+  },
+  {
+    "id": "amzn-185",
+    "symbol": "AMZN",
+    "date": "2005-02-01",
+    "price": 35.18
+  },
+  {
+    "id": "amzn-186",
+    "symbol": "AMZN",
+    "date": "2005-03-01",
+    "price": 34.27
+  },
+  {
+    "id": "amzn-187",
+    "symbol": "AMZN",
+    "date": "2005-04-01",
+    "price": 32.36
+  },
+  {
+    "id": "amzn-188",
+    "symbol": "AMZN",
+    "date": "2005-05-01",
+    "price": 35.51
+  },
+  {
+    "id": "amzn-189",
+    "symbol": "AMZN",
+    "date": "2005-06-01",
+    "price": 33.09
+  },
+  {
+    "id": "amzn-190",
+    "symbol": "AMZN",
+    "date": "2005-07-01",
+    "price": 45.15
+  },
+  {
+    "id": "amzn-191",
+    "symbol": "AMZN",
+    "date": "2005-08-01",
+    "price": 42.7
+  },
+  {
+    "id": "amzn-192",
+    "symbol": "AMZN",
+    "date": "2005-09-01",
+    "price": 45.3
+  },
+  {
+    "id": "amzn-193",
+    "symbol": "AMZN",
+    "date": "2005-10-01",
+    "price": 39.86
+  },
+  {
+    "id": "amzn-194",
+    "symbol": "AMZN",
+    "date": "2005-11-01",
+    "price": 48.46
+  },
+  {
+    "id": "amzn-195",
+    "symbol": "AMZN",
+    "date": "2005-12-01",
+    "price": 47.15
+  },
+  {
+    "id": "amzn-196",
+    "symbol": "AMZN",
+    "date": "2006-01-01",
+    "price": 44.82
+  },
+  {
+    "id": "amzn-197",
+    "symbol": "AMZN",
+    "date": "2006-02-01",
+    "price": 37.44
+  },
+  {
+    "id": "amzn-198",
+    "symbol": "AMZN",
+    "date": "2006-03-01",
+    "price": 36.53
+  },
+  {
+    "id": "amzn-199",
+    "symbol": "AMZN",
+    "date": "2006-04-01",
+    "price": 35.21
+  },
+  {
+    "id": "amzn-200",
+    "symbol": "AMZN",
+    "date": "2006-05-01",
+    "price": 34.61
+  },
+  {
+    "id": "amzn-201",
+    "symbol": "AMZN",
+    "date": "2006-06-01",
+    "price": 38.68
+  },
+  {
+    "id": "amzn-202",
+    "symbol": "AMZN",
+    "date": "2006-07-01",
+    "price": 26.89
+  },
+  {
+    "id": "amzn-203",
+    "symbol": "AMZN",
+    "date": "2006-08-01",
+    "price": 30.83
+  },
+  {
+    "id": "amzn-204",
+    "symbol": "AMZN",
+    "date": "2006-09-01",
+    "price": 32.12
+  },
+  {
+    "id": "amzn-205",
+    "symbol": "AMZN",
+    "date": "2006-10-01",
+    "price": 38.09
+  },
+  {
+    "id": "amzn-206",
+    "symbol": "AMZN",
+    "date": "2006-11-01",
+    "price": 40.34
+  },
+  {
+    "id": "amzn-207",
+    "symbol": "AMZN",
+    "date": "2006-12-01",
+    "price": 39.46
+  },
+  {
+    "id": "amzn-208",
+    "symbol": "AMZN",
+    "date": "2007-01-01",
+    "price": 37.67
+  },
+  {
+    "id": "amzn-209",
+    "symbol": "AMZN",
+    "date": "2007-02-01",
+    "price": 39.14
+  },
+  {
+    "id": "amzn-210",
+    "symbol": "AMZN",
+    "date": "2007-03-01",
+    "price": 39.79
+  },
+  {
+    "id": "amzn-211",
+    "symbol": "AMZN",
+    "date": "2007-04-01",
+    "price": 61.33
+  },
+  {
+    "id": "amzn-212",
+    "symbol": "AMZN",
+    "date": "2007-05-01",
+    "price": 69.14
+  },
+  {
+    "id": "amzn-213",
+    "symbol": "AMZN",
+    "date": "2007-06-01",
+    "price": 68.41
+  },
+  {
+    "id": "amzn-214",
+    "symbol": "AMZN",
+    "date": "2007-07-01",
+    "price": 78.54
+  },
+  {
+    "id": "amzn-215",
+    "symbol": "AMZN",
+    "date": "2007-08-01",
+    "price": 79.91
+  },
+  {
+    "id": "amzn-216",
+    "symbol": "AMZN",
+    "date": "2007-09-01",
+    "price": 93.15
+  },
+  {
+    "id": "amzn-217",
+    "symbol": "AMZN",
+    "date": "2007-10-01",
+    "price": 89.15
+  },
+  {
+    "id": "amzn-218",
+    "symbol": "AMZN",
+    "date": "2007-11-01",
+    "price": 90.56
+  },
+  {
+    "id": "amzn-219",
+    "symbol": "AMZN",
+    "date": "2007-12-01",
+    "price": 92.64
+  },
+  {
+    "id": "amzn-220",
+    "symbol": "AMZN",
+    "date": "2008-01-01",
+    "price": 77.7
+  },
+  {
+    "id": "amzn-221",
+    "symbol": "AMZN",
+    "date": "2008-02-01",
+    "price": 64.47
+  },
+  {
+    "id": "amzn-222",
+    "symbol": "AMZN",
+    "date": "2008-03-01",
+    "price": 71.3
+  },
+  {
+    "id": "amzn-223",
+    "symbol": "AMZN",
+    "date": "2008-04-01",
+    "price": 78.63
+  },
+  {
+    "id": "amzn-224",
+    "symbol": "AMZN",
+    "date": "2008-05-01",
+    "price": 81.62
+  },
+  {
+    "id": "amzn-225",
+    "symbol": "AMZN",
+    "date": "2008-06-01",
+    "price": 73.33
+  },
+  {
+    "id": "amzn-226",
+    "symbol": "AMZN",
+    "date": "2008-07-01",
+    "price": 76.34
+  },
+  {
+    "id": "amzn-227",
+    "symbol": "AMZN",
+    "date": "2008-08-01",
+    "price": 80.81
+  },
+  {
+    "id": "amzn-228",
+    "symbol": "AMZN",
+    "date": "2008-09-01",
+    "price": 72.76
+  },
+  {
+    "id": "amzn-229",
+    "symbol": "AMZN",
+    "date": "2008-10-01",
+    "price": 57.24
+  },
+  {
+    "id": "amzn-230",
+    "symbol": "AMZN",
+    "date": "2008-11-01",
+    "price": 42.7
+  },
+  {
+    "id": "amzn-231",
+    "symbol": "AMZN",
+    "date": "2008-12-01",
+    "price": 51.28
+  },
+  {
+    "id": "amzn-232",
+    "symbol": "AMZN",
+    "date": "2009-01-01",
+    "price": 58.82
+  },
+  {
+    "id": "amzn-233",
+    "symbol": "AMZN",
+    "date": "2009-02-01",
+    "price": 64.79
+  },
+  {
+    "id": "amzn-234",
+    "symbol": "AMZN",
+    "date": "2009-03-01",
+    "price": 73.44
+  },
+  {
+    "id": "amzn-235",
+    "symbol": "AMZN",
+    "date": "2009-04-01",
+    "price": 80.52
+  },
+  {
+    "id": "amzn-236",
+    "symbol": "AMZN",
+    "date": "2009-05-01",
+    "price": 77.99
+  },
+  {
+    "id": "amzn-237",
+    "symbol": "AMZN",
+    "date": "2009-06-01",
+    "price": 83.66
+  },
+  {
+    "id": "amzn-238",
+    "symbol": "AMZN",
+    "date": "2009-07-01",
+    "price": 85.76
+  },
+  {
+    "id": "amzn-239",
+    "symbol": "AMZN",
+    "date": "2009-08-01",
+    "price": 81.19
+  },
+  {
+    "id": "amzn-240",
+    "symbol": "AMZN",
+    "date": "2009-09-01",
+    "price": 93.36
+  },
+  {
+    "id": "amzn-241",
+    "symbol": "AMZN",
+    "date": "2009-10-01",
+    "price": 118.81
+  },
+  {
+    "id": "amzn-242",
+    "symbol": "AMZN",
+    "date": "2009-11-01",
+    "price": 135.91
+  },
+  {
+    "id": "amzn-243",
+    "symbol": "AMZN",
+    "date": "2009-12-01",
+    "price": 134.52
+  },
+  {
+    "id": "amzn-244",
+    "symbol": "AMZN",
+    "date": "2010-01-01",
+    "price": 125.41
+  },
+  {
+    "id": "amzn-245",
+    "symbol": "AMZN",
+    "date": "2010-02-01",
+    "price": 118.4
+  },
+  {
+    "id": "amzn-246",
+    "symbol": "AMZN",
+    "date": "2010-03-01",
+    "price": 128.82
+  },
+  {
+    "id": "ibm-247",
+    "symbol": "IBM",
+    "date": "2000-01-01",
+    "price": 100.52
+  },
+  {
+    "id": "ibm-248",
+    "symbol": "IBM",
+    "date": "2000-02-01",
+    "price": 92.11
+  },
+  {
+    "id": "ibm-249",
+    "symbol": "IBM",
+    "date": "2000-03-01",
+    "price": 106.11
+  },
+  {
+    "id": "ibm-250",
+    "symbol": "IBM",
+    "date": "2000-04-01",
+    "price": 99.95
+  },
+  {
+    "id": "ibm-251",
+    "symbol": "IBM",
+    "date": "2000-05-01",
+    "price": 96.31
+  },
+  {
+    "id": "ibm-252",
+    "symbol": "IBM",
+    "date": "2000-06-01",
+    "price": 98.33
+  },
+  {
+    "id": "ibm-253",
+    "symbol": "IBM",
+    "date": "2000-07-01",
+    "price": 100.74
+  },
+  {
+    "id": "ibm-254",
+    "symbol": "IBM",
+    "date": "2000-08-01",
+    "price": 118.62
+  },
+  {
+    "id": "ibm-255",
+    "symbol": "IBM",
+    "date": "2000-09-01",
+    "price": 101.19
+  },
+  {
+    "id": "ibm-256",
+    "symbol": "IBM",
+    "date": "2000-10-01",
+    "price": 88.5
+  },
+  {
+    "id": "ibm-257",
+    "symbol": "IBM",
+    "date": "2000-11-01",
+    "price": 84.12
+  },
+  {
+    "id": "ibm-258",
+    "symbol": "IBM",
+    "date": "2000-12-01",
+    "price": 76.47
+  },
+  {
+    "id": "ibm-259",
+    "symbol": "IBM",
+    "date": "2001-01-01",
+    "price": 100.76
+  },
+  {
+    "id": "ibm-260",
+    "symbol": "IBM",
+    "date": "2001-02-01",
+    "price": 89.98
+  },
+  {
+    "id": "ibm-261",
+    "symbol": "IBM",
+    "date": "2001-03-01",
+    "price": 86.63
+  },
+  {
+    "id": "ibm-262",
+    "symbol": "IBM",
+    "date": "2001-04-01",
+    "price": 103.7
+  },
+  {
+    "id": "ibm-263",
+    "symbol": "IBM",
+    "date": "2001-05-01",
+    "price": 100.82
+  },
+  {
+    "id": "ibm-264",
+    "symbol": "IBM",
+    "date": "2001-06-01",
+    "price": 102.35
+  },
+  {
+    "id": "ibm-265",
+    "symbol": "IBM",
+    "date": "2001-07-01",
+    "price": 94.87
+  },
+  {
+    "id": "ibm-266",
+    "symbol": "IBM",
+    "date": "2001-08-01",
+    "price": 90.25
+  },
+  {
+    "id": "ibm-267",
+    "symbol": "IBM",
+    "date": "2001-09-01",
+    "price": 82.82
+  },
+  {
+    "id": "ibm-268",
+    "symbol": "IBM",
+    "date": "2001-10-01",
+    "price": 97.58
+  },
+  {
+    "id": "ibm-269",
+    "symbol": "IBM",
+    "date": "2001-11-01",
+    "price": 104.5
+  },
+  {
+    "id": "ibm-270",
+    "symbol": "IBM",
+    "date": "2001-12-01",
+    "price": 109.36
+  },
+  {
+    "id": "ibm-271",
+    "symbol": "IBM",
+    "date": "2002-01-01",
+    "price": 97.54
+  },
+  {
+    "id": "ibm-272",
+    "symbol": "IBM",
+    "date": "2002-02-01",
+    "price": 88.82
+  },
+  {
+    "id": "ibm-273",
+    "symbol": "IBM",
+    "date": "2002-03-01",
+    "price": 94.15
+  },
+  {
+    "id": "ibm-274",
+    "symbol": "IBM",
+    "date": "2002-04-01",
+    "price": 75.82
+  },
+  {
+    "id": "ibm-275",
+    "symbol": "IBM",
+    "date": "2002-05-01",
+    "price": 72.97
+  },
+  {
+    "id": "ibm-276",
+    "symbol": "IBM",
+    "date": "2002-06-01",
+    "price": 65.31
+  },
+  {
+    "id": "ibm-277",
+    "symbol": "IBM",
+    "date": "2002-07-01",
+    "price": 63.86
+  },
+  {
+    "id": "ibm-278",
+    "symbol": "IBM",
+    "date": "2002-08-01",
+    "price": 68.52
+  },
+  {
+    "id": "ibm-279",
+    "symbol": "IBM",
+    "date": "2002-09-01",
+    "price": 53.01
+  },
+  {
+    "id": "ibm-280",
+    "symbol": "IBM",
+    "date": "2002-10-01",
+    "price": 71.76
+  },
+  {
+    "id": "ibm-281",
+    "symbol": "IBM",
+    "date": "2002-11-01",
+    "price": 79.16
+  },
+  {
+    "id": "ibm-282",
+    "symbol": "IBM",
+    "date": "2002-12-01",
+    "price": 70.58
+  },
+  {
+    "id": "ibm-283",
+    "symbol": "IBM",
+    "date": "2003-01-01",
+    "price": 71.22
+  },
+  {
+    "id": "ibm-284",
+    "symbol": "IBM",
+    "date": "2003-02-01",
+    "price": 71.13
+  },
+  {
+    "id": "ibm-285",
+    "symbol": "IBM",
+    "date": "2003-03-01",
+    "price": 71.57
+  },
+  {
+    "id": "ibm-286",
+    "symbol": "IBM",
+    "date": "2003-04-01",
+    "price": 77.47
+  },
+  {
+    "id": "ibm-287",
+    "symbol": "IBM",
+    "date": "2003-05-01",
+    "price": 80.48
+  },
+  {
+    "id": "ibm-288",
+    "symbol": "IBM",
+    "date": "2003-06-01",
+    "price": 75.42
+  },
+  {
+    "id": "ibm-289",
+    "symbol": "IBM",
+    "date": "2003-07-01",
+    "price": 74.28
+  },
+  {
+    "id": "ibm-290",
+    "symbol": "IBM",
+    "date": "2003-08-01",
+    "price": 75.12
+  },
+  {
+    "id": "ibm-291",
+    "symbol": "IBM",
+    "date": "2003-09-01",
+    "price": 80.91
+  },
+  {
+    "id": "ibm-292",
+    "symbol": "IBM",
+    "date": "2003-10-01",
+    "price": 81.96
+  },
+  {
+    "id": "ibm-293",
+    "symbol": "IBM",
+    "date": "2003-11-01",
+    "price": 83.08
+  },
+  {
+    "id": "ibm-294",
+    "symbol": "IBM",
+    "date": "2003-12-01",
+    "price": 85.05
+  },
+  {
+    "id": "ibm-295",
+    "symbol": "IBM",
+    "date": "2004-01-01",
+    "price": 91.06
+  },
+  {
+    "id": "ibm-296",
+    "symbol": "IBM",
+    "date": "2004-02-01",
+    "price": 88.7
+  },
+  {
+    "id": "ibm-297",
+    "symbol": "IBM",
+    "date": "2004-03-01",
+    "price": 84.41
+  },
+  {
+    "id": "ibm-298",
+    "symbol": "IBM",
+    "date": "2004-04-01",
+    "price": 81.04
+  },
+  {
+    "id": "ibm-299",
+    "symbol": "IBM",
+    "date": "2004-05-01",
+    "price": 81.59
+  },
+  {
+    "id": "ibm-300",
+    "symbol": "IBM",
+    "date": "2004-06-01",
+    "price": 81.19
+  },
+  {
+    "id": "ibm-301",
+    "symbol": "IBM",
+    "date": "2004-07-01",
+    "price": 80.19
+  },
+  {
+    "id": "ibm-302",
+    "symbol": "IBM",
+    "date": "2004-08-01",
+    "price": 78.17
+  },
+  {
+    "id": "ibm-303",
+    "symbol": "IBM",
+    "date": "2004-09-01",
+    "price": 79.13
+  },
+  {
+    "id": "ibm-304",
+    "symbol": "IBM",
+    "date": "2004-10-01",
+    "price": 82.84
+  },
+  {
+    "id": "ibm-305",
+    "symbol": "IBM",
+    "date": "2004-11-01",
+    "price": 87.15
+  },
+  {
+    "id": "ibm-306",
+    "symbol": "IBM",
+    "date": "2004-12-01",
+    "price": 91.16
+  },
+  {
+    "id": "ibm-307",
+    "symbol": "IBM",
+    "date": "2005-01-01",
+    "price": 86.39
+  },
+  {
+    "id": "ibm-308",
+    "symbol": "IBM",
+    "date": "2005-02-01",
+    "price": 85.78
+  },
+  {
+    "id": "ibm-309",
+    "symbol": "IBM",
+    "date": "2005-03-01",
+    "price": 84.66
+  },
+  {
+    "id": "ibm-310",
+    "symbol": "IBM",
+    "date": "2005-04-01",
+    "price": 70.77
+  },
+  {
+    "id": "ibm-311",
+    "symbol": "IBM",
+    "date": "2005-05-01",
+    "price": 70.18
+  },
+  {
+    "id": "ibm-312",
+    "symbol": "IBM",
+    "date": "2005-06-01",
+    "price": 68.93
+  },
+  {
+    "id": "ibm-313",
+    "symbol": "IBM",
+    "date": "2005-07-01",
+    "price": 77.53
+  },
+  {
+    "id": "ibm-314",
+    "symbol": "IBM",
+    "date": "2005-08-01",
+    "price": 75.07
+  },
+  {
+    "id": "ibm-315",
+    "symbol": "IBM",
+    "date": "2005-09-01",
+    "price": 74.7
+  },
+  {
+    "id": "ibm-316",
+    "symbol": "IBM",
+    "date": "2005-10-01",
+    "price": 76.25
+  },
+  {
+    "id": "ibm-317",
+    "symbol": "IBM",
+    "date": "2005-11-01",
+    "price": 82.98
+  },
+  {
+    "id": "ibm-318",
+    "symbol": "IBM",
+    "date": "2005-12-01",
+    "price": 76.73
+  },
+  {
+    "id": "ibm-319",
+    "symbol": "IBM",
+    "date": "2006-01-01",
+    "price": 75.89
+  },
+  {
+    "id": "ibm-320",
+    "symbol": "IBM",
+    "date": "2006-02-01",
+    "price": 75.09
+  },
+  {
+    "id": "ibm-321",
+    "symbol": "IBM",
+    "date": "2006-03-01",
+    "price": 77.17
+  },
+  {
+    "id": "ibm-322",
+    "symbol": "IBM",
+    "date": "2006-04-01",
+    "price": 77.05
+  },
+  {
+    "id": "ibm-323",
+    "symbol": "IBM",
+    "date": "2006-05-01",
+    "price": 75.04
+  },
+  {
+    "id": "ibm-324",
+    "symbol": "IBM",
+    "date": "2006-06-01",
+    "price": 72.15
+  },
+  {
+    "id": "ibm-325",
+    "symbol": "IBM",
+    "date": "2006-07-01",
+    "price": 72.7
+  },
+  {
+    "id": "ibm-326",
+    "symbol": "IBM",
+    "date": "2006-08-01",
+    "price": 76.35
+  },
+  {
+    "id": "ibm-327",
+    "symbol": "IBM",
+    "date": "2006-09-01",
+    "price": 77.26
+  },
+  {
+    "id": "ibm-328",
+    "symbol": "IBM",
+    "date": "2006-10-01",
+    "price": 87.06
+  },
+  {
+    "id": "ibm-329",
+    "symbol": "IBM",
+    "date": "2006-11-01",
+    "price": 86.95
+  },
+  {
+    "id": "ibm-330",
+    "symbol": "IBM",
+    "date": "2006-12-01",
+    "price": 91.9
+  },
+  {
+    "id": "ibm-331",
+    "symbol": "IBM",
+    "date": "2007-01-01",
+    "price": 93.79
+  },
+  {
+    "id": "ibm-332",
+    "symbol": "IBM",
+    "date": "2007-02-01",
+    "price": 88.18
+  },
+  {
+    "id": "ibm-333",
+    "symbol": "IBM",
+    "date": "2007-03-01",
+    "price": 89.44
+  },
+  {
+    "id": "ibm-334",
+    "symbol": "IBM",
+    "date": "2007-04-01",
+    "price": 96.98
+  },
+  {
+    "id": "ibm-335",
+    "symbol": "IBM",
+    "date": "2007-05-01",
+    "price": 101.54
+  },
+  {
+    "id": "ibm-336",
+    "symbol": "IBM",
+    "date": "2007-06-01",
+    "price": 100.25
+  },
+  {
+    "id": "ibm-337",
+    "symbol": "IBM",
+    "date": "2007-07-01",
+    "price": 105.4
+  },
+  {
+    "id": "ibm-338",
+    "symbol": "IBM",
+    "date": "2007-08-01",
+    "price": 111.54
+  },
+  {
+    "id": "ibm-339",
+    "symbol": "IBM",
+    "date": "2007-09-01",
+    "price": 112.6
+  },
+  {
+    "id": "ibm-340",
+    "symbol": "IBM",
+    "date": "2007-10-01",
+    "price": 111.0
+  },
+  {
+    "id": "ibm-341",
+    "symbol": "IBM",
+    "date": "2007-11-01",
+    "price": 100.9
+  },
+  {
+    "id": "ibm-342",
+    "symbol": "IBM",
+    "date": "2007-12-01",
+    "price": 103.7
+  },
+  {
+    "id": "ibm-343",
+    "symbol": "IBM",
+    "date": "2008-01-01",
+    "price": 102.75
+  },
+  {
+    "id": "ibm-344",
+    "symbol": "IBM",
+    "date": "2008-02-01",
+    "price": 109.64
+  },
+  {
+    "id": "ibm-345",
+    "symbol": "IBM",
+    "date": "2008-03-01",
+    "price": 110.87
+  },
+  {
+    "id": "ibm-346",
+    "symbol": "IBM",
+    "date": "2008-04-01",
+    "price": 116.23
+  },
+  {
+    "id": "ibm-347",
+    "symbol": "IBM",
+    "date": "2008-05-01",
+    "price": 125.14
+  },
+  {
+    "id": "ibm-348",
+    "symbol": "IBM",
+    "date": "2008-06-01",
+    "price": 114.6
+  },
+  {
+    "id": "ibm-349",
+    "symbol": "IBM",
+    "date": "2008-07-01",
+    "price": 123.74
+  },
+  {
+    "id": "ibm-350",
+    "symbol": "IBM",
+    "date": "2008-08-01",
+    "price": 118.16
+  },
+  {
+    "id": "ibm-351",
+    "symbol": "IBM",
+    "date": "2008-09-01",
+    "price": 113.53
+  },
+  {
+    "id": "ibm-352",
+    "symbol": "IBM",
+    "date": "2008-10-01",
+    "price": 90.24
+  },
+  {
+    "id": "ibm-353",
+    "symbol": "IBM",
+    "date": "2008-11-01",
+    "price": 79.65
+  },
+  {
+    "id": "ibm-354",
+    "symbol": "IBM",
+    "date": "2008-12-01",
+    "price": 82.15
+  },
+  {
+    "id": "ibm-355",
+    "symbol": "IBM",
+    "date": "2009-01-01",
+    "price": 89.46
+  },
+  {
+    "id": "ibm-356",
+    "symbol": "IBM",
+    "date": "2009-02-01",
+    "price": 90.32
+  },
+  {
+    "id": "ibm-357",
+    "symbol": "IBM",
+    "date": "2009-03-01",
+    "price": 95.09
+  },
+  {
+    "id": "ibm-358",
+    "symbol": "IBM",
+    "date": "2009-04-01",
+    "price": 101.29
+  },
+  {
+    "id": "ibm-359",
+    "symbol": "IBM",
+    "date": "2009-05-01",
+    "price": 104.85
+  },
+  {
+    "id": "ibm-360",
+    "symbol": "IBM",
+    "date": "2009-06-01",
+    "price": 103.01
+  },
+  {
+    "id": "ibm-361",
+    "symbol": "IBM",
+    "date": "2009-07-01",
+    "price": 116.34
+  },
+  {
+    "id": "ibm-362",
+    "symbol": "IBM",
+    "date": "2009-08-01",
+    "price": 117.0
+  },
+  {
+    "id": "ibm-363",
+    "symbol": "IBM",
+    "date": "2009-09-01",
+    "price": 118.55
+  },
+  {
+    "id": "ibm-364",
+    "symbol": "IBM",
+    "date": "2009-10-01",
+    "price": 119.54
+  },
+  {
+    "id": "ibm-365",
+    "symbol": "IBM",
+    "date": "2009-11-01",
+    "price": 125.79
+  },
+  {
+    "id": "ibm-366",
+    "symbol": "IBM",
+    "date": "2009-12-01",
+    "price": 130.32
+  },
+  {
+    "id": "ibm-367",
+    "symbol": "IBM",
+    "date": "2010-01-01",
+    "price": 121.85
+  },
+  {
+    "id": "ibm-368",
+    "symbol": "IBM",
+    "date": "2010-02-01",
+    "price": 127.16
+  },
+  {
+    "id": "ibm-369",
+    "symbol": "IBM",
+    "date": "2010-03-01",
+    "price": 125.55
+  },
+  {
+    "id": "goog-370",
+    "symbol": "GOOG",
+    "date": "2004-08-01",
+    "price": 102.37
+  },
+  {
+    "id": "goog-371",
+    "symbol": "GOOG",
+    "date": "2004-09-01",
+    "price": 129.6
+  },
+  {
+    "id": "goog-372",
+    "symbol": "GOOG",
+    "date": "2004-10-01",
+    "price": 190.64
+  },
+  {
+    "id": "goog-373",
+    "symbol": "GOOG",
+    "date": "2004-11-01",
+    "price": 181.98
+  },
+  {
+    "id": "goog-374",
+    "symbol": "GOOG",
+    "date": "2004-12-01",
+    "price": 192.79
+  },
+  {
+    "id": "goog-375",
+    "symbol": "GOOG",
+    "date": "2005-01-01",
+    "price": 195.62
+  },
+  {
+    "id": "goog-376",
+    "symbol": "GOOG",
+    "date": "2005-02-01",
+    "price": 187.99
+  },
+  {
+    "id": "goog-377",
+    "symbol": "GOOG",
+    "date": "2005-03-01",
+    "price": 180.51
+  },
+  {
+    "id": "goog-378",
+    "symbol": "GOOG",
+    "date": "2005-04-01",
+    "price": 220.0
+  },
+  {
+    "id": "goog-379",
+    "symbol": "GOOG",
+    "date": "2005-05-01",
+    "price": 277.27
+  },
+  {
+    "id": "goog-380",
+    "symbol": "GOOG",
+    "date": "2005-06-01",
+    "price": 294.15
+  },
+  {
+    "id": "goog-381",
+    "symbol": "GOOG",
+    "date": "2005-07-01",
+    "price": 287.76
+  },
+  {
+    "id": "goog-382",
+    "symbol": "GOOG",
+    "date": "2005-08-01",
+    "price": 286.0
+  },
+  {
+    "id": "goog-383",
+    "symbol": "GOOG",
+    "date": "2005-09-01",
+    "price": 316.46
+  },
+  {
+    "id": "goog-384",
+    "symbol": "GOOG",
+    "date": "2005-10-01",
+    "price": 372.14
+  },
+  {
+    "id": "goog-385",
+    "symbol": "GOOG",
+    "date": "2005-11-01",
+    "price": 404.91
+  },
+  {
+    "id": "goog-386",
+    "symbol": "GOOG",
+    "date": "2005-12-01",
+    "price": 414.86
+  },
+  {
+    "id": "goog-387",
+    "symbol": "GOOG",
+    "date": "2006-01-01",
+    "price": 432.66
+  },
+  {
+    "id": "goog-388",
+    "symbol": "GOOG",
+    "date": "2006-02-01",
+    "price": 362.62
+  },
+  {
+    "id": "goog-389",
+    "symbol": "GOOG",
+    "date": "2006-03-01",
+    "price": 390.0
+  },
+  {
+    "id": "goog-390",
+    "symbol": "GOOG",
+    "date": "2006-04-01",
+    "price": 417.94
+  },
+  {
+    "id": "goog-391",
+    "symbol": "GOOG",
+    "date": "2006-05-01",
+    "price": 371.82
+  },
+  {
+    "id": "goog-392",
+    "symbol": "GOOG",
+    "date": "2006-06-01",
+    "price": 419.33
+  },
+  {
+    "id": "goog-393",
+    "symbol": "GOOG",
+    "date": "2006-07-01",
+    "price": 386.6
+  },
+  {
+    "id": "goog-394",
+    "symbol": "GOOG",
+    "date": "2006-08-01",
+    "price": 378.53
+  },
+  {
+    "id": "goog-395",
+    "symbol": "GOOG",
+    "date": "2006-09-01",
+    "price": 401.9
+  },
+  {
+    "id": "goog-396",
+    "symbol": "GOOG",
+    "date": "2006-10-01",
+    "price": 476.39
+  },
+  {
+    "id": "goog-397",
+    "symbol": "GOOG",
+    "date": "2006-11-01",
+    "price": 484.81
+  },
+  {
+    "id": "goog-398",
+    "symbol": "GOOG",
+    "date": "2006-12-01",
+    "price": 460.48
+  },
+  {
+    "id": "goog-399",
+    "symbol": "GOOG",
+    "date": "2007-01-01",
+    "price": 501.5
+  },
+  {
+    "id": "goog-400",
+    "symbol": "GOOG",
+    "date": "2007-02-01",
+    "price": 449.45
+  },
+  {
+    "id": "goog-401",
+    "symbol": "GOOG",
+    "date": "2007-03-01",
+    "price": 458.16
+  },
+  {
+    "id": "goog-402",
+    "symbol": "GOOG",
+    "date": "2007-04-01",
+    "price": 471.38
+  },
+  {
+    "id": "goog-403",
+    "symbol": "GOOG",
+    "date": "2007-05-01",
+    "price": 497.91
+  },
+  {
+    "id": "goog-404",
+    "symbol": "GOOG",
+    "date": "2007-06-01",
+    "price": 522.7
+  },
+  {
+    "id": "goog-405",
+    "symbol": "GOOG",
+    "date": "2007-07-01",
+    "price": 510.0
+  },
+  {
+    "id": "goog-406",
+    "symbol": "GOOG",
+    "date": "2007-08-01",
+    "price": 515.25
+  },
+  {
+    "id": "goog-407",
+    "symbol": "GOOG",
+    "date": "2007-09-01",
+    "price": 567.27
+  },
+  {
+    "id": "goog-408",
+    "symbol": "GOOG",
+    "date": "2007-10-01",
+    "price": 707.0
+  },
+  {
+    "id": "goog-409",
+    "symbol": "GOOG",
+    "date": "2007-11-01",
+    "price": 693.0
+  },
+  {
+    "id": "goog-410",
+    "symbol": "GOOG",
+    "date": "2007-12-01",
+    "price": 691.48
+  },
+  {
+    "id": "goog-411",
+    "symbol": "GOOG",
+    "date": "2008-01-01",
+    "price": 564.3
+  },
+  {
+    "id": "goog-412",
+    "symbol": "GOOG",
+    "date": "2008-02-01",
+    "price": 471.18
+  },
+  {
+    "id": "goog-413",
+    "symbol": "GOOG",
+    "date": "2008-03-01",
+    "price": 440.47
+  },
+  {
+    "id": "goog-414",
+    "symbol": "GOOG",
+    "date": "2008-04-01",
+    "price": 574.29
+  },
+  {
+    "id": "goog-415",
+    "symbol": "GOOG",
+    "date": "2008-05-01",
+    "price": 585.8
+  },
+  {
+    "id": "goog-416",
+    "symbol": "GOOG",
+    "date": "2008-06-01",
+    "price": 526.42
+  },
+  {
+    "id": "goog-417",
+    "symbol": "GOOG",
+    "date": "2008-07-01",
+    "price": 473.75
+  },
+  {
+    "id": "goog-418",
+    "symbol": "GOOG",
+    "date": "2008-08-01",
+    "price": 463.29
+  },
+  {
+    "id": "goog-419",
+    "symbol": "GOOG",
+    "date": "2008-09-01",
+    "price": 400.52
+  },
+  {
+    "id": "goog-420",
+    "symbol": "GOOG",
+    "date": "2008-10-01",
+    "price": 359.36
+  },
+  {
+    "id": "goog-421",
+    "symbol": "GOOG",
+    "date": "2008-11-01",
+    "price": 292.96
+  },
+  {
+    "id": "goog-422",
+    "symbol": "GOOG",
+    "date": "2008-12-01",
+    "price": 307.65
+  },
+  {
+    "id": "goog-423",
+    "symbol": "GOOG",
+    "date": "2009-01-01",
+    "price": 338.53
+  },
+  {
+    "id": "goog-424",
+    "symbol": "GOOG",
+    "date": "2009-02-01",
+    "price": 337.99
+  },
+  {
+    "id": "goog-425",
+    "symbol": "GOOG",
+    "date": "2009-03-01",
+    "price": 348.06
+  },
+  {
+    "id": "goog-426",
+    "symbol": "GOOG",
+    "date": "2009-04-01",
+    "price": 395.97
+  },
+  {
+    "id": "goog-427",
+    "symbol": "GOOG",
+    "date": "2009-05-01",
+    "price": 417.23
+  },
+  {
+    "id": "goog-428",
+    "symbol": "GOOG",
+    "date": "2009-06-01",
+    "price": 421.59
+  },
+  {
+    "id": "goog-429",
+    "symbol": "GOOG",
+    "date": "2009-07-01",
+    "price": 443.05
+  },
+  {
+    "id": "goog-430",
+    "symbol": "GOOG",
+    "date": "2009-08-01",
+    "price": 461.67
+  },
+  {
+    "id": "goog-431",
+    "symbol": "GOOG",
+    "date": "2009-09-01",
+    "price": 495.85
+  },
+  {
+    "id": "goog-432",
+    "symbol": "GOOG",
+    "date": "2009-10-01",
+    "price": 536.12
+  },
+  {
+    "id": "goog-433",
+    "symbol": "GOOG",
+    "date": "2009-11-01",
+    "price": 583.0
+  },
+  {
+    "id": "goog-434",
+    "symbol": "GOOG",
+    "date": "2009-12-01",
+    "price": 619.98
+  },
+  {
+    "id": "goog-435",
+    "symbol": "GOOG",
+    "date": "2010-01-01",
+    "price": 529.94
+  },
+  {
+    "id": "goog-436",
+    "symbol": "GOOG",
+    "date": "2010-02-01",
+    "price": 526.8
+  },
+  {
+    "id": "goog-437",
+    "symbol": "GOOG",
+    "date": "2010-03-01",
+    "price": 560.19
+  },
+  {
+    "id": "aapl-438",
+    "symbol": "AAPL",
+    "date": "2000-01-01",
+    "price": 25.94
+  },
+  {
+    "id": "aapl-439",
+    "symbol": "AAPL",
+    "date": "2000-02-01",
+    "price": 28.66
+  },
+  {
+    "id": "aapl-440",
+    "symbol": "AAPL",
+    "date": "2000-03-01",
+    "price": 33.95
+  },
+  {
+    "id": "aapl-441",
+    "symbol": "AAPL",
+    "date": "2000-04-01",
+    "price": 31.01
+  },
+  {
+    "id": "aapl-442",
+    "symbol": "AAPL",
+    "date": "2000-05-01",
+    "price": 21.0
+  },
+  {
+    "id": "aapl-443",
+    "symbol": "AAPL",
+    "date": "2000-06-01",
+    "price": 26.19
+  },
+  {
+    "id": "aapl-444",
+    "symbol": "AAPL",
+    "date": "2000-07-01",
+    "price": 25.41
+  },
+  {
+    "id": "aapl-445",
+    "symbol": "AAPL",
+    "date": "2000-08-01",
+    "price": 30.47
+  },
+  {
+    "id": "aapl-446",
+    "symbol": "AAPL",
+    "date": "2000-09-01",
+    "price": 12.88
+  },
+  {
+    "id": "aapl-447",
+    "symbol": "AAPL",
+    "date": "2000-10-01",
+    "price": 9.78
+  },
+  {
+    "id": "aapl-448",
+    "symbol": "AAPL",
+    "date": "2000-11-01",
+    "price": 8.25
+  },
+  {
+    "id": "aapl-449",
+    "symbol": "AAPL",
+    "date": "2000-12-01",
+    "price": 7.44
+  },
+  {
+    "id": "aapl-450",
+    "symbol": "AAPL",
+    "date": "2001-01-01",
+    "price": 10.81
+  },
+  {
+    "id": "aapl-451",
+    "symbol": "AAPL",
+    "date": "2001-02-01",
+    "price": 9.12
+  },
+  {
+    "id": "aapl-452",
+    "symbol": "AAPL",
+    "date": "2001-03-01",
+    "price": 11.03
+  },
+  {
+    "id": "aapl-453",
+    "symbol": "AAPL",
+    "date": "2001-04-01",
+    "price": 12.74
+  },
+  {
+    "id": "aapl-454",
+    "symbol": "AAPL",
+    "date": "2001-05-01",
+    "price": 9.98
+  },
+  {
+    "id": "aapl-455",
+    "symbol": "AAPL",
+    "date": "2001-06-01",
+    "price": 11.62
+  },
+  {
+    "id": "aapl-456",
+    "symbol": "AAPL",
+    "date": "2001-07-01",
+    "price": 9.4
+  },
+  {
+    "id": "aapl-457",
+    "symbol": "AAPL",
+    "date": "2001-08-01",
+    "price": 9.27
+  },
+  {
+    "id": "aapl-458",
+    "symbol": "AAPL",
+    "date": "2001-09-01",
+    "price": 7.76
+  },
+  {
+    "id": "aapl-459",
+    "symbol": "AAPL",
+    "date": "2001-10-01",
+    "price": 8.78
+  },
+  {
+    "id": "aapl-460",
+    "symbol": "AAPL",
+    "date": "2001-11-01",
+    "price": 10.65
+  },
+  {
+    "id": "aapl-461",
+    "symbol": "AAPL",
+    "date": "2001-12-01",
+    "price": 10.95
+  },
+  {
+    "id": "aapl-462",
+    "symbol": "AAPL",
+    "date": "2002-01-01",
+    "price": 12.36
+  },
+  {
+    "id": "aapl-463",
+    "symbol": "AAPL",
+    "date": "2002-02-01",
+    "price": 10.85
+  },
+  {
+    "id": "aapl-464",
+    "symbol": "AAPL",
+    "date": "2002-03-01",
+    "price": 11.84
+  },
+  {
+    "id": "aapl-465",
+    "symbol": "AAPL",
+    "date": "2002-04-01",
+    "price": 12.14
+  },
+  {
+    "id": "aapl-466",
+    "symbol": "AAPL",
+    "date": "2002-05-01",
+    "price": 11.65
+  },
+  {
+    "id": "aapl-467",
+    "symbol": "AAPL",
+    "date": "2002-06-01",
+    "price": 8.86
+  },
+  {
+    "id": "aapl-468",
+    "symbol": "AAPL",
+    "date": "2002-07-01",
+    "price": 7.63
+  },
+  {
+    "id": "aapl-469",
+    "symbol": "AAPL",
+    "date": "2002-08-01",
+    "price": 7.38
+  },
+  {
+    "id": "aapl-470",
+    "symbol": "AAPL",
+    "date": "2002-09-01",
+    "price": 7.25
+  },
+  {
+    "id": "aapl-471",
+    "symbol": "AAPL",
+    "date": "2002-10-01",
+    "price": 8.03
+  },
+  {
+    "id": "aapl-472",
+    "symbol": "AAPL",
+    "date": "2002-11-01",
+    "price": 7.75
+  },
+  {
+    "id": "aapl-473",
+    "symbol": "AAPL",
+    "date": "2002-12-01",
+    "price": 7.16
+  },
+  {
+    "id": "aapl-474",
+    "symbol": "AAPL",
+    "date": "2003-01-01",
+    "price": 7.18
+  },
+  {
+    "id": "aapl-475",
+    "symbol": "AAPL",
+    "date": "2003-02-01",
+    "price": 7.51
+  },
+  {
+    "id": "aapl-476",
+    "symbol": "AAPL",
+    "date": "2003-03-01",
+    "price": 7.07
+  },
+  {
+    "id": "aapl-477",
+    "symbol": "AAPL",
+    "date": "2003-04-01",
+    "price": 7.11
+  },
+  {
+    "id": "aapl-478",
+    "symbol": "AAPL",
+    "date": "2003-05-01",
+    "price": 8.98
+  },
+  {
+    "id": "aapl-479",
+    "symbol": "AAPL",
+    "date": "2003-06-01",
+    "price": 9.53
+  },
+  {
+    "id": "aapl-480",
+    "symbol": "AAPL",
+    "date": "2003-07-01",
+    "price": 10.54
+  },
+  {
+    "id": "aapl-481",
+    "symbol": "AAPL",
+    "date": "2003-08-01",
+    "price": 11.31
+  },
+  {
+    "id": "aapl-482",
+    "symbol": "AAPL",
+    "date": "2003-09-01",
+    "price": 10.36
+  },
+  {
+    "id": "aapl-483",
+    "symbol": "AAPL",
+    "date": "2003-10-01",
+    "price": 11.44
+  },
+  {
+    "id": "aapl-484",
+    "symbol": "AAPL",
+    "date": "2003-11-01",
+    "price": 10.45
+  },
+  {
+    "id": "aapl-485",
+    "symbol": "AAPL",
+    "date": "2003-12-01",
+    "price": 10.69
+  },
+  {
+    "id": "aapl-486",
+    "symbol": "AAPL",
+    "date": "2004-01-01",
+    "price": 11.28
+  },
+  {
+    "id": "aapl-487",
+    "symbol": "AAPL",
+    "date": "2004-02-01",
+    "price": 11.96
+  },
+  {
+    "id": "aapl-488",
+    "symbol": "AAPL",
+    "date": "2004-03-01",
+    "price": 13.52
+  },
+  {
+    "id": "aapl-489",
+    "symbol": "AAPL",
+    "date": "2004-04-01",
+    "price": 12.89
+  },
+  {
+    "id": "aapl-490",
+    "symbol": "AAPL",
+    "date": "2004-05-01",
+    "price": 14.03
+  },
+  {
+    "id": "aapl-491",
+    "symbol": "AAPL",
+    "date": "2004-06-01",
+    "price": 16.27
+  },
+  {
+    "id": "aapl-492",
+    "symbol": "AAPL",
+    "date": "2004-07-01",
+    "price": 16.17
+  },
+  {
+    "id": "aapl-493",
+    "symbol": "AAPL",
+    "date": "2004-08-01",
+    "price": 17.25
+  },
+  {
+    "id": "aapl-494",
+    "symbol": "AAPL",
+    "date": "2004-09-01",
+    "price": 19.38
+  },
+  {
+    "id": "aapl-495",
+    "symbol": "AAPL",
+    "date": "2004-10-01",
+    "price": 26.2
+  },
+  {
+    "id": "aapl-496",
+    "symbol": "AAPL",
+    "date": "2004-11-01",
+    "price": 33.53
+  },
+  {
+    "id": "aapl-497",
+    "symbol": "AAPL",
+    "date": "2004-12-01",
+    "price": 32.2
+  },
+  {
+    "id": "aapl-498",
+    "symbol": "AAPL",
+    "date": "2005-01-01",
+    "price": 38.45
+  },
+  {
+    "id": "aapl-499",
+    "symbol": "AAPL",
+    "date": "2005-02-01",
+    "price": 44.86
+  },
+  {
+    "id": "aapl-500",
+    "symbol": "AAPL",
+    "date": "2005-03-01",
+    "price": 41.67
+  },
+  {
+    "id": "aapl-501",
+    "symbol": "AAPL",
+    "date": "2005-04-01",
+    "price": 36.06
+  },
+  {
+    "id": "aapl-502",
+    "symbol": "AAPL",
+    "date": "2005-05-01",
+    "price": 39.76
+  },
+  {
+    "id": "aapl-503",
+    "symbol": "AAPL",
+    "date": "2005-06-01",
+    "price": 36.81
+  },
+  {
+    "id": "aapl-504",
+    "symbol": "AAPL",
+    "date": "2005-07-01",
+    "price": 42.65
+  },
+  {
+    "id": "aapl-505",
+    "symbol": "AAPL",
+    "date": "2005-08-01",
+    "price": 46.89
+  },
+  {
+    "id": "aapl-506",
+    "symbol": "AAPL",
+    "date": "2005-09-01",
+    "price": 53.61
+  },
+  {
+    "id": "aapl-507",
+    "symbol": "AAPL",
+    "date": "2005-10-01",
+    "price": 57.59
+  },
+  {
+    "id": "aapl-508",
+    "symbol": "AAPL",
+    "date": "2005-11-01",
+    "price": 67.82
+  },
+  {
+    "id": "aapl-509",
+    "symbol": "AAPL",
+    "date": "2005-12-01",
+    "price": 71.89
+  },
+  {
+    "id": "aapl-510",
+    "symbol": "AAPL",
+    "date": "2006-01-01",
+    "price": 75.51
+  },
+  {
+    "id": "aapl-511",
+    "symbol": "AAPL",
+    "date": "2006-02-01",
+    "price": 68.49
+  },
+  {
+    "id": "aapl-512",
+    "symbol": "AAPL",
+    "date": "2006-03-01",
+    "price": 62.72
+  },
+  {
+    "id": "aapl-513",
+    "symbol": "AAPL",
+    "date": "2006-04-01",
+    "price": 70.39
+  },
+  {
+    "id": "aapl-514",
+    "symbol": "AAPL",
+    "date": "2006-05-01",
+    "price": 59.77
+  },
+  {
+    "id": "aapl-515",
+    "symbol": "AAPL",
+    "date": "2006-06-01",
+    "price": 57.27
+  },
+  {
+    "id": "aapl-516",
+    "symbol": "AAPL",
+    "date": "2006-07-01",
+    "price": 67.96
+  },
+  {
+    "id": "aapl-517",
+    "symbol": "AAPL",
+    "date": "2006-08-01",
+    "price": 67.85
+  },
+  {
+    "id": "aapl-518",
+    "symbol": "AAPL",
+    "date": "2006-09-01",
+    "price": 76.98
+  },
+  {
+    "id": "aapl-519",
+    "symbol": "AAPL",
+    "date": "2006-10-01",
+    "price": 81.08
+  },
+  {
+    "id": "aapl-520",
+    "symbol": "AAPL",
+    "date": "2006-11-01",
+    "price": 91.66
+  },
+  {
+    "id": "aapl-521",
+    "symbol": "AAPL",
+    "date": "2006-12-01",
+    "price": 84.84
+  },
+  {
+    "id": "aapl-522",
+    "symbol": "AAPL",
+    "date": "2007-01-01",
+    "price": 85.73
+  },
+  {
+    "id": "aapl-523",
+    "symbol": "AAPL",
+    "date": "2007-02-01",
+    "price": 84.61
+  },
+  {
+    "id": "aapl-524",
+    "symbol": "AAPL",
+    "date": "2007-03-01",
+    "price": 92.91
+  },
+  {
+    "id": "aapl-525",
+    "symbol": "AAPL",
+    "date": "2007-04-01",
+    "price": 99.8
+  },
+  {
+    "id": "aapl-526",
+    "symbol": "AAPL",
+    "date": "2007-05-01",
+    "price": 121.19
+  },
+  {
+    "id": "aapl-527",
+    "symbol": "AAPL",
+    "date": "2007-06-01",
+    "price": 122.04
+  },
+  {
+    "id": "aapl-528",
+    "symbol": "AAPL",
+    "date": "2007-07-01",
+    "price": 131.76
+  },
+  {
+    "id": "aapl-529",
+    "symbol": "AAPL",
+    "date": "2007-08-01",
+    "price": 138.48
+  },
+  {
+    "id": "aapl-530",
+    "symbol": "AAPL",
+    "date": "2007-09-01",
+    "price": 153.47
+  },
+  {
+    "id": "aapl-531",
+    "symbol": "AAPL",
+    "date": "2007-10-01",
+    "price": 189.95
+  },
+  {
+    "id": "aapl-532",
+    "symbol": "AAPL",
+    "date": "2007-11-01",
+    "price": 182.22
+  },
+  {
+    "id": "aapl-533",
+    "symbol": "AAPL",
+    "date": "2007-12-01",
+    "price": 198.08
+  },
+  {
+    "id": "aapl-534",
+    "symbol": "AAPL",
+    "date": "2008-01-01",
+    "price": 135.36
+  },
+  {
+    "id": "aapl-535",
+    "symbol": "AAPL",
+    "date": "2008-02-01",
+    "price": 125.02
+  },
+  {
+    "id": "aapl-536",
+    "symbol": "AAPL",
+    "date": "2008-03-01",
+    "price": 143.5
+  },
+  {
+    "id": "aapl-537",
+    "symbol": "AAPL",
+    "date": "2008-04-01",
+    "price": 173.95
+  },
+  {
+    "id": "aapl-538",
+    "symbol": "AAPL",
+    "date": "2008-05-01",
+    "price": 188.75
+  },
+  {
+    "id": "aapl-539",
+    "symbol": "AAPL",
+    "date": "2008-06-01",
+    "price": 167.44
+  },
+  {
+    "id": "aapl-540",
+    "symbol": "AAPL",
+    "date": "2008-07-01",
+    "price": 158.95
+  },
+  {
+    "id": "aapl-541",
+    "symbol": "AAPL",
+    "date": "2008-08-01",
+    "price": 169.53
+  },
+  {
+    "id": "aapl-542",
+    "symbol": "AAPL",
+    "date": "2008-09-01",
+    "price": 113.66
+  },
+  {
+    "id": "aapl-543",
+    "symbol": "AAPL",
+    "date": "2008-10-01",
+    "price": 107.59
+  },
+  {
+    "id": "aapl-544",
+    "symbol": "AAPL",
+    "date": "2008-11-01",
+    "price": 92.67
+  },
+  {
+    "id": "aapl-545",
+    "symbol": "AAPL",
+    "date": "2008-12-01",
+    "price": 85.35
+  },
+  {
+    "id": "aapl-546",
+    "symbol": "AAPL",
+    "date": "2009-01-01",
+    "price": 90.13
+  },
+  {
+    "id": "aapl-547",
+    "symbol": "AAPL",
+    "date": "2009-02-01",
+    "price": 89.31
+  },
+  {
+    "id": "aapl-548",
+    "symbol": "AAPL",
+    "date": "2009-03-01",
+    "price": 105.12
+  },
+  {
+    "id": "aapl-549",
+    "symbol": "AAPL",
+    "date": "2009-04-01",
+    "price": 125.83
+  },
+  {
+    "id": "aapl-550",
+    "symbol": "AAPL",
+    "date": "2009-05-01",
+    "price": 135.81
+  },
+  {
+    "id": "aapl-551",
+    "symbol": "AAPL",
+    "date": "2009-06-01",
+    "price": 142.43
+  },
+  {
+    "id": "aapl-552",
+    "symbol": "AAPL",
+    "date": "2009-07-01",
+    "price": 163.39
+  },
+  {
+    "id": "aapl-553",
+    "symbol": "AAPL",
+    "date": "2009-08-01",
+    "price": 168.21
+  },
+  {
+    "id": "aapl-554",
+    "symbol": "AAPL",
+    "date": "2009-09-01",
+    "price": 185.35
+  },
+  {
+    "id": "aapl-555",
+    "symbol": "AAPL",
+    "date": "2009-10-01",
+    "price": 188.5
+  },
+  {
+    "id": "aapl-556",
+    "symbol": "AAPL",
+    "date": "2009-11-01",
+    "price": 199.91
+  },
+  {
+    "id": "aapl-557",
+    "symbol": "AAPL",
+    "date": "2009-12-01",
+    "price": 210.73
+  },
+  {
+    "id": "aapl-558",
+    "symbol": "AAPL",
+    "date": "2010-01-01",
+    "price": 192.06
+  },
+  {
+    "id": "aapl-559",
+    "symbol": "AAPL",
+    "date": "2010-02-01",
+    "price": 204.62
+  },
+  {
+    "id": "aapl-560",
+    "symbol": "AAPL",
+    "date": "2010-03-01",
+    "price": 223.02
+  }
+]

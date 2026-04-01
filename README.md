@@ -5,14 +5,14 @@ The stable Vue release is preserved on the `release/v1.0.0` branch.
 
 ## Current milestone
 
-`v2.3.12` is the shared control system release.
+`v2.3.13` is the dataset-pack import release.
 
-The home route at `/` remains the graph workbench. This release standardizes example switching and shared controls:
+The home route at `/` remains the graph workbench. This release expands the gallery’s data pack:
 
-- a persistent top-level action bar now exposes Graph Home, Gallery, Cars, and Open Example actions
-- the gallery now browses examples through visible category tabs instead of only route-local cards
-- the workbench header now uses registry-backed shared controls for technique, dataset, and ordering
-- a command-based example switcher now opens registered examples without relying on hidden keyboard-first flows
+- `penguins`, `energy`, and `stocks` are now vendored locally into both frontend and API data folders
+- `/api/datasets` now exposes gallery metadata, preview summaries, provenance, and featured example ids for the expanded pack
+- the gallery now shows first-class dataset cards with provenance and preview summaries alongside the example catalog
+- placeholder routes for SPLOM, Sankey, and focus-context examples are now registered so the example line can grow patch-by-patch without changing the routing model
 
 The `v2.3` line now consists of:
 
@@ -29,6 +29,7 @@ The `v2.3` line now consists of:
 - `v2.3.10`: canonical Les Miserables dataset import, duplicate-key fix, and remote runtime cleanup
 - `v2.3.11`: example gallery foundation, visualization catalog, and generic example routes
 - `v2.3.12`: shared control system, command-based example switching, and gallery category tabs
+- `v2.3.13`: dataset-pack import, gallery dataset cards, and placeholder example registration
 
 The core stack now includes:
 
@@ -56,6 +57,7 @@ The release ladder remains:
 - `v2.3.10`: canonical Les Miserables dataset and remote runtime fixes
 - `v2.3.11`: example gallery foundation
 - `v2.3.12`: shared control system
+- `v2.3.13`: dataset pack import
 - `v2.4.0`: spatio-temporal data
 - `v2.5.0`: multi-view coordination
 - `v2.6.0`: spatial-ready foundations

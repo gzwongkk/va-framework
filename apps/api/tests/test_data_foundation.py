@@ -5,7 +5,7 @@ from fastapi.testclient import TestClient
 from app.main import app
 
 
-def test_dataset_registry_endpoint_returns_seed_datasets() -> None:
+def test_dataset_registry_endpoint_returns_gallery_dataset_pack() -> None:
     client = TestClient(app)
 
     response = client.get('/api/datasets')
@@ -13,10 +13,13 @@ def test_dataset_registry_endpoint_returns_seed_datasets() -> None:
     assert response.status_code == 200
     payload = response.json()
     ids = {item['id'] for item in payload}
-    assert ids == {'cars', 'miserables', 'flare', 'earthquakes'}
+    assert ids == {'cars', 'miserables', 'flare', 'earthquakes', 'penguins', 'energy', 'stocks'}
 
     flare = next(item for item in payload if item['id'] == 'flare')
     miserables = next(item for item in payload if item['id'] == 'miserables')
+    penguins = next(item for item in payload if item['id'] == 'penguins')
+    energy = next(item for item in payload if item['id'] == 'energy')
+    stocks = next(item for item in payload if item['id'] == 'stocks')
 
     assert miserables['schema']['rowCount'] == 77
     assert miserables['schema']['entities']['nodes']['rowCount'] == 77
@@ -29,6 +32,12 @@ def test_dataset_registry_endpoint_returns_seed_datasets() -> None:
         'labelField': 'name',
     }
     assert set(flare['schema']['entities'].keys()) == {'nodes', 'links'}
+    assert penguins['category'] == 'tabular'
+    assert penguins['execution']['rowCount'] == 344
+    assert energy['category'] == 'flow'
+    assert energy['schema']['entities']['links']['rowCount'] == 68
+    assert stocks['category'] == 'time-series'
+    assert stocks['schema']['timeField'] == 'date'
 
 
 def test_query_endpoint_filters_and_projects_rows() -> None:

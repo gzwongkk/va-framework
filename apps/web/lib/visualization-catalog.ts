@@ -215,6 +215,66 @@ export const visualizationCatalog: VisualizationExampleDefinition[] = [
       },
     ],
   },
+  {
+    id: 'penguins-splom',
+    title: 'Brushable scatterplot matrix',
+    summary: 'Brush-driven multivariate matrix on penguins for field comparison and cohort inspection.',
+    category: 'tabular',
+    datasetIds: ['penguins'],
+    defaultDatasetId: 'penguins',
+    rendererId: 'penguins-splom',
+    routePath: '/examples/penguins-splom',
+    provenanceLabel: 'D3 SPLOM pattern rebuilt natively on Vega Penguins',
+    provenanceUrl: 'https://vega.github.io/vega-datasets/data/penguins.json',
+    controlSpecs: [
+      {
+        id: 'dataset',
+        label: 'Dataset',
+        type: 'select',
+        options: [{ label: 'Penguins', value: 'penguins' }],
+      },
+    ],
+  },
+  {
+    id: 'energy-sankey',
+    title: 'Energy Sankey diagram',
+    summary: 'Source-target flow tracing on the canonical D3 energy network with selection-aware summaries.',
+    category: 'flow',
+    datasetIds: ['energy'],
+    defaultDatasetId: 'energy',
+    rendererId: 'energy-sankey',
+    routePath: '/examples/energy-sankey',
+    provenanceLabel: 'D3 Sankey energy example rebuilt natively',
+    provenanceUrl: 'https://raw.githubusercontent.com/d3/d3-sankey/master/test/energy.json',
+    controlSpecs: [
+      {
+        id: 'dataset',
+        label: 'Dataset',
+        type: 'select',
+        options: [{ label: 'Energy', value: 'energy' }],
+      },
+    ],
+  },
+  {
+    id: 'stocks-focus-context',
+    title: 'Focus + context time series',
+    summary: 'Time-series brush and detail flow on monthly stock prices with symbol-aware focus windows.',
+    category: 'time-series',
+    datasetIds: ['stocks'],
+    defaultDatasetId: 'stocks',
+    rendererId: 'stocks-focus-context',
+    routePath: '/examples/stocks-focus-context',
+    provenanceLabel: 'D3 focus-context time-series pattern rebuilt natively',
+    provenanceUrl: 'https://vega.github.io/vega-datasets/data/stocks.csv',
+    controlSpecs: [
+      {
+        id: 'dataset',
+        label: 'Dataset',
+        type: 'select',
+        options: [{ label: 'Stocks', value: 'stocks' }],
+      },
+    ],
+  },
 ];
 
 export const visualizationCategoryOrder: VisualizationExampleDefinition['category'][] = [

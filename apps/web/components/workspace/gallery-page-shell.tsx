@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { ArrowRight, Boxes, Database, Network, Shapes, Waves } from 'lucide-react';
 
 import { WorkspaceActionBar } from '@/components/workspace/workspace-action-bar';
+import { useDatasetCatalog } from '@/lib/data/query-hooks';
 import { getVisualizationExamplesByCategory } from '@/lib/visualization-catalog';
 import { useUiStudioStore } from '@/lib/ui-studio-store';
 import {
@@ -33,6 +34,8 @@ export function GalleryPageShell() {
   const buttonPreset = useUiStudioStore((state) => state.prefs.buttonPreset);
   const groupedExamples = getVisualizationExamplesByCategory().filter((group) => group.examples.length > 0);
   const [activeCategory, setActiveCategory] = useState(groupedExamples[0]?.category ?? 'graph');
+  const datasetCatalog = useDatasetCatalog();
+  const featuredDatasets = (datasetCatalog.data ?? []).filter((dataset) => dataset.category !== 'seed');
 
   return (
     <main className="min-h-screen px-5 py-6 lg:px-8">
@@ -131,6 +134,65 @@ export function GalleryPageShell() {
             );
           })}
         </Tabs>
+
+        <section className="grid gap-3">
+          <div className="flex items-center gap-3">
+            <div className="ui-studio-icon-chip rounded-[var(--ui-radius-control)] border p-2.5">
+              <Database className="size-4" />
+            </div>
+            <div>
+              <p className="ui-studio-label font-semibold uppercase tracking-[0.2em]">Dataset pack</p>
+              <p className="ui-studio-body">Official local snapshots that feed the gallery examples and future adapters.</p>
+            </div>
+          </div>
+          <div className="grid gap-4 xl:grid-cols-2 2xl:grid-cols-3">
+            {featuredDatasets.map((dataset) => (
+              <Card className="ui-studio-surface border" key={dataset.id}>
+                <CardHeader className="gap-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="grid gap-2">
+                      <p className="ui-studio-label font-semibold uppercase tracking-[0.22em]">
+                        {dataset.category ?? dataset.kind}
+                      </p>
+                      <CardTitle className="font-[family-name:var(--font-display)] text-[1.18rem]">
+                        {dataset.title}
+                      </CardTitle>
+                    </div>
+                    <span className="rounded-[var(--ui-radius-pill)] border px-2.5 py-1 text-xs font-medium text-[var(--ui-text-secondary)]">
+                      {dataset.execution.rowCount} rows
+                    </span>
+                  </div>
+                  <CardDescription className="ui-studio-body">
+                    {dataset.previewSummary ?? dataset.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="grid gap-3">
+                  <div className="flex flex-wrap gap-2 text-xs">
+                    {(dataset.featuredExampleIds ?? []).map((exampleId) => (
+                      <span
+                        className="rounded-[var(--ui-radius-pill)] border px-2.5 py-1 text-[var(--ui-text-secondary)]"
+                        key={exampleId}
+                      >
+                        {exampleId}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="grid gap-1 text-sm text-[var(--ui-text-secondary)]">
+                    <span className="font-medium text-[var(--ui-text-primary)]">{dataset.provenance.name}</span>
+                    <a
+                      className="truncate underline decoration-[var(--ui-border)] underline-offset-4"
+                      href={dataset.provenance.url}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      {dataset.provenance.url}
+                    </a>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
       </section>
     </main>
   );

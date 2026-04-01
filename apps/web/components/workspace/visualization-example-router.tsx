@@ -4,6 +4,7 @@ import { AlertCircle, ArrowRight } from 'lucide-react';
 
 import { CarsSingleViewShell } from '@/components/workspace/cars-single-view-shell';
 import { GraphSingleViewShell } from '@/components/workspace/graph-single-view-shell';
+import { VisualizationPendingShell } from '@/components/workspace/visualization-pending-shell';
 import { Button } from '@va/ui';
 import Link from 'next/link';
 
@@ -36,6 +37,36 @@ export function VisualizationExampleRouter({ exampleId }: VisualizationExampleRo
 
   if (exampleId === 'cars-scatter') {
     return <CarsSingleViewShell visualizationId={exampleId} />;
+  }
+
+  if (exampleId === 'penguins-splom') {
+    return (
+      <VisualizationPendingShell
+        description="The normalized penguins dataset is registered and ready. The native brushable scatterplot matrix lands in the next gallery patch."
+        releaseLabel="Coming in v2.3.14"
+        title="Brushable scatterplot matrix"
+      />
+    );
+  }
+
+  if (exampleId === 'energy-sankey') {
+    return (
+      <VisualizationPendingShell
+        description="The energy flow network is now in the shared registry. The Sankey renderer lands in the flow-specific patch immediately after the SPLOM."
+        releaseLabel="Coming in v2.3.15"
+        title="Energy Sankey diagram"
+      />
+    );
+  }
+
+  if (exampleId === 'stocks-focus-context') {
+    return (
+      <VisualizationPendingShell
+        description="The stocks time-series pack is registered and ready. The focus-plus-context time-series workbench lands later in the gallery line."
+        releaseLabel="Coming in v2.3.17"
+        title="Focus + context time series"
+      />
+    );
   }
 
   return (
