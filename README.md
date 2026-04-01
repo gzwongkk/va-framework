@@ -5,18 +5,16 @@ The stable Vue release is preserved on the `release/v1.0.0` branch.
 
 ## Current milestone
 
-`v2.3.2` is the graph workbench foundation patch.
+`v2.3.3` is the adjacency-matrix graph workbench patch.
 
-The home route at `/` is now a graph workbench rather than a single hardcoded force-graph page. This patch adds:
+The home route at `/` is now a graph workbench with real technique renderers rather than one fully implemented force canvas and placeholder panels. This patch adds:
 
-- a technique-switched graph header with `force`, `matrix`, `tree`, and `multivariate` modes
-- deep-linkable workbench URL state through `?technique=` and `?dataset=`
-- a shared graph workbench state layer for technique, dataset, ordering, focus, and future multivariate encodings
-- normalized graph node attributes so later techniques can reuse one graph result shape
-- the `flare` hierarchy dataset alongside `miserables`
-- local and remote graph parity for both datasets, including synthetic parent-child links for `flare`
-- a preserved force-directed canvas as the fully implemented technique in this patch
-- scaffold panels for the upcoming adjacency-matrix, tree, and multivariate v2.3.x patches
+- a real adjacency matrix renderer with brushing and ordering
+- a graph workbench shell that now renders `force`, `matrix`, `tree`, and `multivariate` techniques inside one page
+- tree techniques for `flare`, including explicit node-link and implicit partition-based layouts
+- MVNV-inspired multivariate encodings with encoded-force, attribute-position, and faceted modes
+- richer graph workbench analytics helpers for matrix summaries, hierarchy normalization, and multivariate metrics
+- keyboard shortcuts for technique switching, search focus, and selection clearing
 - a preserved cars reference workflow at `/cars`
 
 The `v2.3` line now consists of:
@@ -24,6 +22,7 @@ The `v2.3` line now consists of:
 - `v2.3.0`: graph-native query contracts, local graphology runtime, remote graph queries, and the first graph workspace
 - `v2.3.1`: graph shell polish, full-graph default scope, visible route switching, and drawer cleanup
 - `v2.3.2`: graph workbench foundation, URL-backed technique switching, and hierarchy dataset support
+- `v2.3.3`: adjacency matrix brushing plus first integrated tree and multivariate technique renderers
 
 The core stack now includes:
 
