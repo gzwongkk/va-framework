@@ -105,7 +105,7 @@ def dataset_registry() -> dict[str, DatasetDescriptor]:
                     'name': 'Vega Miserables dataset',
                     'url': 'https://vega.github.io/vega-datasets/data/miserables.json',
                     'license': 'Public sample dataset',
-                    'notes': 'Curated local sample with nodes and weighted links.',
+                    'notes': 'Canonical Vega graph normalized locally for the graph workbench runtime.',
                 },
                 'schema': {
                     'entity': 'nodes',

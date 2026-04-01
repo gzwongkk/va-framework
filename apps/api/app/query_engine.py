@@ -30,6 +30,10 @@ def _to_graph_scalar(value: Any) -> GraphScalar:
     return str(value)
 
 
+def _resolve_graph_node_id(value: Any, node_lookup: dict[str, str]) -> str:
+    return node_lookup.get(str(value), str(value))
+
+
 def _matches_filter(row: dict[str, Any], clause: FilterClause) -> bool:
     value = row.get(clause.field)
     target = clause.value
@@ -272,12 +276,15 @@ def _compute_hierarchy_depths(nodes: list[dict[str, Any]]) -> dict[str, int]:
     return depth_by_id
 
 
-def _normalize_graph_nodes(nodes: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+def _normalize_graph_nodes(
+    nodes: list[dict[str, Any]],
+) -> tuple[dict[str, dict[str, Any]], dict[str, str]]:
     depth_by_id = _compute_hierarchy_depths(nodes)
     normalized_nodes: dict[str, dict[str, Any]] = {}
+    node_lookup: dict[str, str] = {}
 
-    for node in nodes:
-        raw_id = node.get('id')
+    for position, node in enumerate(nodes):
+        raw_id = node.get('id', node.get('name', node.get('index', position)))
         if raw_id is None:
             continue
 
@@ -287,11 +294,12 @@ def _normalize_graph_nodes(nodes: list[dict[str, Any]]) -> dict[str, dict[str, A
         depth = int(_to_number(node.get('depth'))) if node.get('depth') is not None else depth_by_id.get(node_id, 0)
         group_source = node.get('group')
         group = int(_to_number(group_source if group_source is not None else depth))
-        label = str(node.get('name') or node.get('id'))
+        label = str(node.get('name') or node.get('label') or node.get('id') or node.get('index') or node_id)
         attributes = {
             key: _to_graph_scalar(value)
             for key, value in node.items()
         }
+        attributes['id'] = node_id
         attributes['group'] = group
         attributes['depth'] = depth
         if 'parent' not in attributes:
@@ -307,14 +315,46 @@ def _normalize_graph_nodes(nodes: list[dict[str, Any]]) -> dict[str, dict[str, A
             'attributes': attributes,
         }
 
-    return normalized_nodes
+        node_lookup[node_id] = node_id
+        for raw_reference in (node.get('id'), node.get('name'), node.get('index'), position):
+            if raw_reference is not None:
+                node_lookup[str(raw_reference)] = node_id
+
+    return normalized_nodes, node_lookup
+
+
+def _normalize_graph_links(
+    edges: list[dict[str, Any]],
+    node_lookup: dict[str, str],
+) -> list[dict[str, Any]]:
+    normalized_edges: list[dict[str, Any]] = []
+
+    for edge in edges:
+        source = edge.get('source')
+        target = edge.get('target')
+        if source is None or target is None:
+            continue
+
+        normalized_source = _resolve_graph_node_id(source, node_lookup)
+        normalized_target = _resolve_graph_node_id(target, node_lookup)
+        normalized_edges.append(
+            {
+                'id': '::'.join(sorted([normalized_source, normalized_target])),
+                'source': normalized_source,
+                'target': normalized_target,
+                'value': _to_number(edge.get('value')),
+            }
+        )
+
+    return normalized_edges
 
 
 def _execute_graph_query(query: QuerySpec) -> GraphQueryResult:
     started = perf_counter()
     nodes = load_dataset_entity(query.datasetId, 'nodes')
     links = load_dataset_entity(query.datasetId, 'links')
-    normalized_nodes = _normalize_graph_nodes(nodes)
+    normalized_nodes, node_lookup = _normalize_graph_nodes(nodes)
+    normalized_links = _normalize_graph_links(links, node_lookup)
     allowed_nodes = {
         node_id: node
         for node_id, node in normalized_nodes.items()
@@ -322,7 +362,7 @@ def _execute_graph_query(query: QuerySpec) -> GraphQueryResult:
     }
 
     minimum_edge_weight = query.graph.minEdgeWeight if query.graph else 0
-    filtered_edges = _build_filtered_graph_edges(links, set(allowed_nodes.keys()), minimum_edge_weight)
+    filtered_edges = _build_filtered_graph_edges(normalized_links, set(allowed_nodes.keys()), minimum_edge_weight)
     requested_focus_node_id = query.graph.focusNodeId if query.graph else None
     focus_node_id = requested_focus_node_id if requested_focus_node_id in allowed_nodes else None
     include_isolates = query.graph.includeIsolates if query.graph else focus_node_id is None

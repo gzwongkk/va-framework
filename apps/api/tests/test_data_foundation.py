@@ -16,6 +16,11 @@ def test_dataset_registry_endpoint_returns_seed_datasets() -> None:
     assert ids == {'cars', 'miserables', 'flare', 'earthquakes'}
 
     flare = next(item for item in payload if item['id'] == 'flare')
+    miserables = next(item for item in payload if item['id'] == 'miserables')
+
+    assert miserables['schema']['rowCount'] == 77
+    assert miserables['schema']['entities']['nodes']['rowCount'] == 77
+    assert miserables['schema']['entities']['links']['rowCount'] == 254
     assert flare['schema']['hierarchy'] == {
         'childrenField': None,
         'rootId': '1',
@@ -73,7 +78,7 @@ def test_query_endpoint_returns_graph_results_for_miserables() -> None:
             'graph': {
                 'focusNodeId': 'Valjean',
                 'neighborDepth': 2,
-                'minEdgeWeight': 4,
+                'minEdgeWeight': 2,
                 'includeIsolates': False,
             },
         },
@@ -84,11 +89,11 @@ def test_query_endpoint_returns_graph_results_for_miserables() -> None:
     assert payload['resultKind'] == 'graph'
     assert payload['executionMode'] == 'remote'
     assert payload['summary']['focusedNodeId'] == 'Valjean'
-    assert payload['nodeCount'] == 5
-    assert payload['edgeCount'] == 4
+    assert payload['nodeCount'] == 23
+    assert payload['edgeCount'] == 59
     assert payload['summary']['groupCount'] == 3
     assert payload['summary']['topNodes'][0]['id'] == 'Valjean'
-    assert payload['summary']['topNodes'][0]['weightedDegree'] == 17
+    assert payload['summary']['topNodes'][0]['weightedDegree'] == 39
 
 
 def test_query_endpoint_returns_graph_results_for_flare_hierarchy() -> None:

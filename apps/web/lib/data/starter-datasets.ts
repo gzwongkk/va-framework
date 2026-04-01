@@ -54,13 +54,13 @@ export const starterDatasets: DatasetDescriptor[] = datasetDescriptorSchema.arra
       name: 'Vega Miserables dataset',
       url: 'https://vega.github.io/vega-datasets/data/miserables.json',
       license: 'Public sample dataset',
-      notes: 'Curated local sample with nodes and weighted links.',
+      notes: 'Canonical Vega graph normalized locally for the graph workbench runtime.',
     },
     schema: {
       entity: 'nodes',
       primaryKey: ['id'],
       labelField: 'id',
-      rowCount: 8,
+      rowCount: 77,
       fields: [
         { name: 'id', title: 'Node id', dataType: 'string', role: 'identifier' },
         { name: 'group', title: 'Community', dataType: 'number', role: 'category' },
@@ -69,7 +69,7 @@ export const starterDatasets: DatasetDescriptor[] = datasetDescriptorSchema.arra
         nodes: {
           primaryKey: ['id'],
           labelField: 'id',
-          rowCount: 8,
+          rowCount: 77,
           fields: [
             { name: 'id', title: 'Node id', dataType: 'string', role: 'identifier' },
             { name: 'group', title: 'Community', dataType: 'number', role: 'category' },
@@ -77,7 +77,7 @@ export const starterDatasets: DatasetDescriptor[] = datasetDescriptorSchema.arra
         },
         links: {
           primaryKey: ['source', 'target'],
-          rowCount: 7,
+          rowCount: 254,
           sourceField: 'source',
           targetField: 'target',
           weightField: 'value',
@@ -98,7 +98,7 @@ export const starterDatasets: DatasetDescriptor[] = datasetDescriptorSchema.arra
     execution: {
       defaultMode: 'local',
       supportedModes: ['local', 'remote'],
-      rowCount: 8,
+      rowCount: 77,
       preferredPreviewLimit: 8,
       notes: [
         'Graph exploration defaults to the local graphology runtime in v2.3.0.',

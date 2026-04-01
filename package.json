@@ -9,7 +9,7 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "concurrently -n web,api -c cyan,green \"pnpm dev:web\" \"pnpm dev:api\"",
-    "dev:api": "python -m uvicorn app.main:app --app-dir apps/api --reload --host 127.0.0.1 --port 8000",
+    "dev:api": "python -m uvicorn app.main:app --app-dir apps/api --reload --host 0.0.0.0 --port 8000",
     "dev:web": "pnpm --filter @va/web dev",
     "dev:web:turbo": "pnpm --filter @va/web dev:turbo",
     "lint": "turbo run lint",

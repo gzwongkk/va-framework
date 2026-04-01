@@ -455,6 +455,11 @@ export function GraphSingleViewShell() {
     () => getMultivariateFieldOptions(multivariateNodes),
     [multivariateNodes],
   );
+  const multivariateCombinedFieldOptions = useMemo(
+    () =>
+      [...new Set([...multivariateFieldOptions.categorical, ...multivariateFieldOptions.numeric])],
+    [multivariateFieldOptions],
+  );
   const multivariateFieldProfiles = useMemo(
     () => getMultivariateFieldProfiles(multivariateNodes),
     [multivariateNodes],
@@ -1124,14 +1129,14 @@ export function GraphSingleViewShell() {
                         aria-label="Node color field"
                         className="flex flex-wrap gap-2"
                         onValueChange={(value) => {
-                          if ([...multivariateFieldOptions.categorical, ...multivariateFieldOptions.numeric].includes(value)) {
+                          if (multivariateCombinedFieldOptions.includes(value)) {
                             setEncodings({ colorField: value });
                           }
                         }}
                         type="single"
                         value={safeEncodingConfig.colorField}
                       >
-                        {[...multivariateFieldOptions.categorical, ...multivariateFieldOptions.numeric].slice(0, 8).map((field) => (
+                        {multivariateCombinedFieldOptions.slice(0, 8).map((field) => (
                           <ToggleGroupItem
                             key={field}
                             className="px-3 text-xs font-semibold uppercase tracking-[0.16em]"

@@ -11,19 +11,43 @@ import {
   type DatasetDescriptor,
 } from '@va/contracts';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://127.0.0.1:8000';
+function getApiBaseUrl() {
+  if (process.env.NEXT_PUBLIC_API_BASE_URL) {
+    return process.env.NEXT_PUBLIC_API_BASE_URL;
+  }
+
+  if (typeof window !== 'undefined') {
+    return `${window.location.protocol}//${window.location.hostname}:8000`;
+  }
+
+  return 'http://127.0.0.1:8000';
+}
 
 async function readJson<T>(path: string, init: RequestInit, parser: (value: unknown) => T): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    ...init,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(init.headers ?? {}),
-    },
-  });
+  const apiBaseUrl = getApiBaseUrl();
+  let response: Response;
+
+  try {
+    response = await fetch(`${apiBaseUrl}${path}`, {
+      ...init,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(init.headers ?? {}),
+      },
+    });
+  } catch {
+    throw new Error(
+      `Unable to reach the API at ${apiBaseUrl}${path}. Start the backend server or set NEXT_PUBLIC_API_BASE_URL.`,
+    );
+  }
 
   if (!response.ok) {
-    throw new Error(`Request failed: ${response.status}`);
+    const detail = (await response.text()).trim();
+    throw new Error(
+      detail
+        ? `Request failed (${response.status}) at ${path}: ${detail}`
+        : `Request failed (${response.status}) at ${path}.`,
+    );
   }
 
   return parser(await response.json());

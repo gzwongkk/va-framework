@@ -120,8 +120,9 @@ function computeHierarchyDepths(rows: Array<Record<string, unknown>>) {
 function normalizeGraphNode(
   rawNode: Record<string, unknown>,
   depthById?: Map<string, number>,
+  fallbackId?: number,
 ): GraphNodeAttributes | undefined {
-  const rawId = rawNode.id;
+  const rawId = rawNode.id ?? rawNode.name ?? rawNode.index ?? fallbackId;
   if (rawId === undefined || rawId === null) {
     return undefined;
   }
@@ -135,11 +136,12 @@ function normalizeGraphNode(
       : depthById?.get(id);
   const groupSource = rawNode.group ?? depth ?? 0;
   const group = toNumber(groupSource);
-  const label = String(rawNode.name ?? rawNode.id);
+  const label = String(rawNode.name ?? rawNode.label ?? rawNode.id ?? rawNode.index ?? id);
   const scalarAttributes = Object.fromEntries(
     Object.entries(rawNode).map(([key, value]) => [key, toGraphScalar(value)]),
   ) satisfies Record<string, QueryScalar>;
 
+  scalarAttributes.id = id;
   scalarAttributes.group = group;
   scalarAttributes.depth = depth ?? 0;
   if (!('parent' in scalarAttributes)) {
@@ -155,6 +157,26 @@ function normalizeGraphNode(
     label,
     parentId,
   };
+}
+
+function buildNodeReferenceLookup(nodes: GraphNodeAttributes[]) {
+  const lookup = new Map<string, string>();
+
+  for (const node of nodes) {
+    lookup.set(node.id, node.id);
+
+    const name = node.attributes.name;
+    if (name !== undefined && name !== null) {
+      lookup.set(String(name), node.id);
+    }
+
+    const index = node.attributes.index;
+    if (index !== undefined && index !== null) {
+      lookup.set(String(index), node.id);
+    }
+  }
+
+  return lookup;
 }
 
 function normalizeHierarchyRows(rows: Array<Record<string, unknown>>): NormalizedGraphSource {
@@ -188,8 +210,9 @@ function normalizeHierarchyRows(rows: Array<Record<string, unknown>>): Normalize
 
 function normalizeGraphObject(rawGraph: RawGraphObject): NormalizedGraphSource {
   const nodes = (rawGraph.nodes ?? [])
-    .map((row) => normalizeGraphNode(row))
+    .map((row, index) => normalizeGraphNode(row, undefined, index))
     .filter((node): node is GraphNodeAttributes => Boolean(node));
+  const nodeReferenceLookup = buildNodeReferenceLookup(nodes);
   const edges = (rawGraph.links ?? []).flatMap((rawLink) => {
     const source = rawLink.source;
     const target = rawLink.target;
@@ -197,8 +220,8 @@ function normalizeGraphObject(rawGraph: RawGraphObject): NormalizedGraphSource {
       return [];
     }
 
-    const normalizedSource = String(source);
-    const normalizedTarget = String(target);
+    const normalizedSource = nodeReferenceLookup.get(String(source)) ?? String(source);
+    const normalizedTarget = nodeReferenceLookup.get(String(target)) ?? String(target);
 
     return [
       {
