@@ -1,3 +1,5 @@
+'use client';
+
 import { UndirectedGraph } from 'graphology';
 import type Graph from 'graphology';
 import {
@@ -7,28 +9,57 @@ import {
   type GraphEdge,
   type GraphNode,
   type GraphQueryResult,
+  type QueryScalar,
   type QuerySpec,
 } from '@va/contracts';
 
 type GraphNodeAttributes = {
+  attributes: Record<string, QueryScalar>;
+  depth?: number;
   group: number;
   id: string;
   label: string;
-};
+  parentId?: string;
+} & Record<string, QueryScalar | Record<string, QueryScalar> | undefined>;
 
 type GraphEdgeAttributes = {
   value: number;
 };
 
-type RawGraph = {
-  links?: Array<{ source: string; target: string; value?: number }>;
-  nodes?: Array<{ group?: number; id: string }>;
+type RawGraphObject = {
+  links?: Array<Record<string, unknown>>;
+  nodes?: Array<Record<string, unknown>>;
+};
+
+type NormalizedEdgeRecord = {
+  id: string;
+  source: string;
+  target: string;
+  value: number;
+};
+
+type NormalizedGraphSource = {
+  edges: NormalizedEdgeRecord[];
+  nodes: GraphNodeAttributes[];
 };
 
 const graphPromiseCache = new Map<string, Promise<UndirectedGraph<GraphNodeAttributes, GraphEdgeAttributes>>>();
 
 function toNumber(value: unknown) {
   return typeof value === 'number' ? value : Number(value ?? 0);
+}
+
+function toGraphScalar(value: unknown): QueryScalar {
+  if (
+    typeof value === 'string' ||
+    typeof value === 'number' ||
+    typeof value === 'boolean' ||
+    value === null
+  ) {
+    return value;
+  }
+
+  return value === undefined ? null : String(value);
 }
 
 function asList(value: unknown) {
@@ -39,8 +70,169 @@ function createEdgeId(source: string, target: string) {
   return [source, target].sort((left, right) => left.localeCompare(right)).join('::');
 }
 
+function isRawGraphObject(value: unknown): value is RawGraphObject {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
+}
+
+function computeHierarchyDepths(rows: Array<Record<string, unknown>>) {
+  const parentById = new Map<string, string>();
+  const knownNodeIds = new Set<string>();
+  const depthById = new Map<string, number>();
+
+  for (const row of rows) {
+    const rawId = row.id;
+    if (rawId === undefined || rawId === null) {
+      continue;
+    }
+
+    const nodeId = String(rawId);
+    knownNodeIds.add(nodeId);
+
+    if (row.parent !== undefined && row.parent !== null) {
+      parentById.set(nodeId, String(row.parent));
+    }
+  }
+
+  const resolveDepth = (nodeId: string): number => {
+    const knownDepth = depthById.get(nodeId);
+    if (knownDepth !== undefined) {
+      return knownDepth;
+    }
+
+    const parentId = parentById.get(nodeId);
+    if (!parentId || parentId === nodeId || !knownNodeIds.has(parentId)) {
+      depthById.set(nodeId, 0);
+      return 0;
+    }
+
+    const depth = resolveDepth(parentId) + 1;
+    depthById.set(nodeId, depth);
+    return depth;
+  };
+
+  for (const nodeId of knownNodeIds) {
+    resolveDepth(nodeId);
+  }
+
+  return depthById;
+}
+
+function normalizeGraphNode(
+  rawNode: Record<string, unknown>,
+  depthById?: Map<string, number>,
+): GraphNodeAttributes | undefined {
+  const rawId = rawNode.id;
+  if (rawId === undefined || rawId === null) {
+    return undefined;
+  }
+
+  const id = String(rawId);
+  const parentId =
+    rawNode.parent !== undefined && rawNode.parent !== null ? String(rawNode.parent) : undefined;
+  const depth =
+    rawNode.depth !== undefined && rawNode.depth !== null
+      ? toNumber(rawNode.depth)
+      : depthById?.get(id);
+  const groupSource = rawNode.group ?? depth ?? 0;
+  const group = toNumber(groupSource);
+  const label = String(rawNode.name ?? rawNode.id);
+  const scalarAttributes = Object.fromEntries(
+    Object.entries(rawNode).map(([key, value]) => [key, toGraphScalar(value)]),
+  ) satisfies Record<string, QueryScalar>;
+
+  scalarAttributes.group = group;
+  scalarAttributes.depth = depth ?? 0;
+  if (!('parent' in scalarAttributes)) {
+    scalarAttributes.parent = parentId ?? null;
+  }
+
+  return {
+    ...scalarAttributes,
+    attributes: scalarAttributes,
+    depth,
+    group,
+    id,
+    label,
+    parentId,
+  };
+}
+
+function normalizeHierarchyRows(rows: Array<Record<string, unknown>>): NormalizedGraphSource {
+  const depthById = computeHierarchyDepths(rows);
+  const nodes = rows
+    .map((row) => normalizeGraphNode(row, depthById))
+    .filter((node): node is GraphNodeAttributes => Boolean(node));
+  const edges = rows
+    .flatMap((row) => {
+      if (row.id === undefined || row.id === null || row.parent === undefined || row.parent === null) {
+        return [];
+      }
+
+      const source = String(row.parent);
+      const target = String(row.id);
+      return [
+        {
+          id: createEdgeId(source, target),
+          source,
+          target,
+          value: 1,
+        },
+      ] satisfies NormalizedEdgeRecord[];
+    });
+
+  return {
+    edges,
+    nodes,
+  };
+}
+
+function normalizeGraphObject(rawGraph: RawGraphObject): NormalizedGraphSource {
+  const nodes = (rawGraph.nodes ?? [])
+    .map((row) => normalizeGraphNode(row))
+    .filter((node): node is GraphNodeAttributes => Boolean(node));
+  const edges = (rawGraph.links ?? []).flatMap((rawLink) => {
+    const source = rawLink.source;
+    const target = rawLink.target;
+    if (source === undefined || source === null || target === undefined || target === null) {
+      return [];
+    }
+
+    const normalizedSource = String(source);
+    const normalizedTarget = String(target);
+
+    return [
+      {
+        id: createEdgeId(normalizedSource, normalizedTarget),
+        source: normalizedSource,
+        target: normalizedTarget,
+        value: toNumber(rawLink.value),
+      },
+    ] satisfies NormalizedEdgeRecord[];
+  });
+
+  return {
+    edges,
+    nodes,
+  };
+}
+
+function normalizeGraphSource(rawGraph: unknown): NormalizedGraphSource {
+  if (Array.isArray(rawGraph)) {
+    return normalizeHierarchyRows(rawGraph as Array<Record<string, unknown>>);
+  }
+
+  if (isRawGraphObject(rawGraph)) {
+    return normalizeGraphObject(rawGraph);
+  }
+
+  return {
+    edges: [],
+    nodes: [],
+  };
+}
+
 function matchesNodeFilter(attributes: GraphNodeAttributes, filterClause: FilterClause) {
-  const value = attributes[filterClause.field as keyof GraphNodeAttributes];
+  const value = attributes[filterClause.field];
   const target = filterClause.value;
 
   switch (filterClause.operator) {
@@ -82,25 +274,21 @@ async function loadGraph(descriptor: DatasetDescriptor) {
       throw new Error(`Unable to load ${descriptor.loader.localPath}`);
     }
 
-    const rawGraph = (await response.json()) as RawGraph;
+    const rawGraph = await response.json();
+    const normalizedGraph = normalizeGraphSource(rawGraph);
     const graph = new UndirectedGraph<GraphNodeAttributes, GraphEdgeAttributes>();
 
-    for (const rawNode of rawGraph.nodes ?? []) {
-      graph.addNode(rawNode.id, {
-        group: toNumber(rawNode.group),
-        id: rawNode.id,
-        label: rawNode.id,
-      });
+    for (const normalizedNode of normalizedGraph.nodes) {
+      graph.addNode(normalizedNode.id, normalizedNode);
     }
 
-    for (const rawLink of rawGraph.links ?? []) {
-      const edgeId = createEdgeId(rawLink.source, rawLink.target);
-      if (!graph.hasNode(rawLink.source) || !graph.hasNode(rawLink.target) || graph.hasEdge(edgeId)) {
+    for (const edge of normalizedGraph.edges) {
+      if (!graph.hasNode(edge.source) || !graph.hasNode(edge.target) || graph.hasEdge(edge.id)) {
         continue;
       }
 
-      graph.addUndirectedEdgeWithKey(edgeId, rawLink.source, rawLink.target, {
-        value: toNumber(rawLink.value),
+      graph.addUndirectedEdgeWithKey(edge.id, edge.source, edge.target, {
+        value: edge.value,
       });
     }
 
@@ -257,10 +445,13 @@ export async function executeLocalGraphQuery(
     .map((nodeId) => {
       const attributes = graph.getNodeAttributes(nodeId);
       return {
+        attributes: attributes.attributes,
         degree: degreeByNode.get(nodeId) ?? 0,
+        depth: attributes.depth,
         group: attributes.group,
         id: nodeId,
         label: attributes.label,
+        parentId: attributes.parentId,
         weightedDegree: Number((weightedDegreeByNode.get(nodeId) ?? 0).toFixed(3)),
       } satisfies GraphNode;
     })

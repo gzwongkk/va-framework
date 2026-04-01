@@ -9,6 +9,8 @@ from typing import Any
 from .models import AggregateSpec, FilterClause, GraphQueryResult, QueryResult, QuerySpec, TabularQueryResult
 from .registry import get_dataset, load_dataset_entity
 
+GraphScalar = str | int | float | bool | None
+
 
 def _as_list(value: Any) -> list[Any]:
     if isinstance(value, list):
@@ -20,6 +22,12 @@ def _to_number(value: Any) -> float:
     if isinstance(value, (int, float)):
         return float(value)
     return float(value or 0)
+
+
+def _to_graph_scalar(value: Any) -> GraphScalar:
+    if isinstance(value, (str, int, float, bool)) or value is None:
+        return value
+    return str(value)
 
 
 def _matches_filter(row: dict[str, Any], clause: FilterClause) -> bool:
@@ -236,13 +244,80 @@ def _build_graph_metrics(
     return degree_by_node, weighted_degree_by_node
 
 
+def _compute_hierarchy_depths(nodes: list[dict[str, Any]]) -> dict[str, int]:
+    parent_by_id = {
+        str(node.get('id')): str(node.get('parent'))
+        for node in nodes
+        if node.get('id') is not None and node.get('parent') is not None
+    }
+    known_node_ids = {str(node.get('id')) for node in nodes if node.get('id') is not None}
+    depth_by_id: dict[str, int] = {}
+
+    def resolve_depth(node_id: str) -> int:
+        if node_id in depth_by_id:
+            return depth_by_id[node_id]
+
+        parent_id = parent_by_id.get(node_id)
+        if parent_id is None or parent_id == node_id or parent_id not in known_node_ids:
+            depth_by_id[node_id] = 0
+            return 0
+
+        depth = resolve_depth(parent_id) + 1
+        depth_by_id[node_id] = depth
+        return depth
+
+    for node_id in known_node_ids:
+        resolve_depth(node_id)
+
+    return depth_by_id
+
+
+def _normalize_graph_nodes(nodes: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    depth_by_id = _compute_hierarchy_depths(nodes)
+    normalized_nodes: dict[str, dict[str, Any]] = {}
+
+    for node in nodes:
+        raw_id = node.get('id')
+        if raw_id is None:
+            continue
+
+        node_id = str(raw_id)
+        parent = node.get('parent')
+        parent_id = str(parent) if parent is not None else None
+        depth = int(_to_number(node.get('depth'))) if node.get('depth') is not None else depth_by_id.get(node_id, 0)
+        group_source = node.get('group')
+        group = int(_to_number(group_source if group_source is not None else depth))
+        label = str(node.get('name') or node.get('id'))
+        attributes = {
+            key: _to_graph_scalar(value)
+            for key, value in node.items()
+        }
+        attributes['group'] = group
+        attributes['depth'] = depth
+        if 'parent' not in attributes:
+            attributes['parent'] = _to_graph_scalar(parent)
+
+        normalized_nodes[node_id] = {
+            **node,
+            'id': node_id,
+            'label': label,
+            'group': group,
+            'depth': depth,
+            'parentId': parent_id,
+            'attributes': attributes,
+        }
+
+    return normalized_nodes
+
+
 def _execute_graph_query(query: QuerySpec) -> GraphQueryResult:
     started = perf_counter()
     nodes = load_dataset_entity(query.datasetId, 'nodes')
     links = load_dataset_entity(query.datasetId, 'links')
+    normalized_nodes = _normalize_graph_nodes(nodes)
     allowed_nodes = {
-        str(node['id']): node
-        for node in nodes
+        node_id: node
+        for node_id, node in normalized_nodes.items()
         if all(_matches_filter(node, clause) for clause in query.filters)
     }
 
@@ -285,10 +360,13 @@ def _execute_graph_query(query: QuerySpec) -> GraphQueryResult:
         [
             {
                 'id': node_id,
-                'label': str(allowed_nodes[node_id].get('id')),
+                'label': str(allowed_nodes[node_id].get('label')),
                 'group': int(_to_number(allowed_nodes[node_id].get('group'))),
                 'degree': degree_by_node.get(node_id, 0),
                 'weightedDegree': round(weighted_degree_by_node.get(node_id, 0.0), 3),
+                'attributes': allowed_nodes[node_id].get('attributes', {}),
+                'parentId': allowed_nodes[node_id].get('parentId'),
+                'depth': allowed_nodes[node_id].get('depth'),
             }
             for node_id in selected_node_ids
         ],

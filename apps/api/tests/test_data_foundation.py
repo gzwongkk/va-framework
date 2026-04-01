@@ -13,7 +13,7 @@ def test_dataset_registry_endpoint_returns_seed_datasets() -> None:
     assert response.status_code == 200
     payload = response.json()
     ids = {item['id'] for item in payload}
-    assert ids == {'cars', 'miserables', 'earthquakes'}
+    assert ids == {'cars', 'miserables', 'flare', 'earthquakes'}
 
 
 def test_query_endpoint_filters_and_projects_rows() -> None:
@@ -79,6 +79,41 @@ def test_query_endpoint_returns_graph_results_for_miserables() -> None:
     assert payload['summary']['groupCount'] == 3
     assert payload['summary']['topNodes'][0]['id'] == 'Valjean'
     assert payload['summary']['topNodes'][0]['weightedDegree'] == 17
+
+
+def test_query_endpoint_returns_graph_results_for_flare_hierarchy() -> None:
+    client = TestClient(app)
+
+    response = client.post(
+        '/api/query',
+        json={
+            'datasetId': 'flare',
+            'executionMode': 'remote',
+            'filters': [
+                {
+                    'field': 'depth',
+                    'operator': 'lte',
+                    'value': 2,
+                }
+            ],
+            'graph': {
+                'includeIsolates': True,
+                'minEdgeWeight': 0,
+                'neighborDepth': 2,
+            },
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload['resultKind'] == 'graph'
+    assert payload['datasetId'] == 'flare'
+    assert payload['executionMode'] == 'remote'
+    assert payload['nodeCount'] > 0
+    assert payload['edgeCount'] > 0
+    assert payload['nodes'][0]['attributes']
+    assert payload['summary']['groupCount'] >= 1
+    assert any(node['parentId'] for node in payload['nodes'] if node.get('parentId'))
 
 
 def test_job_endpoint_executes_background_query() -> None:

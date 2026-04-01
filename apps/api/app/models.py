@@ -35,6 +35,14 @@ class DatasetEntitySchema(BaseModel):
     weightField: str | None = None
 
 
+class DatasetHierarchy(BaseModel):
+    rootId: str | None = None
+    parentField: str
+    childrenField: str | None = None
+    depthField: str | None = None
+    labelField: str | None = None
+
+
 class DatasetSchema(BaseModel):
     entity: str = 'rows'
     fields: list[FieldSpec] = Field(default_factory=list)
@@ -43,6 +51,7 @@ class DatasetSchema(BaseModel):
     timeField: str | None = None
     labelField: str | None = None
     entities: dict[str, DatasetEntitySchema] | None = None
+    hierarchy: DatasetHierarchy | None = None
 
 
 class Provenance(BaseModel):
@@ -137,6 +146,9 @@ class GraphNode(BaseModel):
     group: int
     degree: int
     weightedDegree: float
+    attributes: dict[str, str | int | float | bool | None] = Field(default_factory=dict)
+    parentId: str | None = None
+    depth: int | None = None
 
 
 class GraphEdge(BaseModel):

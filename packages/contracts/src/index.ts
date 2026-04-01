@@ -49,6 +49,15 @@ export const datasetEntitySchema = z.object({
 });
 export type DatasetEntity = z.infer<typeof datasetEntitySchema>;
 
+export const datasetHierarchySchema = z.object({
+  rootId: z.string().optional(),
+  parentField: z.string(),
+  childrenField: z.string().optional(),
+  depthField: z.string().optional(),
+  labelField: z.string().optional(),
+});
+export type DatasetHierarchy = z.infer<typeof datasetHierarchySchema>;
+
 export const datasetSchemaSchema = z.object({
   entity: z.string().default('rows'),
   fields: z.array(fieldSpecSchema).default([]),
@@ -57,6 +66,7 @@ export const datasetSchemaSchema = z.object({
   timeField: z.string().optional(),
   labelField: z.string().optional(),
   entities: z.record(z.string(), datasetEntitySchema).optional(),
+  hierarchy: datasetHierarchySchema.optional(),
 });
 export type DatasetSchema = z.infer<typeof datasetSchemaSchema>;
 
@@ -199,6 +209,9 @@ export const graphNodeSchema = z.object({
   group: z.number().int().nonnegative(),
   degree: z.number().int().nonnegative(),
   weightedDegree: z.number().nonnegative(),
+  attributes: z.record(z.string(), queryScalarSchema).default({}),
+  parentId: z.string().optional(),
+  depth: z.number().int().nonnegative().optional(),
 });
 export type GraphNode = z.infer<typeof graphNodeSchema>;
 

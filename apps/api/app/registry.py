@@ -10,6 +10,30 @@ from .models import DatasetDescriptor
 DATA_DIR = Path(__file__).resolve().parent.parent / 'data'
 
 
+def _as_string_id(value: Any) -> str:
+    return str(value)
+
+
+def _build_hierarchy_links(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    links: list[dict[str, Any]] = []
+
+    for row in rows:
+        parent = row.get('parent')
+        node_id = row.get('id')
+        if parent is None or node_id is None:
+            continue
+
+        links.append(
+            {
+                'source': _as_string_id(parent),
+                'target': _as_string_id(node_id),
+                'value': 1,
+            }
+        )
+
+    return links
+
+
 @lru_cache(maxsize=1)
 def dataset_registry() -> dict[str, DatasetDescriptor]:
     return {
@@ -134,6 +158,106 @@ def dataset_registry() -> dict[str, DatasetDescriptor]:
                 },
             }
         ),
+        'flare': DatasetDescriptor.model_validate(
+            {
+                'id': 'flare',
+                'title': 'Flare hierarchy',
+                'description': 'Hierarchy dataset for the v2.3 graph workbench tree technique line.',
+                'kind': 'graph',
+                'tags': ['starter', 'vega', 'graph', 'tree', 'hierarchy'],
+                'provenance': {
+                    'name': 'Vega Flare dataset',
+                    'url': 'https://vega.github.io/vega-datasets/data/flare.json',
+                    'license': 'Public sample dataset',
+                    'notes': 'Curated local hierarchy sample normalized for upcoming tree techniques.',
+                },
+                'schema': {
+                    'entity': 'nodes',
+                    'primaryKey': ['id'],
+                    'labelField': 'name',
+                    'rowCount': len(load_dataset_entity('flare', 'nodes')),
+                    'fields': [
+                        {'name': 'id', 'title': 'Node id', 'dataType': 'number', 'role': 'identifier'},
+                        {'name': 'name', 'title': 'Name', 'dataType': 'string', 'role': 'category'},
+                        {
+                            'name': 'parent',
+                            'title': 'Parent id',
+                            'dataType': 'number',
+                            'role': 'identifier',
+                            'nullable': True,
+                        },
+                        {
+                            'name': 'size',
+                            'title': 'Size',
+                            'dataType': 'number',
+                            'role': 'measure',
+                            'nullable': True,
+                        },
+                        {'name': 'depth', 'title': 'Depth', 'dataType': 'number', 'role': 'measure'},
+                    ],
+                    'hierarchy': {
+                        'rootId': '1',
+                        'parentField': 'parent',
+                        'depthField': 'depth',
+                        'labelField': 'name',
+                    },
+                    'entities': {
+                        'nodes': {
+                            'primaryKey': ['id'],
+                            'labelField': 'name',
+                            'rowCount': len(load_dataset_entity('flare', 'nodes')),
+                            'fields': [
+                                {'name': 'id', 'title': 'Node id', 'dataType': 'number', 'role': 'identifier'},
+                                {'name': 'name', 'title': 'Name', 'dataType': 'string', 'role': 'category'},
+                                {
+                                    'name': 'parent',
+                                    'title': 'Parent id',
+                                    'dataType': 'number',
+                                    'role': 'identifier',
+                                    'nullable': True,
+                                },
+                                {
+                                    'name': 'size',
+                                    'title': 'Size',
+                                    'dataType': 'number',
+                                    'role': 'measure',
+                                    'nullable': True,
+                                },
+                                {'name': 'depth', 'title': 'Depth', 'dataType': 'number', 'role': 'measure'},
+                            ],
+                        },
+                        'links': {
+                            'primaryKey': ['source', 'target'],
+                            'rowCount': len(load_dataset_entity('flare', 'links')),
+                            'sourceField': 'source',
+                            'targetField': 'target',
+                            'weightField': 'value',
+                            'fields': [
+                                {'name': 'source', 'title': 'Source', 'dataType': 'string', 'role': 'identifier'},
+                                {'name': 'target', 'title': 'Target', 'dataType': 'string', 'role': 'identifier'},
+                                {'name': 'value', 'title': 'Weight', 'dataType': 'number', 'role': 'measure'},
+                            ],
+                        },
+                    },
+                },
+                'loader': {
+                    'format': 'json',
+                    'localPath': '/datasets/flare.sample.json',
+                    'remotePath': '/api/query',
+                    'tableName': 'flare_nodes',
+                },
+                'execution': {
+                    'defaultMode': 'local',
+                    'supportedModes': ['local', 'remote'],
+                    'rowCount': len(load_dataset_entity('flare', 'nodes')),
+                    'preferredPreviewLimit': 16,
+                    'notes': [
+                        'Hierarchy metadata is exposed now so tree techniques can reuse the shared graph contract.',
+                        'Parent-child links are synthesized locally and remotely from the flat flare JSON rows.',
+                    ],
+                },
+            }
+        ),
         'earthquakes': DatasetDescriptor.model_validate(
             {
                 'id': 'earthquakes',
@@ -205,6 +329,8 @@ def get_dataset(dataset_id: str) -> DatasetDescriptor:
 def load_dataset_entity(dataset_id: str, entity: str | None = None) -> list[dict[str, Any]]:
     raw = _load_raw_file(dataset_id)
     if isinstance(raw, list):
+        if entity == 'links':
+            return _build_hierarchy_links(raw)
         return raw
     if entity and entity in raw:
         return raw[entity]
