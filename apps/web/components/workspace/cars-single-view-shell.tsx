@@ -53,6 +53,7 @@ export function CarsSingleViewShell() {
   const preferredExecutionMode = useCoordinationStore((state) => state.preferredExecutionMode);
   const selectedId = useCoordinationStore((state) => state.selections[VIEW_ID]?.ids[0]);
   const setActiveDatasetId = useCoordinationStore((state) => state.setActiveDatasetId);
+  const setActiveViewId = useCoordinationStore((state) => state.setActiveViewId);
   const setFilters = useCoordinationStore((state) => state.setFilters);
   const setLastQuery = useCoordinationStore((state) => state.setLastQuery);
   const setPreferredExecutionMode = useCoordinationStore((state) => state.setPreferredExecutionMode);
@@ -101,6 +102,10 @@ export function CarsSingleViewShell() {
       setActiveDatasetId(CARS_DATASET_ID);
     }
   }, [activeDatasetId, carsDataset, setActiveDatasetId]);
+
+  useEffect(() => {
+    setActiveViewId(VIEW_ID);
+  }, [setActiveViewId]);
 
   useEffect(() => {
     setFilters(query.filters);

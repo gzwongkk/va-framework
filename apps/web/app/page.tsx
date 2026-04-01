@@ -1,5 +1,5 @@
-import { CarsSingleViewShell } from '@/components/workspace/cars-single-view-shell';
+import { GraphSingleViewShell } from '@/components/workspace/graph-single-view-shell';
 
 export default function HomePage() {
-  return <CarsSingleViewShell />;
+  return <GraphSingleViewShell />;
 }

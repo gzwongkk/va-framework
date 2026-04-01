@@ -8,6 +8,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 type CoordinationStore = CoordinationState & {
   preferredExecutionMode: ExecutionMode;
   setActiveDatasetId: (datasetId: string) => void;
+  setActiveViewId: (viewId: string) => void;
   setPreferredExecutionMode: (mode: ExecutionMode) => void;
   setFilters: (filters: FilterClause[]) => void;
   setLastJobId: (jobId?: string) => void;
@@ -18,7 +19,7 @@ type CoordinationStore = CoordinationState & {
 
 const initialState: CoordinationState = {
   activeDatasetId: undefined,
-  activeViewId: 'single-view-plot',
+  activeViewId: 'graph-canvas',
   filters: [],
   hover: undefined,
   layout: baselineWorkspaceLayout,
@@ -97,6 +98,7 @@ export const useCoordinationStore = create<CoordinationStore>()(
             lastJobId: undefined,
           };
         }),
+      setActiveViewId: (viewId) => set((state) => (state.activeViewId === viewId ? state : { activeViewId: viewId })),
       setPreferredExecutionMode: (mode) =>
         set((state) => (state.preferredExecutionMode === mode ? state : { preferredExecutionMode: mode })),
       setFilters: (filters) => set((state) => (hasSameSerializedValue(state.filters, filters) ? state : { filters })),
