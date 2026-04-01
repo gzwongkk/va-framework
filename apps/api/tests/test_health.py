@@ -9,5 +9,5 @@ def test_health_endpoint() -> None:
     response = client.get('/api/health')
 
     assert response.status_code == 200
-    assert response.json()['version'] == '2.3.8'
-    assert response.json()['stage'] == 'multivariate-techniques'
+    assert response.json()['version'] == '2.3.9'
+    assert response.json()['stage'] == 'graph-workbench-final'

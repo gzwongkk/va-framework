@@ -5,14 +5,14 @@ The stable Vue release is preserved on the `release/v1.0.0` branch.
 
 ## Current milestone
 
-`v2.3.8` is the multivariate-network techniques patch.
+`v2.3.9` is the final graph-workbench hardening patch.
 
-The home route at `/` remains the graph workbench. This patch turns the multivariate mode into a more legible analytical technique:
+The home route at `/` remains the graph workbench. This patch closes the `v2.3` line:
 
-- layout-aware encoding summaries for encoded-force, attribute-position, and faceted modes
-- explicit color legends and facet summaries inside the multivariate stage
-- stronger field-profile and facet-distribution readback in the detail rail
-- memoized multivariate transforms so technique switching stays responsive while the active graph state evolves
+- technique guidance now includes both “best for” and “watch for” notes derived from the roadmap references
+- the graph control surface carries explicit accessibility labels for major toggle groups, search, and data tables
+- URL parsing, technique guidance, multivariate summaries, tree techniques, and graph queries are covered by the current regression suite
+- `v2.3.9` is the release gate before the roadmap moves on to `v2.4.0`
 
 The `v2.3` line now consists of:
 
@@ -25,6 +25,7 @@ The `v2.3` line now consists of:
 - `v2.3.6`: explicit and implicit tree-technique polish with selected-path highlighting
 - `v2.3.7`: multivariate field profiles, missing-value handling, and encoding groundwork
 - `v2.3.8`: multivariate layout polish, legends, and facet-aware analytical summaries
+- `v2.3.9`: graph workbench hardening, guidance, accessibility labels, and regression coverage
 
 The core stack now includes:
 
@@ -48,6 +49,7 @@ The release ladder remains:
 - `v2.3.6`: tree techniques
 - `v2.3.7`: multivariate network foundation
 - `v2.3.8`: multivariate network techniques
+- `v2.3.9`: graph workbench hardening
 - `v2.3.7`: multivariate network foundation
 - `v2.3.8`: multivariate network techniques
 - `v2.3.9`: graph workbench hardening
