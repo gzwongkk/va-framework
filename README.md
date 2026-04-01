@@ -5,14 +5,14 @@ The stable Vue release is preserved on the `release/v1.0.0` branch.
 
 ## Current milestone
 
-`v2.3.9` is the final graph-workbench hardening patch.
+`v2.3.10` is the current graph-workbench patch.
 
-The home route at `/` remains the graph workbench. This patch closes the `v2.3` line:
+The home route at `/` remains the graph workbench. This patch tightens the canonical Les Miserables path:
 
-- technique guidance now includes both “best for” and “watch for” notes derived from the roadmap references
-- the graph control surface carries explicit accessibility labels for major toggle groups, search, and data tables
-- URL parsing, technique guidance, multivariate summaries, tree techniques, and graph queries are covered by the current regression suite
-- `v2.3.9` is the release gate before the roadmap moves on to `v2.4.0`
+- the local and remote graph runtimes now use the canonical Vega `miserables.json` dataset at 77 nodes and 254 links
+- the graph normalization layer accepts the raw Vega node/link format instead of relying on the earlier tiny local sample
+- the multivariate color-field toggle no longer emits duplicate React keys
+- remote execution now resolves its API base from the active host and the dev API listens on `0.0.0.0` for LAN-safe local development
 
 The `v2.3` line now consists of:
 
@@ -26,6 +26,7 @@ The `v2.3` line now consists of:
 - `v2.3.7`: multivariate field profiles, missing-value handling, and encoding groundwork
 - `v2.3.8`: multivariate layout polish, legends, and facet-aware analytical summaries
 - `v2.3.9`: graph workbench hardening, guidance, accessibility labels, and regression coverage
+- `v2.3.10`: canonical Les Miserables dataset import, duplicate-key fix, and remote runtime cleanup
 
 The core stack now includes:
 
@@ -50,9 +51,7 @@ The release ladder remains:
 - `v2.3.7`: multivariate network foundation
 - `v2.3.8`: multivariate network techniques
 - `v2.3.9`: graph workbench hardening
-- `v2.3.7`: multivariate network foundation
-- `v2.3.8`: multivariate network techniques
-- `v2.3.9`: graph workbench hardening
+- `v2.3.10`: canonical Les Miserables dataset and remote runtime fixes
 - `v2.4.0`: spatio-temporal data
 - `v2.5.0`: multi-view coordination
 - `v2.6.0`: spatial-ready foundations
@@ -97,9 +96,10 @@ Routes:
 - `/`: graph workbench
 - `/cars`: cars single-view reference workflow
 
-The graph workbench defaults to `miserables` + `force`, and also supports `flare` as the hierarchy dataset for the upcoming tree line.
+The graph workbench defaults to `miserables` + `force`, and also supports `flare` as the hierarchy dataset for the tree line.
+The canonical Les Miserables dataset used here is the Vega sample graph with 77 nodes and 254 links.
 
-## v2.3.2 endpoints
+## Graph workbench endpoints
 
 - `GET /api/health`
 - `GET /api/datasets`
