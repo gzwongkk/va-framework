@@ -1,6 +1,6 @@
 [project]
 name = "va-framework-api"
-version = "2.3.16"
+version = "2.3.17"
 description = "FastAPI backend for the v2 visual analytics framework."
 requires-python = ">=3.11"
 dependencies = [

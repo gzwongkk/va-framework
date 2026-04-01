@@ -9,5 +9,5 @@ def test_health_endpoint() -> None:
     response = client.get('/api/health')
 
     assert response.status_code == 200
-    assert response.json()['version'] == '2.3.16'
-    assert response.json()['stage'] == 'hierarchy-suite'
+    assert response.json()['version'] == '2.3.17'
+    assert response.json()['stage'] == 'time-series-focus-context'

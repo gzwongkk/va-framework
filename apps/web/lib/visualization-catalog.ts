@@ -268,6 +268,15 @@ export const visualizationCatalog: VisualizationExampleDefinition[] = [
     provenanceUrl: 'https://vega.github.io/vega-datasets/data/stocks.csv',
     controlSpecs: [
       {
+        id: 'execution',
+        label: 'Execution',
+        type: 'button-group',
+        options: [
+          { label: 'Local', value: 'local' },
+          { label: 'Remote', value: 'remote' },
+        ],
+      },
+      {
         id: 'dataset',
         label: 'Dataset',
         type: 'select',

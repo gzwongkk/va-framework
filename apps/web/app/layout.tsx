@@ -7,9 +7,9 @@ import '@fontsource-variable/roboto/index.css';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'va-framework v2.3.16',
+  title: 'va-framework v2.3.17',
   description:
-    'Hierarchy technique suite added to the v2.3 analytics gallery line.',
+    'Focus-plus-context time-series added to the v2.3 analytics gallery line.',
 };
 
 export default function RootLayout({

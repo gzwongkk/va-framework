@@ -140,6 +140,39 @@ def test_query_endpoint_returns_graph_results_for_flare_hierarchy() -> None:
     assert any(node['parentId'] for node in payload['nodes'] if node.get('parentId'))
 
 
+def test_query_endpoint_returns_stocks_rows_for_time_series_workbench() -> None:
+    client = TestClient(app)
+
+    response = client.post(
+        '/api/query',
+        json={
+            'datasetId': 'stocks',
+            'executionMode': 'remote',
+            'filters': [
+                {
+                    'field': 'symbol',
+                    'operator': 'in',
+                    'value': ['AAPL', 'MSFT'],
+                }
+            ],
+            'sorts': [
+                {'field': 'symbol', 'direction': 'asc'},
+                {'field': 'date', 'direction': 'asc'},
+            ],
+            'select': ['id', 'symbol', 'date', 'price'],
+            'limit': 12,
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload['resultKind'] == 'table'
+    assert payload['datasetId'] == 'stocks'
+    assert payload['executionMode'] == 'remote'
+    assert payload['rowCount'] == 12
+    assert {row['symbol'] for row in payload['rows']} <= {'AAPL', 'MSFT'}
+
+
 def test_job_endpoint_executes_background_query() -> None:
     client = TestClient(app)
 

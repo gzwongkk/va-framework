@@ -8,7 +8,7 @@ from .registry import DatasetDescriptor, list_datasets
 
 app = FastAPI(
     title='va-framework API',
-    version='2.3.16',
+    version='2.3.17',
     description='Graph workbench API for the React-native visual analytics framework.',
 )
 
@@ -26,8 +26,8 @@ app.add_middleware(
 def get_health() -> dict[str, str]:
     return {
         'status': 'ok',
-        'version': '2.3.16',
-        'stage': 'hierarchy-suite',
+        'version': '2.3.17',
+        'stage': 'time-series-focus-context',
     }
 
 

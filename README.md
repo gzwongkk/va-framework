@@ -5,14 +5,14 @@ The stable Vue release is preserved on the `release/v1.0.0` branch.
 
 ## Current milestone
 
-`v2.3.16` is the hierarchy technique suite release.
+`v2.3.17` is the focus-plus-context time-series release.
 
-The home route at `/` remains the graph workbench. This release turns `flare` into a first-class hierarchy example family:
+The home route at `/` remains the graph workbench. This release adds `stocks` as a first-class time-series example in the gallery line:
 
-- `/examples/hierarchy-suite` now delivers a dedicated hierarchy shell on the vendored `flare` dataset
-- tidy tree, radial cluster, icicle, sunburst, and treemap variants now share one local/remote query path and one registry-backed workbench shell
-- the hierarchy example preserves selected-path inspection while switching between explicit and implicit techniques
-- `flare` is no longer only a graph-home fallback dataset; it now has a dedicated example route in the gallery line
+- `/examples/stocks-focus-context` now delivers a dedicated focus-plus-context shell on the vendored `stocks` dataset
+- the time-series example supports symbol filters, local/remote execution parity, and brushed focus-window updates inside the shared workbench frame
+- the stocks example writes the current focus window into the shared viewport state so later coordinated views can reuse it
+- `stocks` is now a real example route in the gallery rather than a registered placeholder
 
 The `v2.3` line now consists of:
 
@@ -33,6 +33,7 @@ The `v2.3` line now consists of:
 - `v2.3.14`: brushable scatterplot matrix on penguins
 - `v2.3.15`: native Sankey flow example on energy
 - `v2.3.16`: hierarchy technique suite on flare
+- `v2.3.17`: focus-plus-context time series on stocks
 
 The core stack now includes:
 
@@ -64,6 +65,7 @@ The release ladder remains:
 - `v2.3.14`: brushable scatterplot matrix
 - `v2.3.15`: flow example
 - `v2.3.16`: tree and hierarchy suite
+- `v2.3.17`: time-series example and graph polish
 - `v2.4.0`: spatio-temporal data
 - `v2.5.0`: multi-view coordination
 - `v2.6.0`: spatial-ready foundations

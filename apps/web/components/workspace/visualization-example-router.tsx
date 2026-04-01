@@ -7,7 +7,7 @@ import { EnergySankeyShell } from '@/components/workspace/energy-sankey-shell';
 import { GraphSingleViewShell } from '@/components/workspace/graph-single-view-shell';
 import { HierarchySuiteShell } from '@/components/workspace/hierarchy-suite-shell';
 import { PenguinsSplomShell } from '@/components/workspace/penguins-splom-shell';
-import { VisualizationPendingShell } from '@/components/workspace/visualization-pending-shell';
+import { StocksFocusContextShell } from '@/components/workspace/stocks-focus-context-shell';
 import { Button } from '@va/ui';
 import Link from 'next/link';
 
@@ -51,13 +51,7 @@ export function VisualizationExampleRouter({ exampleId }: VisualizationExampleRo
   }
 
   if (exampleId === 'stocks-focus-context') {
-    return (
-      <VisualizationPendingShell
-        description="The stocks time-series pack is registered and ready. The focus-plus-context time-series workbench lands later in the gallery line."
-        releaseLabel="Coming in v2.3.17"
-        title="Focus + context time series"
-      />
-    );
+    return <StocksFocusContextShell visualizationId={exampleId} />;
   }
 
   return (

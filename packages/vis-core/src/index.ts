@@ -19,3 +19,4 @@ export * from './graph-tree-techniques';
 export * from './multivariate-network-view';
 export * from './sankey-flow-diagram';
 export * from './scatter-plot';
+export * from './focus-context-time-series';
