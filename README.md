@@ -5,14 +5,14 @@ The stable Vue release is preserved on the `release/v1.0.0` branch.
 
 ## Current milestone
 
-`v2.3.14` is the brushable scatterplot matrix release.
+`v2.3.15` is the native Sankey flow release.
 
-The home route at `/` remains the graph workbench. This release adds the first imported tabular example:
+The home route at `/` remains the graph workbench. This release adds the first native flow example:
 
-- `/examples/penguins-splom` now delivers a native React + D3 brushable scatterplot matrix on the vendored `penguins` dataset
-- the SPLOM runs through the shared gallery shell, route model, local/remote query path, and persisted coordination state
-- brushing any scatter cell creates a selection-aware cohort that updates the detail rail without leaving the single-canvas workbench
-- field presets, runtime switching, and species filtering are now exercised by a real registry-backed example instead of a placeholder route
+- `/examples/energy-sankey` now delivers a native React + D3 Sankey workbench on the vendored `energy` graph dataset
+- the flow example reuses the shared graph query contract, local/remote execution path, gallery routing model, and persisted coordination state
+- source-stage and target-stage filtering, minimum-flow thresholds, node selection, and link inspection now run inside the same shell used by the rest of the gallery line
+- the previous Sankey placeholder route has been replaced with a real registry-backed example and flow-specific detail summaries
 
 The `v2.3` line now consists of:
 
@@ -31,6 +31,7 @@ The `v2.3` line now consists of:
 - `v2.3.12`: shared control system, command-based example switching, and gallery category tabs
 - `v2.3.13`: dataset-pack import, gallery dataset cards, and placeholder example registration
 - `v2.3.14`: brushable scatterplot matrix on penguins
+- `v2.3.15`: native Sankey flow example on energy
 
 The core stack now includes:
 
@@ -60,6 +61,7 @@ The release ladder remains:
 - `v2.3.12`: shared control system
 - `v2.3.13`: dataset pack import
 - `v2.3.14`: brushable scatterplot matrix
+- `v2.3.15`: flow example
 - `v2.4.0`: spatio-temporal data
 - `v2.5.0`: multi-view coordination
 - `v2.6.0`: spatial-ready foundations

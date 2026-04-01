@@ -3,6 +3,7 @@
 import { AlertCircle, ArrowRight } from 'lucide-react';
 
 import { CarsSingleViewShell } from '@/components/workspace/cars-single-view-shell';
+import { EnergySankeyShell } from '@/components/workspace/energy-sankey-shell';
 import { GraphSingleViewShell } from '@/components/workspace/graph-single-view-shell';
 import { PenguinsSplomShell } from '@/components/workspace/penguins-splom-shell';
 import { VisualizationPendingShell } from '@/components/workspace/visualization-pending-shell';
@@ -45,13 +46,7 @@ export function VisualizationExampleRouter({ exampleId }: VisualizationExampleRo
   }
 
   if (exampleId === 'energy-sankey') {
-    return (
-      <VisualizationPendingShell
-        description="The energy flow network is now in the shared registry. The Sankey renderer lands in the flow-specific patch immediately after the SPLOM."
-        releaseLabel="Coming in v2.3.15"
-        title="Energy Sankey diagram"
-      />
-    );
+    return <EnergySankeyShell visualizationId={exampleId} />;
   }
 
   if (exampleId === 'stocks-focus-context') {

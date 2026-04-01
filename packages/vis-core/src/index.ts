@@ -17,4 +17,5 @@ export * from './adjacency-matrix-brush';
 export * from './brushable-scatterplot-matrix';
 export * from './graph-tree-techniques';
 export * from './multivariate-network-view';
+export * from './sankey-flow-diagram';
 export * from './scatter-plot';
