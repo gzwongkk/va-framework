@@ -6,6 +6,8 @@ from pydantic import BaseModel, ConfigDict, Field
 
 DatasetKind = Literal['tabular', 'graph', 'spatio-temporal']
 DatasetGalleryCategory = Literal['graph', 'hierarchy', 'multivariate', 'tabular', 'flow', 'time-series', 'seed']
+DataKindAdapterId = Literal['tabular', 'graph', 'spatio-temporal', 'text', 'tree-native', 'image', 'xr-scene']
+DatasetStarterPriority = Literal['primary', 'reference', 'seed']
 ExecutionMode = Literal['local', 'remote']
 FieldDataType = Literal['string', 'number', 'boolean', 'date', 'json', 'latitude', 'longitude']
 FieldRole = Literal['dimension', 'measure', 'identifier', 'timestamp', 'location', 'category']
@@ -77,6 +79,14 @@ class DatasetExecution(BaseModel):
     notes: list[str] = Field(default_factory=list)
 
 
+class DatasetStarterMetadata(BaseModel):
+    kindAdapterId: DataKindAdapterId
+    priority: DatasetStarterPriority
+    defaultVariant: str
+    supportedVariants: list[str] = Field(default_factory=list)
+    supportsMultiDatasetBinding: bool = False
+
+
 class DatasetDescriptor(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
@@ -92,6 +102,7 @@ class DatasetDescriptor(BaseModel):
     datasetSchema: DatasetSchema = Field(alias='schema')
     loader: DatasetLoader
     execution: DatasetExecution
+    starter: DatasetStarterMetadata | None = None
 
 
 class FilterClause(BaseModel):

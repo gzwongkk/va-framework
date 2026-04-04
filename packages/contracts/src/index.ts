@@ -13,6 +13,12 @@ export const datasetGalleryCategorySchema = z.enum([
 ]);
 export type DatasetGalleryCategory = z.infer<typeof datasetGalleryCategorySchema>;
 
+export const dataKindAdapterIdSchema = z.enum(['tabular', 'graph', 'spatio-temporal', 'text', 'tree-native', 'image', 'xr-scene']);
+export type DataKindAdapterId = z.infer<typeof dataKindAdapterIdSchema>;
+
+export const datasetStarterPrioritySchema = z.enum(['primary', 'reference', 'seed']);
+export type DatasetStarterPriority = z.infer<typeof datasetStarterPrioritySchema>;
+
 export const executionModeSchema = z.enum(['local', 'remote']);
 export type ExecutionMode = z.infer<typeof executionModeSchema>;
 
@@ -105,6 +111,15 @@ export const datasetExecutionSchema = z.object({
 });
 export type DatasetExecution = z.infer<typeof datasetExecutionSchema>;
 
+export const datasetStarterMetadataSchema = z.object({
+  kindAdapterId: dataKindAdapterIdSchema,
+  priority: datasetStarterPrioritySchema,
+  defaultVariant: z.string(),
+  supportedVariants: z.array(z.string()).default([]),
+  supportsMultiDatasetBinding: z.boolean().default(false),
+});
+export type DatasetStarterMetadata = z.infer<typeof datasetStarterMetadataSchema>;
+
 export const datasetDescriptorSchema = z.object({
   id: z.string(),
   title: z.string(),
@@ -118,6 +133,7 @@ export const datasetDescriptorSchema = z.object({
   schema: datasetSchemaSchema,
   loader: datasetLoaderSchema,
   execution: datasetExecutionSchema,
+  starter: datasetStarterMetadataSchema.optional(),
 });
 export type DatasetDescriptor = z.infer<typeof datasetDescriptorSchema>;
 

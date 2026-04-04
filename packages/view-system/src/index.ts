@@ -1,6 +1,7 @@
 export type CoordinateSpace = 'screen-2d' | 'world-3d' | 'spatial-anchor';
 export type CoordinationSignal = 'selection' | 'hover' | 'brush' | 'zoom' | 'filter' | 'query';
 export type DatasetKind = 'tabular' | 'graph' | 'spatio-temporal';
+export type DataKindAdapterId = 'tabular' | 'graph' | 'spatio-temporal' | 'text' | 'tree-native' | 'image' | 'xr-scene';
 export type VisualizationCategory =
   | 'graph'
   | 'hierarchy'
@@ -10,6 +11,8 @@ export type VisualizationCategory =
   | 'time-series';
 export type VisualizationControlType = 'toggle-group' | 'select' | 'button-group';
 export type VisualizationControlValue = string | number | boolean | null | string[];
+export type StarterPriority = 'primary' | 'reference' | 'seed';
+export type ViewRole = 'primary' | 'supporting' | 'detail' | 'overview';
 
 export type CoordinationFilter = {
   field: string;
@@ -64,6 +67,52 @@ export type ViewLayout = {
   slots: ViewLayoutSlot[];
 };
 
+export type WorkspaceLayoutDefinition = {
+  id: string;
+  label: string;
+  mode: 'single-main-canvas';
+  slots: ViewLayoutSlot[];
+};
+
+export type ViewInstanceDefinition = {
+  id: string;
+  label: string;
+  role: ViewRole;
+  viewId: string;
+};
+
+export type DatasetBinding = {
+  id: string;
+  datasetId: string;
+  entity?: string;
+  kindAdapterId: DataKindAdapterId;
+  viewInstanceIds: string[];
+  isPrimary: boolean;
+};
+
+export type CoordinationChannel = {
+  id: string;
+  signal: CoordinationSignal;
+  sourceViewInstanceId: string;
+  targetViewInstanceIds: string[];
+  datasetBindingIds: string[];
+};
+
+export type StarterVariantDefinition = {
+  id: string;
+  label: string;
+  summary: string;
+};
+
+export type StarterWorkbenchDefinition = {
+  id: string;
+  label: string;
+  summary: string;
+  kindAdapterId: DataKindAdapterId;
+  defaultDatasetId: string;
+  defaultVariantId: string;
+};
+
 export type SelectionState = {
   ids: string[];
   sourceViewId?: string;
@@ -86,8 +135,13 @@ export type ViewportState = {
 
 export type CoordinationState = {
   activeDatasetId?: string;
+  activeLayoutId?: string;
+  activeStarterKind?: DataKindAdapterId;
+  activeStarterVariant?: string;
   activeViewId?: string;
   activeVisualizationId?: string;
+  coordinationChannels: Record<string, CoordinationChannel>;
+  datasetBindings: Record<string, DatasetBinding>;
   filters: CoordinationFilter[];
   layout: ViewLayout;
   lastQuery?: CoordinationQuery;
@@ -95,6 +149,7 @@ export type CoordinationState = {
   selections: Record<string, SelectionState>;
   hover?: HoverState;
   visualizationControlValues: Record<string, Record<string, VisualizationControlValue>>;
+  viewInstances: Record<string, ViewInstanceDefinition>;
   viewports: Record<string, ViewportState>;
 };
 
@@ -142,6 +197,14 @@ export type VisualizationExampleDefinition = {
   presets?: VisualizationPreset[];
 };
 
+export type DatasetStarterMetadata = {
+  kindAdapterId: DataKindAdapterId;
+  priority: StarterPriority;
+  defaultVariant: string;
+  supportedVariants: string[];
+  supportsMultiDatasetBinding: boolean;
+};
+
 export const baselineWorkspaceLayout: ViewLayout = {
   id: 'baseline-shell',
   mode: 'single-page-workspace',
@@ -151,6 +214,13 @@ export const baselineWorkspaceLayout: ViewLayout = {
     { id: 'sidebar', label: 'Controls and query tuning', role: 'sidebar' },
     { id: 'details', label: 'Derived details and explanations', role: 'details' },
   ],
+};
+
+export const singleMainCanvasLayout: WorkspaceLayoutDefinition = {
+  id: 'single-main-canvas',
+  label: 'Single main canvas',
+  mode: 'single-main-canvas',
+  slots: baselineWorkspaceLayout.slots,
 };
 
 export const starterViews: ViewDefinition[] = [

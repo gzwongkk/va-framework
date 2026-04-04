@@ -95,6 +95,13 @@ def dataset_registry() -> dict[str, DatasetDescriptor]:
                         'Aggregations and long-running transforms can be pushed to the API job layer.',
                     ],
                 },
+                'starter': {
+                    'kindAdapterId': 'tabular',
+                    'priority': 'primary',
+                    'defaultVariant': 'scatter',
+                    'supportedVariants': ['scatter', 'table'],
+                    'supportsMultiDatasetBinding': False,
+                },
             }
         ),
         'miserables': DatasetDescriptor.model_validate(
@@ -161,6 +168,13 @@ def dataset_registry() -> dict[str, DatasetDescriptor]:
                         'Graph exploration defaults to the local graphology runtime in v2.3.0.',
                         'Remote execution stays available for parity and heavier graph transforms.',
                     ],
+                },
+                'starter': {
+                    'kindAdapterId': 'graph',
+                    'priority': 'primary',
+                    'defaultVariant': 'force',
+                    'supportedVariants': ['force', 'matrix'],
+                    'supportsMultiDatasetBinding': True,
                 },
             }
         ),
@@ -265,6 +279,13 @@ def dataset_registry() -> dict[str, DatasetDescriptor]:
                         'Parent-child links are synthesized locally and remotely from the flat flare JSON rows.',
                     ],
                 },
+                'starter': {
+                    'kindAdapterId': 'graph',
+                    'priority': 'reference',
+                    'defaultVariant': 'hierarchy',
+                    'supportedVariants': ['hierarchy'],
+                    'supportsMultiDatasetBinding': True,
+                },
             }
         ),
         'earthquakes': DatasetDescriptor.model_validate(
@@ -315,6 +336,13 @@ def dataset_registry() -> dict[str, DatasetDescriptor]:
                         'The dataset is already normalized for time and location fields.',
                     ],
                 },
+                'starter': {
+                    'kindAdapterId': 'spatio-temporal',
+                    'priority': 'seed',
+                    'defaultVariant': 'map',
+                    'supportedVariants': ['map'],
+                    'supportsMultiDatasetBinding': True,
+                },
             }
         ),
         'penguins': DatasetDescriptor.model_validate(
@@ -364,6 +392,13 @@ def dataset_registry() -> dict[str, DatasetDescriptor]:
                         'Designed for brushable scatterplot matrices and other multivariate tabular examples.',
                         'The local path uses the browser runtime for lightweight filters and the DuckDB worker for larger projections.',
                     ],
+                },
+                'starter': {
+                    'kindAdapterId': 'tabular',
+                    'priority': 'reference',
+                    'defaultVariant': 'splom',
+                    'supportedVariants': ['scatter', 'splom', 'table'],
+                    'supportsMultiDatasetBinding': False,
                 },
             }
         ),
@@ -440,6 +475,13 @@ def dataset_registry() -> dict[str, DatasetDescriptor]:
                         'Stage metadata helps the flow example summarize upstream, midstream, and downstream energy paths.',
                     ],
                 },
+                'starter': {
+                    'kindAdapterId': 'graph',
+                    'priority': 'reference',
+                    'defaultVariant': 'flow',
+                    'supportedVariants': ['flow'],
+                    'supportsMultiDatasetBinding': True,
+                },
             }
         ),
         'stocks': DatasetDescriptor.model_validate(
@@ -486,6 +528,13 @@ def dataset_registry() -> dict[str, DatasetDescriptor]:
                         'Time-series examples reuse the existing tabular query contract and local preview path.',
                         'The focus-context milestone uses date filtering and symbol selection without expanding the wire schema.',
                     ],
+                },
+                'starter': {
+                    'kindAdapterId': 'tabular',
+                    'priority': 'reference',
+                    'defaultVariant': 'time-series',
+                    'supportedVariants': ['time-series', 'table'],
+                    'supportsMultiDatasetBinding': False,
                 },
             }
         ),

@@ -46,6 +46,13 @@ export const starterDatasets: DatasetDescriptor[] = datasetDescriptorSchema.arra
         'Remote execution remains available for parity and later heavier transforms.',
       ],
     },
+    starter: {
+      kindAdapterId: 'tabular',
+      priority: 'primary',
+      defaultVariant: 'scatter',
+      supportedVariants: ['scatter', 'table'],
+      supportsMultiDatasetBinding: false,
+    },
   },
   {
     id: 'miserables',
@@ -110,6 +117,13 @@ export const starterDatasets: DatasetDescriptor[] = datasetDescriptorSchema.arra
         'Graph exploration defaults to the local graphology runtime in v2.3.0.',
         'Remote execution remains available for parity and heavier graph transforms.',
       ],
+    },
+    starter: {
+      kindAdapterId: 'graph',
+      priority: 'primary',
+      defaultVariant: 'force',
+      supportedVariants: ['force', 'matrix'],
+      supportsMultiDatasetBinding: true,
     },
   },
   {
@@ -188,6 +202,13 @@ export const starterDatasets: DatasetDescriptor[] = datasetDescriptorSchema.arra
         'Tree layout techniques will build on this hierarchy metadata in later v2.3.x patches.',
       ],
     },
+    starter: {
+      kindAdapterId: 'graph',
+      priority: 'reference',
+      defaultVariant: 'hierarchy',
+      supportedVariants: ['hierarchy'],
+      supportsMultiDatasetBinding: true,
+    },
   },
   {
     id: 'penguins',
@@ -235,6 +256,13 @@ export const starterDatasets: DatasetDescriptor[] = datasetDescriptorSchema.arra
         'Designed for brushable scatterplot matrices and other multivariate tabular examples.',
         'The local path uses the browser runtime for lightweight filters and the DuckDB worker for larger projections.',
       ],
+    },
+    starter: {
+      kindAdapterId: 'tabular',
+      priority: 'reference',
+      defaultVariant: 'splom',
+      supportedVariants: ['scatter', 'splom', 'table'],
+      supportsMultiDatasetBinding: false,
     },
   },
   {
@@ -309,6 +337,13 @@ export const starterDatasets: DatasetDescriptor[] = datasetDescriptorSchema.arra
         'Stage metadata helps the flow example summarize upstream, midstream, and downstream energy paths.',
       ],
     },
+    starter: {
+      kindAdapterId: 'graph',
+      priority: 'reference',
+      defaultVariant: 'flow',
+      supportedVariants: ['flow'],
+      supportsMultiDatasetBinding: true,
+    },
   },
   {
     id: 'stocks',
@@ -353,6 +388,13 @@ export const starterDatasets: DatasetDescriptor[] = datasetDescriptorSchema.arra
         'Time-series examples reuse the existing tabular query contract and local preview path.',
         'The focus-context milestone uses date filtering and symbol selection without expanding the wire schema.',
       ],
+    },
+    starter: {
+      kindAdapterId: 'tabular',
+      priority: 'reference',
+      defaultVariant: 'time-series',
+      supportedVariants: ['time-series', 'table'],
+      supportsMultiDatasetBinding: false,
     },
   },
   {
@@ -400,6 +442,13 @@ export const starterDatasets: DatasetDescriptor[] = datasetDescriptorSchema.arra
       notes: [
         'Spatial viewport coordination is planned for the spatio-temporal milestone.',
       ],
+    },
+    starter: {
+      kindAdapterId: 'spatio-temporal',
+      priority: 'seed',
+      defaultVariant: 'map',
+      supportedVariants: ['map'],
+      supportsMultiDatasetBinding: true,
     },
   },
 ]);
