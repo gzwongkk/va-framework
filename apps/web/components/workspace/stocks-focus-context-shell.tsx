@@ -71,9 +71,13 @@ export function StocksFocusContextShell({
   const controlValues = useCoordinationStore(
     (state) => state.visualizationControlValues[visualizationId],
   );
-  const selectedSymbols = Array.isArray(controlValues?.symbols)
-    ? controlValues.symbols.map(String)
-    : [];
+  const selectedSymbols = useMemo(
+    () => {
+      const symbols = controlValues?.symbols;
+      return Array.isArray(symbols) ? symbols.map(String) : [];
+    },
+    [controlValues],
+  );
   const setActiveDatasetId = useCoordinationStore((state) => state.setActiveDatasetId);
   const setActiveViewId = useCoordinationStore((state) => state.setActiveViewId);
   const setActiveVisualizationId = useCoordinationStore((state) => state.setActiveVisualizationId);

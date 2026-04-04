@@ -1,89 +1,74 @@
 # va-framework v2
 
-`main` now tracks the React-native rewrite of the visual analytics framework.
-The stable Vue release is preserved on the `release/v1.0.0` branch.
+`main` tracks the React-native rewrite of the visual analytics framework.
+The stable Vue release remains on the `release/v1.0.0` branch.
 
 ## Current milestone
 
-`v2.3.18` is the gallery hardening and contribution-architecture release.
+`v2.3.22` completes the starter integration revision.
 
-The home route at `/` remains the graph workbench. This final `v2.3` release closes the gallery line with provenance, contributor guidance, and smoke coverage around the example registry:
+The framework is now starter-first instead of gallery-first:
 
-- every gallery-backed example shell now renders a shared provenance panel that shows both example-source and dataset-source attribution
-- the gallery line now includes contributor-facing guidance for adding datasets, visualization adapters, and shared controls in `docs/gallery-contributors.md`
-- route and registry smoke tests now cover the main gallery surfaces and ensure every catalog example resolves to a registered dataset
-- the `stocks` focus-context example from `v2.3.17` remains part of the final gallery line alongside graph, hierarchy, SPLOM, and Sankey examples
+- `/` is the unified starter workbench
+- users can switch between the two first-class data kinds currently supported:
+  - `tabular`
+  - `graph`
+- the shell keeps one shared product shape while the active dataset, starter variant, and runtime change
+- the gallery and example routes stay available as reference material and presets on top of the same framework contracts
 
-The `v2.3` line now consists of:
+This revision also prepares the repo for later expansion without forcing the UX there too early:
 
-- `v2.3.0`: graph-native query contracts, local graphology runtime, remote graph queries, and the first graph workspace
-- `v2.3.1`: graph shell polish, full-graph default scope, visible route switching, and drawer cleanup
-- `v2.3.2`: graph workbench foundation, URL-backed technique switching, and hierarchy dataset support
-- `v2.3.3`: adjacency matrix brushing plus first integrated tree and multivariate technique renderers
-- `v2.3.4`: matrix ordering and graph-analysis polish
-- `v2.3.5`: tree data foundation, hierarchy pathing, and flare metadata checks
-- `v2.3.6`: explicit and implicit tree-technique polish with selected-path highlighting
-- `v2.3.7`: multivariate field profiles, missing-value handling, and encoding groundwork
-- `v2.3.8`: multivariate layout polish, legends, and facet-aware analytical summaries
-- `v2.3.9`: graph workbench hardening, guidance, accessibility labels, and regression coverage
-- `v2.3.10`: canonical Les Miserables dataset import, duplicate-key fix, and remote runtime cleanup
-- `v2.3.11`: example gallery foundation, visualization catalog, and generic example routes
-- `v2.3.12`: shared control system, command-based example switching, and gallery category tabs
-- `v2.3.13`: dataset-pack import, gallery dataset cards, and placeholder example registration
-- `v2.3.14`: brushable scatterplot matrix on penguins
-- `v2.3.15`: native Sankey flow example on energy
-- `v2.3.16`: hierarchy technique suite on flare
-- `v2.3.17`: focus-plus-context time series on stocks
-- `v2.3.18`: gallery hardening, provenance panels, contributor docs, and route/catalog smoke coverage
+- dataset descriptors now carry starter metadata
+- the frontend has pluggable kind-adapter contracts
+- the view system now includes multi-view-ready layout, dataset-binding, and coordination-channel contracts
+- the shipped UX still stays one-main-canvas-at-a-time for the `v2.3` line
 
-The core stack now includes:
+## v2.3.19 to v2.3.22
 
-- `TanStack Query` for async server-state work
-- `Zustand` for persisted coordination state
-- `DuckDB-Wasm + Apache Arrow` for tabular local analytics
-- `graphology` for local graph data modeling and metrics
-- custom D3 visualization primitives in `packages/vis-core`
+- `v2.3.19`: starter metadata, adapter contracts, and multi-view-ready state foundations
+- `v2.3.20`: unified starter shell and generic tabular starter path
+- `v2.3.21`: generic graph starter path
+- `v2.3.22`: preset refactor, starter-first routing, and hardening
 
-The release ladder remains:
+## Current product shape
 
-- `v2.0.0`: React shell and monorepo baseline
-- `v2.1.0`: data foundation with shared contracts, coordinated state, and local/remote execution
-- `v2.2.0`: single-view analytics
-- `v2.3.0`: graph data
-- `v2.3.1`: graph shell polish
-- `v2.3.2`: graph workbench foundation
-- `v2.3.3`: adjacency matrix brush MVP
-- `v2.3.4`: matrix ordering and graph-analysis polish
-- `v2.3.5`: tree data foundation
-- `v2.3.6`: tree techniques
-- `v2.3.7`: multivariate network foundation
-- `v2.3.8`: multivariate network techniques
-- `v2.3.9`: graph workbench hardening
-- `v2.3.10`: canonical Les Miserables dataset and remote runtime fixes
-- `v2.3.11`: example gallery foundation
-- `v2.3.12`: shared control system
-- `v2.3.13`: dataset pack import
-- `v2.3.14`: brushable scatterplot matrix
-- `v2.3.15`: flow example
-- `v2.3.16`: tree and hierarchy suite
-- `v2.3.17`: time-series example and graph polish
-- `v2.3.18`: hardening and contribution architecture
-- `v2.4.0`: spatio-temporal data
-- `v2.5.0`: multi-view coordination
-- `v2.6.0`: spatial-ready foundations
+Starter home:
+
+- `tabular / cars / scatter` is the default first load
+- `penguins` extends the tabular starter with `splom`
+- `stocks` extends the tabular starter with `time-series`
+- `miserables` is the primary graph starter with `force` and `matrix`
+- `flare` exposes the `hierarchy` starter
+- `energy` exposes the `flow` starter
+- `earthquakes` stays seed-only until the `v2.4.0` spatio-temporal line
+
+Reference routes:
+
+- `/`: unified starter workbench
+- `/cars`: backwards-compatible alias for `tabular / cars / scatter`
+- `/gallery`: curated reference gallery
+- `/examples/[exampleId]`: example-specific route layer
 
 ## Workspace layout
 
 - `apps/web`: Next.js App Router frontend
 - `apps/api`: FastAPI backend
-- `packages/ui`: shadcn-style component baseline
+- `packages/ui`: shadcn/Radix-based component layer
 - `packages/contracts`: shared TypeScript contracts and schemas
-- `packages/view-system`: workspace and view contracts
-- `packages/vis-core`: visualization primitives
+- `packages/view-system`: starter, layout, and coordination contracts
+- `packages/vis-core`: native D3-based visualization primitives
+
+## Core stack
+
+- `TanStack Query` for async server-state work
+- `Zustand` for persisted coordination state
+- `DuckDB-Wasm + Apache Arrow` for local tabular analytics
+- `graphology` for local graph modeling and metrics
+- native D3 visualization primitives in `packages/vis-core`
 
 ## Development
 
-This repo now uses `pnpm` workspaces for the JavaScript side and Python 3.11+ for the API.
+This repo uses `pnpm` workspaces for the JavaScript side and Python 3.11+ for the API.
 
 ```bash
 pnpm install
@@ -91,40 +76,32 @@ pnpm dev:web
 pnpm dev:api
 ```
 
-Or run both app processes together:
+Or run both together:
 
 ```bash
 pnpm dev
 ```
 
-If the repo stays on a NAS or another slow filesystem, prefer the default webpack-based `pnpm dev:web`.
-If you move the repo to a local SSD and want the faster compiler path, use:
+If the repo lives on a NAS or another slow filesystem, prefer the default webpack-based `pnpm dev:web`.
+If you move the repo to a local SSD, you can try:
 
 ```bash
 pnpm dev:web:turbo
 ```
 
 The frontend runs at <http://localhost:3000>.
-The backend health endpoint is available at <http://127.0.0.1:8000/api/health>.
+The backend health endpoint is <http://127.0.0.1:8000/api/health>.
 
-Routes:
-
-- `/`: graph workbench
-- `/gallery`: visualization gallery
-- `/examples/[exampleId]`: registry-backed example route
-- `/cars`: cars single-view reference workflow
-
-The graph workbench defaults to `miserables` + `force`, and also supports `flare` as the hierarchy dataset for the tree line.
-The canonical Les Miserables dataset used here is the Vega sample graph with 77 nodes and 254 links.
-
-Contributor guide:
-
-- `docs/gallery-contributors.md`: add a dataset, add a visualization adapter, and wire shared controls into the workbench shell
-
-## Graph workbench endpoints
+## API endpoints
 
 - `GET /api/health`
 - `GET /api/datasets`
 - `POST /api/query`
 - `POST /api/jobs`
 - `GET /api/jobs/{id}`
+
+## Notes
+
+- The canonical Les Miserables dataset in this repo is the Vega sample graph with `77` nodes and `254` links.
+- The current framework is designed to accept more data kinds later through adapters instead of hardcoding only tabular and graph paths.
+- The current framework is also ready for later multi-view work through shared layout and coordination contracts, even though the shipped `v2.3` UX still centers on one active canvas.
