@@ -1,11 +1,11 @@
 import { Suspense } from 'react';
 
-import { GraphSingleViewShell } from '@/components/workspace/graph-single-view-shell';
+import { StarterWorkbenchShell } from '@/components/workspace/starter-workbench-shell';
 
 export default function HomePage() {
   return (
     <Suspense fallback={null}>
-      <GraphSingleViewShell />
+      <StarterWorkbenchShell initialDatasetId="cars" initialKind="tabular" initialVariantId="scatter" />
     </Suspense>
   );
 }

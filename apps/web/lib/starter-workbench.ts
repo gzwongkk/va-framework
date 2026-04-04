@@ -16,6 +16,15 @@ export type DataKindAdapter = StarterWorkbenchDefinition & {
   iconLabel: string;
 };
 
+export type StarterExampleId =
+  | 'cars-scatter'
+  | 'penguins-splom'
+  | 'stocks-focus-context'
+  | 'graph-force'
+  | 'graph-matrix'
+  | 'hierarchy-suite'
+  | 'energy-sankey';
+
 const variantCatalog: Record<StarterVariantId, StarterVariantDefinition> = {
   scatter: {
     id: 'scatter',
@@ -132,6 +141,11 @@ export function getStarterVariants(dataset: DatasetDescriptor | undefined): Star
     .filter((variant): variant is StarterVariantDefinition => Boolean(variant));
 }
 
+export function getStarterVariantLabel(variantId: string) {
+  const variant = variantCatalog[variantId as StarterVariantId];
+  return variant?.label ?? variantId;
+}
+
 export function resolveStarterVariant(
   dataset: DatasetDescriptor | undefined,
   requestedVariantId?: string,
@@ -178,6 +192,66 @@ export function getStarterSchemaGuidance(dataset: DatasetDescriptor | undefined)
   }
 
   return guidance;
+}
+
+export function getStarterHelpText(kind: SupportedStarterKind, variantId: string) {
+  if (kind === 'graph') {
+    switch (variantId) {
+      case 'matrix':
+        return 'Adjacency matrices are useful when density, ordering, and group blocks matter more than path tracing.';
+      case 'hierarchy':
+        return 'Hierarchy starters expose explicit and implicit tree techniques from the same normalized graph dataset.';
+      case 'flow':
+        return 'Flow starters are best when edges represent staged movement and users need source-to-target tracing.';
+      default:
+        return 'Force layouts are the fastest way to start graph exploration and then branch into more specialized techniques.';
+    }
+  }
+
+  switch (variantId) {
+    case 'splom':
+      return 'Scatterplot matrices work best when a dataset has several numeric measures and users need cohort brushing.';
+    case 'time-series':
+      return 'Time-series starters emphasize temporal focus, context, and trend comparison rather than row inspection.';
+    case 'table':
+      return 'Table starters are the best baseline when schema familiarity and record inspection come before visual encoding.';
+    default:
+      return 'Scatter starters give a fast first read on quantitative relationships while keeping the rest of the workbench available.';
+  }
+}
+
+export function getStarterVisualizationId(
+  kind: SupportedStarterKind,
+  datasetId: string,
+  variantId: string,
+): StarterExampleId | undefined {
+  if (kind === 'tabular') {
+    if (datasetId === 'cars' && variantId === 'scatter') {
+      return 'cars-scatter';
+    }
+    if (datasetId === 'penguins' && variantId === 'splom') {
+      return 'penguins-splom';
+    }
+    if (datasetId === 'stocks' && variantId === 'time-series') {
+      return 'stocks-focus-context';
+    }
+    return undefined;
+  }
+
+  if (datasetId === 'miserables' && variantId === 'force') {
+    return 'graph-force';
+  }
+  if (datasetId === 'miserables' && variantId === 'matrix') {
+    return 'graph-matrix';
+  }
+  if (datasetId === 'flare' && variantId === 'hierarchy') {
+    return 'hierarchy-suite';
+  }
+  if (datasetId === 'energy' && variantId === 'flow') {
+    return 'energy-sankey';
+  }
+
+  return undefined;
 }
 
 export function buildStarterSearchParams(kind: SupportedStarterKind, datasetId: string, variantId: string) {

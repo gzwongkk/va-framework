@@ -4,6 +4,7 @@ import { starterDatasets } from './data/starter-datasets';
 import {
   getStarterDatasets,
   getStarterSchemaGuidance,
+  getStarterVisualizationId,
   resolveStarterDataset,
   resolveStarterVariant,
 } from './starter-workbench';
@@ -33,5 +34,11 @@ describe('starter workbench registry', () => {
   it('produces starter guidance derived from the active dataset schema', () => {
     const guidance = getStarterSchemaGuidance(resolveStarterDataset(starterDatasets, 'graph'));
     expect(guidance.some((line) => line.includes('Link entity ready'))).toBe(true);
+  });
+
+  it('maps starter presets to shared example ids when available', () => {
+    expect(getStarterVisualizationId('tabular', 'cars', 'scatter')).toBe('cars-scatter');
+    expect(getStarterVisualizationId('graph', 'miserables', 'force')).toBe('graph-force');
+    expect(getStarterVisualizationId('graph', 'flare', 'hierarchy')).toBe('hierarchy-suite');
   });
 });

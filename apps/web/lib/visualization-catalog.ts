@@ -4,7 +4,7 @@ export const visualizationCatalog: VisualizationExampleDefinition[] = [
   {
     id: 'graph-force',
     title: 'Les Miserables force graph',
-    summary: 'Topology-first graph workbench with force layout, selection, neighborhood scope, and remote/local parity.',
+    summary: 'Starter preset for the primary graph adapter with force layout, selection, and remote/local parity.',
     category: 'graph',
     datasetIds: ['miserables'],
     defaultDatasetId: 'miserables',
@@ -195,7 +195,7 @@ export const visualizationCatalog: VisualizationExampleDefinition[] = [
   {
     id: 'cars-scatter',
     title: 'Cars single-view reference',
-    summary: 'Reference single-view analytics workflow retained from the v2.2 line.',
+    summary: 'Starter preset for the primary tabular adapter with the canonical cars scatter workflow.',
     category: 'tabular',
     datasetIds: ['cars'],
     defaultDatasetId: 'cars',

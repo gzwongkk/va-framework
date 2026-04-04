@@ -48,9 +48,9 @@ export function GalleryPageShell() {
                 Registry-driven analytics gallery
               </h1>
               <p className="ui-studio-body max-w-3xl">
-                Browse the current visualization line, open examples in the workbench shell, and use the
-                same routing model that will later host imported SPLOM, Sankey, hierarchy, and time-series
-                examples.
+                Start from the unified starter home at `/`, then use this gallery as the reference layer for
+                deeper techniques, imported examples, and specialized presets built on top of the same
+                framework contracts.
               </p>
             </div>
             <WorkspaceActionBar buttonPreset={buttonPreset} />
@@ -84,9 +84,9 @@ export function GalleryPageShell() {
                   </div>
                   <div>
                     <p className="ui-studio-label font-semibold uppercase tracking-[0.2em]">{meta.label}</p>
-                    <p className="ui-studio-body">Registered examples in the {meta.label.toLowerCase()} line.</p>
-                  </div>
-                </div>
+              <p className="ui-studio-body">Registered examples in the {meta.label.toLowerCase()} line.</p>
+            </div>
+          </div>
                 <div className="grid gap-4 xl:grid-cols-2 2xl:grid-cols-3">
                   {examples.map((example) => (
                     <Card className="ui-studio-surface border" key={example.id}>
@@ -167,10 +167,15 @@ export function GalleryPageShell() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="grid gap-3">
-                  <div className="flex flex-wrap gap-2 text-xs">
-                    {(dataset.featuredExampleIds ?? []).map((exampleId) => (
-                      <span
-                        className="rounded-[var(--ui-radius-pill)] border px-2.5 py-1 text-[var(--ui-text-secondary)]"
+                <div className="flex flex-wrap gap-2 text-xs">
+                  {dataset.starter ? (
+                    <span className="rounded-[var(--ui-radius-pill)] border px-2.5 py-1 text-[var(--ui-text-secondary)]">
+                      {dataset.starter.priority} starter
+                    </span>
+                  ) : null}
+                  {(dataset.featuredExampleIds ?? []).map((exampleId) => (
+                    <span
+                      className="rounded-[var(--ui-radius-pill)] border px-2.5 py-1 text-[var(--ui-text-secondary)]"
                         key={exampleId}
                       >
                         {exampleId}

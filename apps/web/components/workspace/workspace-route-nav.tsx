@@ -14,7 +14,7 @@ const ROUTES = [
   {
     href: '/',
     icon: Network,
-    label: 'Graph Home',
+    label: 'Starter Home',
     match: (pathname: string) => pathname === '/',
   },
   {

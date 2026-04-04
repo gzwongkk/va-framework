@@ -1,5 +1,16 @@
-import { CarsSingleViewShell } from '@/components/workspace/cars-single-view-shell';
+import { Suspense } from 'react';
+
+import { StarterWorkbenchShell } from '@/components/workspace/starter-workbench-shell';
 
 export default function CarsPage() {
-  return <CarsSingleViewShell />;
+  return (
+    <Suspense fallback={null}>
+      <StarterWorkbenchShell
+        initialDatasetId="cars"
+        initialKind="tabular"
+        initialVariantId="scatter"
+        visualizationId="cars-scatter"
+      />
+    </Suspense>
+  );
 }

@@ -2,11 +2,10 @@
 
 import { AlertCircle, ArrowRight } from 'lucide-react';
 
-import { CarsSingleViewShell } from '@/components/workspace/cars-single-view-shell';
 import { EnergySankeyShell } from '@/components/workspace/energy-sankey-shell';
 import { GraphSingleViewShell } from '@/components/workspace/graph-single-view-shell';
-import { HierarchySuiteShell } from '@/components/workspace/hierarchy-suite-shell';
 import { PenguinsSplomShell } from '@/components/workspace/penguins-splom-shell';
+import { StarterWorkbenchShell } from '@/components/workspace/starter-workbench-shell';
 import { StocksFocusContextShell } from '@/components/workspace/stocks-focus-context-shell';
 import { Button } from '@va/ui';
 import Link from 'next/link';
@@ -17,11 +16,25 @@ type VisualizationExampleRouterProps = {
 
 export function VisualizationExampleRouter({ exampleId }: VisualizationExampleRouterProps) {
   if (exampleId === 'graph-force') {
-    return <GraphSingleViewShell initialDatasetId="miserables" initialTechnique="force" visualizationId={exampleId} />;
+    return (
+      <StarterWorkbenchShell
+        initialDatasetId="miserables"
+        initialKind="graph"
+        initialVariantId="force"
+        visualizationId={exampleId}
+      />
+    );
   }
 
   if (exampleId === 'graph-matrix') {
-    return <GraphSingleViewShell initialDatasetId="miserables" initialTechnique="matrix" visualizationId={exampleId} />;
+    return (
+      <StarterWorkbenchShell
+        initialDatasetId="miserables"
+        initialKind="graph"
+        initialVariantId="matrix"
+        visualizationId={exampleId}
+      />
+    );
   }
 
   if (exampleId === 'graph-multivariate') {
@@ -35,11 +48,25 @@ export function VisualizationExampleRouter({ exampleId }: VisualizationExampleRo
   }
 
   if (exampleId === 'hierarchy-suite') {
-    return <HierarchySuiteShell visualizationId={exampleId} />;
+    return (
+      <StarterWorkbenchShell
+        initialDatasetId="flare"
+        initialKind="graph"
+        initialVariantId="hierarchy"
+        visualizationId={exampleId}
+      />
+    );
   }
 
   if (exampleId === 'cars-scatter') {
-    return <CarsSingleViewShell visualizationId={exampleId} />;
+    return (
+      <StarterWorkbenchShell
+        initialDatasetId="cars"
+        initialKind="tabular"
+        initialVariantId="scatter"
+        visualizationId={exampleId}
+      />
+    );
   }
 
   if (exampleId === 'penguins-splom') {
